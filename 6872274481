@@ -1013,7 +1013,7 @@ runcode(function()
     })
 end)
 
-runFunction(function()
+runcode(function()
 	TxtPack = GuiLibrary.ObjectsThatCanBeSaved.RenderWindow.Api.CreateOptionsButton({
 		Name = "ZylaTxtPack",
 		Function = function(callback)
