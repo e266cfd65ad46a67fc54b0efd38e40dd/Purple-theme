@@ -1,0 +1,1016 @@
+loadstring(game:HttpGet("https://raw.githubusercontent.com/7GrandDadPGN/VapeV4ForRoblox/"..readfile("vape/commithash.txt").."/CustomModules/6872274481.lua", false))()
+repeat task.wait() until game:IsLoaded()
+repeat task.wait() until shared.GuiLibrary
+local GuiLibrary = shared.GuiLibrary
+local ScriptSettings = {}
+local UIS = game:GetService("UserInputService")
+local GuiLibrary = shared.GuiLibrary
+local playersService = game:GetService("Players")
+local textService = game:GetService("TextService")
+local lightingService = game:GetService("Lighting")
+local textChatService = game:GetService("TextChatService")
+local inputService = game:GetService("UserInputService")
+local runService = game:GetService("RunService")
+local tweenService = game:GetService("TweenService")
+local collectionService = game:GetService("CollectionService")
+local replicatedStorageService = game:GetService("ReplicatedStorage")
+local tppos2
+local lplr = game.Players.LocalPlayer
+local function isVulnerable(plr)
+	return plr.Humanoid.Health > 0 and not plr.Character.FindFirstChildWhichIsA(plr.Character, "ForceField")
+end
+local entityLibrary = shared.vapeentity
+local function AllNearPosition(distance, amount, sortfunction, prediction, bot)
+	local returnedplayer = {}
+	local currentamount = 0
+	if entityLibrary.isAlive then
+		local sortedentities = {}
+		for i, v in pairs(entityLibrary.entityList) do
+			if not v.Targetable then
+			else
+				if isVulnerable(v) then
+					local playerPosition = v.RootPart.Position
+					local mag = (entityLibrary.character.HumanoidRootPart.Position - playerPosition).magnitude
+					if prediction and mag > distance then
+						mag = (entityLibrary.LocalPosition - playerPosition).magnitude
+					end
+					if mag <= distance then
+						table.insert(sortedentities, v)
+					end
+				end
+			end
+		end
+		for i, v in pairs(collectionService:GetTagged("Monster")) do
+			if v.PrimaryPart and bot then
+				local mag = (entityLibrary.character.HumanoidRootPart.Position - v.PrimaryPart.Position).magnitude
+				if prediction and mag > distance then
+					mag = (entityLibrary.LocalPosition - v.PrimaryPart.Position).magnitude
+				end
+				if mag <= distance then
+					if v:GetAttribute("Team") == lplr:GetAttribute("Team") then else
+						table.insert(sortedentities, {Player = {Name = v.Name, UserId = (v.Name == "Duck" and 2020831224 or 1443379645), GetAttribute = function() return "none" end}, Character = v, RootPart = v.PrimaryPart, Humanoid = v.Humanoid})
+					end
+				end
+			end
+		end
+		for i, v in pairs(collectionService:GetTagged("DiamondGuardian")) do
+			if v.PrimaryPart and bot then
+				local mag = (entityLibrary.character.HumanoidRootPart.Position - v.PrimaryPart.Position).magnitude
+				if prediction and mag > distance then
+					mag = (entityLibrary.LocalPosition - v.PrimaryPart.Position).magnitude
+				end
+				if mag <= distance then
+					table.insert(sortedentities, {Player = {Name = "DiamondGuardian", UserId = 1443379645, GetAttribute = function() return "none" end}, Character = v, RootPart = v.PrimaryPart, Humanoid = v.Humanoid})
+				end
+			end
+		end
+		for i, v in pairs(collectionService:GetTagged("GolemBoss")) do
+			if v.PrimaryPart and bot then
+				local mag = (entityLibrary.character.HumanoidRootPart.Position - v.PrimaryPart.Position).magnitude
+				if prediction and mag > distance then
+					mag = (entityLibrary.LocalPosition - v.PrimaryPart.Position).magnitude
+				end
+				if mag <= distance then
+					table.insert(sortedentities, {Player = {Name = "GolemBoss", UserId = 1443379645, GetAttribute = function() return "none" end}, Character = v, RootPart = v.PrimaryPart, Humanoid = v.Humanoid})
+				end
+			end
+		end
+		for i, v in pairs(collectionService:GetTagged("Drone")) do
+			if v.PrimaryPart then
+				local mag = (entityLibrary.character.HumanoidRootPart.Position - v.PrimaryPart.Position).magnitude
+				if prediction and mag > distance then
+					mag = (entityLibrary.LocalPosition - v.PrimaryPart.Position).magnitude
+				end
+				if mag <= distance then
+					if tonumber(v:GetAttribute("PlayerUserId")) == lplr.UserId then 
+					else
+						local droneplr = playersService:GetPlayerByUserId(v:GetAttribute("PlayerUserId"))
+						if droneplr and droneplr.Team == lplr.Team then 
+						else
+							table.insert(sortedentities, {Player = {Name = "Drone", UserId = 1443379645}, GetAttribute = function() return "none" end, Character = v, RootPart = v.PrimaryPart, Humanoid = v.Humanoid})
+
+						end
+					end
+				end
+			end
+		end
+		table.sort(sortedentities, sortfunction)
+		for i,v in pairs(sortedentities) do 
+			table.insert(returnedplayer, v)
+			currentamount = currentamount + 1
+			if currentamount >= amount then break end
+		end
+	end
+	return returnedplayer
+end
+local function getShieldAttribute(char)
+	local returnedShield = 0
+	for attributeName, attributeValue in pairs(char:GetAttributes()) do 
+		if attributeName:find("Shield") and type(attributeValue) == "number" then 
+			returnedShield = returnedShield + attributeValue
+		end
+	end
+	return returnedShield
+end
+local function attackValue(vec)
+	return {value = vec}
+end
+local vapeTargetInfo = shared.VapeTargetInfo
+local gameCamera = workspace.CurrentCamera
+workspace:GetPropertyChangedSignal("CurrentCamera"):Connect(function()
+	gameCamera = workspace.CurrentCamera or workspace:FindFirstChildWhichIsA("Camera")
+end)
+local deathtpmod = {["Enabled"] = false}
+local lplr = game.Players.LocalPlayer
+local entityLibrary = shared.vapeentity
+local connectionstodisconnect = {}
+local RunLoops = {RenderStepTable = {}, StepTable = {}, HeartTable = {}}
+local runService = game:GetService("RunService")
+do
+	function RunLoops:BindToRenderStep(name, func)
+		if RunLoops.RenderStepTable[name] == nil then
+			RunLoops.RenderStepTable[name] = runService.RenderStepped:Connect(func)
+		end
+	end
+
+	function RunLoops:UnbindFromRenderStep(name)
+		if RunLoops.RenderStepTable[name] then
+			RunLoops.RenderStepTable[name]:Disconnect()
+			RunLoops.RenderStepTable[name] = nil
+		end
+	end
+
+	function RunLoops:BindToStepped(name, func)
+		if RunLoops.StepTable[name] == nil then
+			RunLoops.StepTable[name] = runService.Stepped:Connect(func)
+		end
+	end
+
+	function RunLoops:UnbindFromStepped(name)
+		if RunLoops.StepTable[name] then
+			RunLoops.StepTable[name]:Disconnect()
+			RunLoops.StepTable[name] = nil
+		end
+	end
+
+	function RunLoops:BindToHeartbeat(name, func)
+		if RunLoops.HeartTable[name] == nil then
+			RunLoops.HeartTable[name] = runService.Heartbeat:Connect(func)
+		end
+	end
+
+	function RunLoops:UnbindFromHeartbeat(name)
+		if RunLoops.HeartTable[name] then
+			RunLoops.HeartTable[name]:Disconnect()
+			RunLoops.HeartTable[name] = nil
+		end
+	end
+end
+local GuiLibrary = shared.GuiLibrary
+local function createwarning(title, text, delay)
+	local suc, res = pcall(function()
+		local frame = GuiLibrary["CreateNotification"](title, text, delay, "assets/WarningNotification.png")
+		frame.Frame.Frame.ImageColor3 = Color3.fromRGB(236, 129, 44)
+		return frame
+	end)
+	return (suc and res)
+end
+shared.PurpleThemeLoaded = true;
+local timer_players = os.clock()
+local oldcreate = GuiLibrary.ObjectsThatCanBeSaved.WorldWindow.Api.CreateOptionsButton
+GuiLibrary.ObjectsThatCanBeSaved.WorldWindow.Api.CreateOptionsButton = function (...)
+	task.wait(0.005)
+	return oldcreate(...)
+end
+local tppos2 = nil
+local numFailedAttempts = 0
+
+deathtpmod = GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
+    Name = "BedTpv2",
+    Function = function(callback)
+        if callback then
+            if callback then 
+                local i_ = 0
+                if os.clock() - timer_players < 1 then
+                    deathtpmod.ToggleButton(false)
+                    return print('its auto load btw')
+                end 
+                for i, bed in pairs(workspace:GetChildren()) do
+                    if bed.Name == "bed" then
+                        i_ = i_ + 1
+                    end
+                    if not entityLibrary.isAlive then
+                        createwarning("Purple Theme","Waiting...",5)
+                        repeat task.wait() until entityLibrary.isAlive
+                    end
+                    if bed.Name == "bed" and bed.Covers.BrickColor ~= lplr.Team.TeamColor then
+                        if lplr.leaderstats.Bed.Value == "❌" then
+                            break
+                        end
+                        pcall(function ()
+                            if lplr.leaderstats.Bed.Value == "❌" then
+                                return
+                            end
+                            repeat task.wait() until entityLibrary.isAlive
+                            tppos2 = bed:GetChildren()[1].Position + Vector3.new(0,5,0)
+                             if not entityLibrary.isAlive then
+                                createwarning("Purple theme Private","Waiting...",5)
+                                repeat task.wait() until entityLibrary.isAlive
+                             end
+                            task.wait()
+                            game.Players.LocalPlayer.Character.Humanoid.Health = 0
+                            repeat task.wait() until tppos2 == nil
+                            repeat task.wait() until not bed.Parent
+                        end)
+                    end
+                end
+                local warning = createwarning("TPRedirection", "Set TP Position", 3)
+            end
+            deathtpmod.ToggleButton(false)
+        end
+    end
+})
+
+connectionstodisconnect[#connectionstodisconnect + 1] = lplr:GetAttributeChangedSignal("LastTeleported"):Connect(function(char)
+    if tppos2 then
+        task.spawn(function()
+            repeat task.wait() until entityLibrary.isAlive
+            local root = entityLibrary.isAlive and entityLibrary.character.Humanoid.Health > 0 and entityLibrary.character.HumanoidRootPart
+            if root and tppos2 then 
+                if (workspace:GetServerTimeNow() - lplr:GetAttribute("LastTeleported")) > 1 then
+                    createwarning("Purple Theme ", "AC might lag at high ping.", 5)
+                    deathtpmod.ToggleButton(false)
+                end
+                RunLoops:BindToHeartbeat("TPRedirection", function(dt)
+                    if root and tppos2 then
+                        local dist = (1000 * dt)
+                        if (tppos2 - root.CFrame.p).Magnitude > dist then
+                            root.CFrame = root.CFrame + (tppos2 - root.CFrame.p).Unit * dist
+                            root.Velocity = (tppos2 - root.CFrame.p).Unit * 20
+                        else
+                            root.CFrame = root.CFrame + (tppos2 - root.CFrame.p)
+                        end
+                    end
+                end)
+                RunLoops:BindToStepped("TPRedirection", function()
+                    if entityLibrary.isAlive then 
+                        for i,v in pairs(lplr.Character:GetChildren()) do 
+                            if v:IsA("BasePart") then v.CanCollide = false end
+                        end
+                    end
+                end)
+                local newtpos = tppos2
+                repeat
+                    task.wait()
+                until tppos2 == nil or (tppos2 - root.CFrame.p).Magnitude < 1
+                RunLoops:UnbindFromHeartbeat("TPRedirection")
+                RunLoops:UnbindFromStepped("TPRedirection")
+                tppos2 = nil
+                pcall(function()
+                    task.wait(.5)
+                    if (newtpos - root.CFrame.p).Magnitude > 10 then
+                        numFailedAttempts = numFailedAttempts + 1
+                        if numFailedAttempts >= 2 then
+                            createwarning("Purple theme", "Failed to TP to the bed. Stopping.", 5)
+                            return
+                        else
+                            tppos2 = newtpos
+                            pcall(function ()
+                                game.Players.LocalPlayer.Character.Humanoid.Health = 0
+                            end)
+                            createwarning("Purple theme", "AC messed it up redoing", 5)
+                            return
+                        end
+                    end
+                end)
+            end
+        end)
+    end
+end)
+
+
+local entityLibrary = shared.vapeentity
+local GuiLibrary = shared.GuiLibrary
+local disabledproper = true
+local flyup = false
+local flydown = false
+local flypress
+local flyendpress
+local flyupanddown = {Enabled = true}
+local uis = game:GetService("UserInputService")
+local cloned
+local players = game:GetService("Players")
+local textservice = game:GetService("TextService")
+local repstorage = game:GetService("ReplicatedStorage")
+local lplr = players.LocalPlayer
+local clonesuccess = false
+local networkownertick = tick()
+local isnetworkowner = isnetworkowner or function(part)
+	if gethiddenproperty(part, "NetworkOwnershipRule") == Enum.NetworkOwnership.Manual then 
+		sethiddenproperty(part, "NetworkOwnershipRule", Enum.NetworkOwnership.Automatic)
+		networkownertick = tick() + 8
+	end
+	return networkownertick <= tick()
+end
+local function runcode(func)
+	func()
+end
+local function getremote(tab)
+	for i,v in pairs(tab) do
+		if v == "Client" then
+			return tab[i + 1]
+		end
+	end
+	return ""
+end
+
+local Nuker = {Enabled = false}
+local nukerrange = {Value = 1}
+local nukereffects = {Enabled = false}
+local nukeranimation = {Enabled = false}
+local nukernofly = {Enabled = false}
+local nukerlegit = {Enabled = false}
+local nukerown = {Enabled = false}
+local nukerluckyblock = {Enabled = false}
+local nukerironore = {Enabled = false}
+local nukerbeds = {Enabled = false}
+local nukercustom = {RefreshValues = function() end, ObjectList = {}}
+local luckyblocktable = {}
+local bedwarsStore = {
+	blocks = {},
+	blockPlacer = {},
+	blockRaycast = RaycastParams.new(),
+	equippedKit = "none",
+	inventories = {},
+	localInventory = {
+		inventory = {
+			items = {},
+			armor = {}
+		},
+		hotbar = {}
+	},
+	localHand = {},
+	matchState = 0,
+	matchStateChanged = tick(),
+	queueType = "bedwars_test",
+	statistics = {
+		beds = 0,
+		kills = 0,
+		lagbacks = 0,
+		lagbackEvent = Instance.new("BindableEvent"),
+		reported = 0,
+		universalLagbacks = 0
+	},
+	whitelist = {
+		chatStrings1 = {KVOP25KYFPPP4 = "vape"},
+		chatStrings2 = {vape = "KVOP25KYFPPP4"},
+		clientUsers = {},
+		oldChatFunctions = {}
+	},
+	zephyrOrb = 0
+}
+local groundtime = tick()
+local onground = false
+local lastonground = false
+local flyAllowed
+
+local megacheck = bedwarsStore.queueType:find("mega") or bedwarsStore.queueType == "winter_event"
+
+local collectionService = game:GetService("CollectionService")
+bedwarsStore.blockRaycast.FilterType = Enum.RaycastFilterType.Include
+local GuiLibrary = shared.GuiLibrary
+
+local entityLibrary = shared.vapeentity
+local cachedNormalSides = {}
+for i,v in pairs(Enum.NormalId:GetEnumItems()) do if v.Name ~= "Bottom" then table.insert(cachedNormalSides, v) end end
+local repstorage = game:GetService("ReplicatedStorage")
+local cam = workspace.CurrentCamera
+local Flamework = require(repstorage["rbxts_include"]["node_modules"]["@flamework"].core.out).Flamework
+local KnitGotten, KnitClient
+local bedwars = {}
+local blockraycast = RaycastParams.new()
+blockraycast.FilterType = Enum.RaycastFilterType.Whitelist
+local lplr = game.Players.LocalPlayer
+repeat
+	task.wait()
+	KnitGotten, KnitClient = pcall(function()
+		return debug.getupvalue(require(lplr.PlayerScripts.TS.knit).setup, 6)
+	end)
+until KnitGotten
+repeat task.wait() until debug.getupvalue(KnitClient.Start, 1) == true
+local InventoryUtil = require(repstorage.TS.inventory["inventory-util"]).InventoryUtil
+bedwars = {
+	AnimationType = require(repstorage.TS.animation["animation-type"]).AnimationType,
+	AnimationUtil = require(repstorage["rbxts_include"]["node_modules"]["@easy-games"]["game-core"].out["shared"].util["animation-util"]).AnimationUtil,
+	AppController = require(repstorage["rbxts_include"]["node_modules"]["@easy-games"]["game-core"].out.client.controllers["app-controller"]).AppController,
+	AbilityController = Flamework.resolveDependency("@easy-games/game-core:client/controllers/ability/ability-controller@AbilityController"),
+	AttackRemote = getremote(debug.getconstants(getmetatable(KnitClient.Controllers.SwordController)["attackEntity"])),
+	BalloonController = KnitClient.Controllers.BalloonController,
+	BalanceFile = require(repstorage.TS.balance["balance-file"]).BalanceFile,
+	BatteryEffectController = KnitClient.Controllers.BatteryEffectsController,
+	BatteryRemote = getremote(debug.getconstants(debug.getproto(debug.getproto(KnitClient.Controllers.BatteryController.KnitStart, 1), 1))),
+	BlockBreaker = KnitClient.Controllers.BlockBreakController.blockBreaker,
+	BlockController = require(repstorage["rbxts_include"]["node_modules"]["@easy-games"]["block-engine"].out).BlockEngine,
+	BlockPlacer = require(repstorage["rbxts_include"]["node_modules"]["@easy-games"]["block-engine"].out.client.placement["block-placer"]).BlockPlacer,
+	BlockEngine = require(lplr.PlayerScripts.TS.lib["block-engine"]["client-block-engine"]).ClientBlockEngine,
+	BlockEngineClientEvents = require(repstorage["rbxts_include"]["node_modules"]["@easy-games"]["block-engine"].out.client["block-engine-client-events"]).BlockEngineClientEvents,
+	BlockPlacementController = KnitClient.Controllers.BlockPlacementController,
+	BowConstantsTable = debug.getupvalue(KnitClient.Controllers.ProjectileController.enableBeam, 5),
+	ProjectileController = KnitClient.Controllers.ProjectileController,
+	ChestController = KnitClient.Controllers.ChestController,
+	CannonHandController = KnitClient.Controllers.CannonHandController,
+	CannonAimRemote = getremote(debug.getconstants(debug.getproto(KnitClient.Controllers.CannonController.startAiming, 5))),
+	ClickHold = require(repstorage["rbxts_include"]["node_modules"]["@easy-games"]["game-core"].out.client.ui.lib.util["click-hold"]).ClickHold,
+	ClientHandler = require(repstorage.TS.remotes).default.Client,
+	ClientHandlerDamageBlock = require(repstorage["rbxts_include"]["node_modules"]["@easy-games"]["block-engine"].out.shared.remotes).BlockEngineRemotes.Client,
+	ClientStoreHandler = require(lplr.PlayerScripts.TS.ui.store).ClientStore,
+	CombatConstant = require(repstorage.TS.combat["combat-constant"]).CombatConstant,
+	CombatController = KnitClient.Controllers.CombatController,
+	ConstantManager = require(repstorage["rbxts_include"]["node_modules"]["@easy-games"]["game-core"].out["shared"].constant["constant-manager"]).ConstantManager,
+	ConsumeSoulRemote = getremote(debug.getconstants(KnitClient.Controllers.GrimReaperController.consumeSoul)),
+	DamageIndicator = KnitClient.Controllers.DamageIndicatorController.spawnDamageIndicator,
+	DamageIndicatorController = KnitClient.Controllers.DamageIndicatorController,
+	DefaultKillEffect = require(lplr.PlayerScripts.TS.controllers.game.locker["kill-effect"].effects["default-kill-effect"]),
+	DropItem = getmetatable(KnitClient.Controllers.ItemDropController).dropItemInHand,
+	DropItemRemote = getremote(debug.getconstants(getmetatable(KnitClient.Controllers.ItemDropController).dropItemInHand)),
+	DragonSlayerController = KnitClient.Controllers.DragonSlayerController,
+	DragonRemote = getremote(debug.getconstants(debug.getproto(debug.getproto(KnitClient.Controllers.DragonSlayerController.KnitStart, 2), 1))),
+	EatRemote = getremote(debug.getconstants(debug.getproto(getmetatable(KnitClient.Controllers.ConsumeController).onEnable, 1))),
+	EquipItemRemote = getremote(debug.getconstants(debug.getprotos(shared.oldequipitem or require(repstorage.TS.entity.entities["inventory-entity"]).InventoryEntity.equipItem)[3])),
+	EmoteMeta = require(repstorage.TS.locker.emote["emote-meta"]).EmoteMeta,
+	FishermanTable = KnitClient.Controllers.FishermanController,
+	FovController = KnitClient.Controllers.FovController,
+	GameAnimationUtil = require(repstorage.TS.animation["animation-util"]).GameAnimationUtil,
+	EntityUtil = require(repstorage.TS.entity["entity-util"]).EntityUtil,
+	getIcon = function(item, showinv)
+		local itemmeta = bedwars.ItemTable[item.itemType]
+		if itemmeta and showinv then
+			return itemmeta.image
+		end
+		return ""
+	end,
+	getInventory = function(plr)
+		local suc, result = pcall(function() 
+			return InventoryUtil.getInventory(plr) 
+		end)
+		return (suc and result or {
+			items = {},
+			armor = {},
+			hand = nil
+		})
+	end,
+	GrimReaperController = KnitClient.Controllers.GrimReaperController,
+	GuitarHealRemote = getremote(debug.getconstants(KnitClient.Controllers.GuitarController.performHeal)),
+	HangGliderController = KnitClient.Controllers.HangGliderController,
+	HighlightController = KnitClient.Controllers.EntityHighlightController,
+	ItemTable = debug.getupvalue(require(repstorage.TS.item["item-meta"]).getItemMeta, 1),
+	KatanaController = KnitClient.Controllers.DaoController,
+	KnockbackUtil = require(repstorage.TS.damage["knockback-util"]).KnockbackUtil,
+	LobbyClientEvents = KnitClient.Controllers.QueueController,
+	MapController = KnitClient.Controllers.MapController,
+	MinerRemote = getremote(debug.getconstants(debug.getproto(getmetatable(KnitClient.Controllers.MinerController).onKitEnabled, 1))),
+	MageRemote = getremote(debug.getconstants(debug.getproto(KnitClient.Controllers.MageController.registerTomeInteraction, 1))),
+	MageKitUtil = require(repstorage.TS.games.bedwars.kit.kits.mage["mage-kit-util"]).MageKitUtil,
+	MageController = KnitClient.Controllers.MageController,
+	MissileController = KnitClient.Controllers.GuidedProjectileController,
+	PickupMetalRemote = getremote(debug.getconstants(debug.getproto(KnitClient.Controllers.MetalDetectorController.KnitStart, 1))),
+	PickupRemote = getremote(debug.getconstants(getmetatable(KnitClient.Controllers.ItemDropController).checkForPickup)),
+	ProjectileMeta = require(repstorage.TS.projectile["projectile-meta"]).ProjectileMeta,
+	ProjectileRemote = getremote(debug.getconstants(debug.getupvalues(getmetatable(KnitClient.Controllers.ProjectileController)["launchProjectileWithValues"])[2])),
+	QueryUtil = require(repstorage["rbxts_include"]["node_modules"]["@easy-games"]["game-core"].out).GameQueryUtil,
+	QueueCard = require(lplr.PlayerScripts.TS.controllers.global.queue.ui["queue-card"]).QueueCard,
+	QueueMeta = require(repstorage.TS.game["queue-meta"]).QueueMeta,
+	RavenTable = KnitClient.Controllers.RavenController,
+	RelicController = KnitClient.Controllers.RelicVotingController,
+	ReportRemote = getremote(debug.getconstants(require(lplr.PlayerScripts.TS.controllers.global.report["report-controller"]).default.reportPlayer)),
+	ResetRemote = getremote(debug.getconstants(debug.getproto(KnitClient.Controllers.ResetController.createBindable, 1))),
+	Roact = require(repstorage["rbxts_include"]["node_modules"]["@rbxts"]["roact"].src),
+	RuntimeLib = require(repstorage["rbxts_include"].RuntimeLib),
+	Shop = require(repstorage.TS.games.bedwars.shop["bedwars-shop"]).BedwarsShop,
+	ShopItems = debug.getupvalue(debug.getupvalue(require(repstorage.TS.games.bedwars.shop["bedwars-shop"]).BedwarsShop.getShopItem, 1), 2),
+	SoundList = require(repstorage.TS.sound["game-sound"]).GameSound,
+	SoundManager = require(repstorage["rbxts_include"]["node_modules"]["@easy-games"]["game-core"].out).SoundManager,
+	SpawnRavenRemote = getremote(debug.getconstants(getmetatable(KnitClient.Controllers.RavenController).spawnRaven)),
+	SprintController = KnitClient.Controllers.SprintController,
+	StopwatchController = KnitClient.Controllers.StopwatchController,
+	SwordController = KnitClient.Controllers.SwordController,
+	TreeRemote = getremote(debug.getconstants(debug.getprotos(debug.getprotos(KnitClient.Controllers.BigmanController.KnitStart)[3])[1])),
+	TrinityRemote = getremote(debug.getconstants(debug.getproto(getmetatable(KnitClient.Controllers.AngelController).onKitEnabled, 1))),
+	ViewmodelController = KnitClient.Controllers.ViewmodelController,
+	WeldTable = require(repstorage.TS.util["weld-util"]).WeldUtil,
+	ZephyrController = KnitClient.Controllers.WindWalkerController
+}
+local networkownertick = tick()
+local matchState = 0
+local connectionstodisconnect = {}
+local queueType = "bedwars_test"
+local currentinventory = {
+	inventory = {
+		items = {},
+		armor = {},
+		hand = nil
+	}
+}
+
+
+local function getSpeedMultiplier(reduce)
+	local speed = 1
+	if lplr.Character then 
+		local SpeedDamageBoost = lplr.Character:GetAttribute("SpeedBoost")
+		if SpeedDamageBoost and SpeedDamageBoost > 2 then 
+			speed = speed + (SpeedDamageBoost - 2)
+		end
+		if lplr.Character:GetAttribute("GrimReaperChannel") then 
+			speed = speed + 0.6
+		end
+		if lplr.Character:GetAttribute("SpeedPieBuff") then 
+			speed = speed + (bedwarsStore.queueType == "SURVIVAL" and 0.15 or 0.24)
+		end
+		local armor = bedwarsStore.localInventory.inventory.armor[3]
+		if type(armor) ~= "table" then armor = {itemType = ""} end
+		if armor.itemType == "speed_boots" then 
+			speed = speed + 1
+		end
+		if bedwarsStore.zephyrOrb ~= 0 then 
+			speed = speed + 1
+		end
+	end
+	return reduce and speed ~= 1 and math.max(speed * (0.8 - (0.3 * math.floor(speed))), 1) or speed
+end
+
+local FlyAnywayProgressBarFrame = Instance.new("Frame")
+FlyAnywayProgressBarFrame.AnchorPoint = Vector2.new(0.5, 0)
+FlyAnywayProgressBarFrame.Position = UDim2.new(0.5, 0, 1, -200)
+FlyAnywayProgressBarFrame.Size = UDim2.new(0.2, 0, 0, 20)
+FlyAnywayProgressBarFrame.BackgroundTransparency = 0.5
+FlyAnywayProgressBarFrame.BorderSizePixel = 0
+FlyAnywayProgressBarFrame.BackgroundColor3 = Color3.new(0, 0, 0)
+FlyAnywayProgressBarFrame.Visible = false
+FlyAnywayProgressBarFrame.Parent = GuiLibrary.MainGui
+local FlyAnywayProgressBarFrame2 = FlyAnywayProgressBarFrame:Clone()
+FlyAnywayProgressBarFrame2.AnchorPoint = Vector2.new(0, 0)
+FlyAnywayProgressBarFrame2.Position = UDim2.new(0, 0, 0, 0)
+FlyAnywayProgressBarFrame2.Size = UDim2.new(1, 0, 0, 20)
+FlyAnywayProgressBarFrame2.BackgroundTransparency = 0
+FlyAnywayProgressBarFrame2.Visible = true
+FlyAnywayProgressBarFrame2.Parent = FlyAnywayProgressBarFrame
+local FlyAnywayProgressBartext = Instance.new("TextLabel")
+FlyAnywayProgressBartext.Text = "2s"
+FlyAnywayProgressBartext.Font = Enum.Font.Gotham
+FlyAnywayProgressBartext.TextStrokeTransparency = 0
+FlyAnywayProgressBartext.TextColor3 =  Color3.new(0.9, 0.9, 0.9)
+FlyAnywayProgressBartext.TextSize = 20
+FlyAnywayProgressBartext.Size = UDim2.new(1, 0, 1, 0)
+FlyAnywayProgressBartext.BackgroundTransparency = 1
+FlyAnywayProgressBartext.Position = UDim2.new(0, 0, -1, 0)
+FlyAnywayProgressBartext.Parent = FlyAnywayProgressBarFrame
+local currenthand = {}
+local kit = ""
+connectionstodisconnect[#connectionstodisconnect + 1] = bedwars.ClientStoreHandler.changed:connect(function(p3, p4)
+	if p3.Game ~= p4.Game then 
+		matchState = p3.Game.matchState
+		queueType = p3.Game.queueType or "bedwars_test"
+	end
+	if p3.Kit ~= p4.Kit then 	
+		bedwars.BountyHunterTarget = p3.Kit.bountyHunterTarget
+	end
+	if p3.Bedwars ~= p4.Bedwars then 
+		kit = p3.Bedwars.kit ~= "none" and p3.Bedwars.kit or ""
+	end
+	if p3.Inventory ~= p4.Inventory then
+		currentinventory = p3.Inventory.observedInventory
+		local obj = p3.Inventory.observedInventory.inventory.hand
+		local typetext = ""
+		if obj then
+			local metatab = bedwars.ItemTable[obj.itemType]
+			typetext = metatab.sword and "sword" or metatab.block and "block" or obj.itemType:find("bow") and "bow"
+		end
+		currenthand = {tool = obj and obj.tool, Type = typetext, amount = obj and obj.amount or 0}
+	end
+end)
+
+GuiLibrary.RemoveObject("PanicOptionsButton")
+GuiLibrary.RemoveObject("MissileTPOptionsButton")
+GuiLibrary.RemoveObject("SwimOptionsButton")
+GuiLibrary.RemoveObject("AutoRelicOptionsButton")
+GuiLibrary.RemoveObject("RavenTPOptionsButton")
+GuiLibrary.RemoveObject("XrayOptionsButton")
+GuiLibrary.RemoveObject("SchematicaOptionsButton")
+GuiLibrary.RemoveObject("SafeWalkOptionsButton")
+GuiLibrary.RemoveObject("ChinaHatOptionsButton")
+GuiLibrary.RemoveObject("AutoBalloonOptionsButton")
+GuiLibrary.RemoveObject("AimAssistOptionsButton")
+GuiLibrary.RemoveObject("KitESPOptionsButton")
+GuiLibrary.RemoveObject("GamingChairOptionsButton")
+GuiLibrary.RemoveObject("SearchOptionsButton")
+GuiLibrary.RemoveObject("SongBeatsOptionsButton")
+GuiLibrary.RemoveObject("ArrowsOptionsButton")
+GuiLibrary.RemoveObject("AutoToolOptionsButton")
+GuiLibrary.RemoveObject("FreecamOptionsButton")
+GuiLibrary.RemoveObject("FirewallBypassOptionsButton")
+GuiLibrary.RemoveObject("BedProtectorOptionsButton")
+GuiLibrary.RemoveObject("GameFixerOptionsButton")
+
+local GuiLibrary = shared.GuiLibrary
+local plrs = game.Players:GetPlayers()
+local hps_detected = {}
+local detected = {}
+local lplr = game.Players.LocalPlayer
+local setcallback = {}
+local hpsset = {}
+local InfFlyD = {["Enabled"] = false,}
+function char(v)
+	repeat task.wait() until v.Character
+	v.Character:WaitForChild("Humanoid").Changed:Connect(function ()
+		if v.Character:WaitForChild("Humanoid").Health ~= 100 then
+			if not hpsset[v.Name] then
+				hpsset[v.Name] = v.Character.Humanoid.Health
+			end
+			if hps_detected[v.Name] then
+				if not setcallback[v.Name] then setcallback[v.Name] = {} end
+				if hpsset[v.Name] >= v.Character.Humanoid.Health then
+					setcallback[v.Name][#setcallback[v.Name] + 1] = true;
+					hpsset[v.Name] = v.Character.Humanoid.Health
+				end
+				return
+			end
+			hps_detected[v.Name] = true;
+			task.wait(0.25)
+			local number = # (setcallback[v.Name] or {})
+			repeat task.wait()
+				for i,z in pairs(setcallback[v.Name] or {}) do
+					task.wait(0.25)
+					table.remove(setcallback[v.Name],i)
+				end
+			until # (setcallback[v.Name] or {}) == 0
+			task.wait(0.1)
+			hps_detected[v.Name] = false;
+		end
+	end)
+	local old
+	local my;
+	my = v.Character.Humanoid.Died:Connect(function()
+		repeat task.wait()
+			old = nil
+			task.wait()
+		until old == nil
+		my:Disconnect()
+	end)
+	local check;--,check2
+	local telepearlon = false
+	 check = v.Character.DescendantAdded:Connect(function(telepearl)
+	     if telepearl.Name == "telepearl" then
+	         telepearlon = true;
+	     end
+	 end)
+	 check2 = v.Character.DescendantRemoving:Connect(function(telepearl)
+	     if telepearl.Name == "telepearl" then
+	         telepearlon = false;
+	     end
+	 end)
+	v:GetAttributeChangedSignal("LastTeleported"):Connect(function()
+		if (workspace:GetServerTimeNow() - lplr:GetAttribute("LastTeleported")) < 3 then
+			telepearlon = true
+			task.wait(2)
+			telepearlon = false;
+		end
+	end)
+	while task.wait(0.1) do
+		repeat task.wait() until v.Character
+		 local root = v.Character:WaitForChild("HumanoidRootPart")
+		 local total = (root.Velocity.X < 0 and -root.Velocity.X or root.Velocity.X) + (root.Velocity.Z < 0 and -root.Velocity.Z or root.Velocity.Z)
+		 local a = (root.Position.Y < 0 and -root.Position.Y or root.Position.Y) * (root.Parent.Humanoid.MoveDirection.Y == 0 and 1 or root.Parent.Humanoid.MoveDirection.Y + 1)
+		 if (total > (a + ((total * .5)) or root:FindFirstChild("BodyVelocity"))
+		 	and (detected[v.Name] == false or detected[v.Name] == nil) and (not hps_detected[v.Name])-- and v ~= lplr
+		 	and root.Position.Y <= 300) then
+		 	detected[v.Name] = true;
+		 	createwarning("Purple theme Private","Vape User Detected : Fly or Speed detected on "..v.Name,3)
+		 	shared.clients.ClientUsers[v.Name] = "VAPE USER"
+		 	break
+		 end
+		local root = v.Character:WaitForChild("HumanoidRootPart")
+		if old then
+			local pos = root.Position
+			local x,y,z = (pos.X < 0 and -pos.X or pos.X),(pos.Y < 0 and -pos.Y or pos.Y),(pos.Z < 0 and -pos.Z or pos.Z)
+			local ox,oy,oz = (old.X < 0 and -old.X or old.X),(old.Y < 0 and -old.Y or old.Y),(old.Z < 0 and -old.Z or old.Z)
+			local hecker
+			if ox + (v.Character.Humanoid.WalkSpeed * 0.8) < x then
+				hecker = true
+				 elseif oy + (v.Character.Humanoid.WalkSpeed * 0.625) < y then
+				 	hecker = true
+			elseif oz + (v.Character.Humanoid.WalkSpeed * 0.8) < z then
+				hecker = true
+			end
+			if hecker and not detected[v.Name] and v ~= game.Players.LocalPlayer
+				and bedwarsStore.matchState ~= 0 and not bedwarsStore.secs and not telepearlon
+				and not hps_detected[v.Name]  then
+				detected[v.Name] = true;
+				task.wait(0.1)
+				if telepearlon then continue end
+				if telepearlon or not (game.Players.LocalPlayer.Character and game.Players.LocalPlayer:FindFirstChild("HumanoidRootPart")) then
+				else
+					createwarning("Purple theme","Vape User Detected : Fly or Speed detected on "..v.Name,3)
+					shared.clients.ClientUsers[v.Name] = "VAPE USER"
+					break
+				end
+			end
+			if InfFlyD.Enabled and y > 2000 then
+				createwarning("Purple theme Private","inf fly detected on "..v.Name.." he do be skidding",3)
+				shared.clients.ClientUsers[v.Name] = "VAPE USER"
+				break
+			end 
+			if v == game.Players.LocalPlayer then break end
+		end
+		old = root.Position
+	end
+end
+local Detection;Detection = GuiLibrary.ObjectsThatCanBeSaved.WorldWindow.Api.CreateOptionsButton({
+	Name = "Vape User Detection",
+	Function = function (enabled)
+		if enabled then
+			task.spawn(function()
+				for i,v in pairs(plrs) do
+					task.spawn(function ()
+						char(v)
+					end)
+					task.spawn(function ()
+						v.CharacterAdded:Connect(function ()
+							task.wait(5)
+							char(v)
+						end)
+					end)
+				end
+				game.Players.PlayerAdded:Connect(function(v)
+					task.wait(5)
+					char(v)
+				end)
+			end)
+		end
+	end,
+})
+InfFlyD = Detection.CreateToggle({
+	Name = "Inf Fly detector",
+	Function = function() end,
+})
+
+local BetterJump2 = {["Enabled"] = false}
+BetterJump2 = GuiLibrary["ObjectsThatCanBeSaved"]["BlatantWindow"]["Api"].CreateOptionsButton({
+		["Name"] = "CFrameHighJump",
+		["HoverText"] = "uses CFrame to highjump",
+		["Function"] = function(v)
+		betterjump = v
+		if betterjump then
+		Workspace.Gravity = 0
+		lplr.Character.HumanoidRootPart.CFrame = lplr.Character.HumanoidRootPart.CFrame + Vector3.new(0, -8, 0)
+		spawn(function()
+					repeat
+		if (not betterjump) then return end
+		Workspace.Gravity = 0
+		lplr.Character.HumanoidRootPart.CFrame = lplr.Character.HumanoidRootPart.CFrame + Vector3.new(0, 16, 0)
+		task.wait(0.05)
+		lplr.Character.HumanoidRootPart.CFrame = lplr.Character.HumanoidRootPart.CFrame + Vector3.new(0, 8, 0)
+		until (not betterjump) 
+			end)	
+		else
+		Workspace.Gravity = 196.2
+		end
+	end
+})
+
+
+local Sky = GuiLibrary["ObjectsThatCanBeSaved"]["RenderWindow"]["Api"].CreateOptionsButton({
+    ["Name"] = "NightTime",
+    ["Function"] = function(v)
+        if v then
+            game.Lighting.Sky.SkyboxBk = "http://www.roblox.com/Asset/?ID=12064107"
+            game.Lighting.Sky.SkyboxDn = "http://www.roblox.com/Asset/?ID=12064152"
+            game.Lighting.Sky.SkyboxFt = "http://www.roblox.com/Asset/?ID=12064121"
+            game.Lighting.Sky.SkyboxLf = "http://www.roblox.com/Asset/?ID=12063984"
+            game.Lighting.Sky.SkyboxRt = "http://www.roblox.com/Asset/?ID=12064115"
+            game.Lighting.Sky.SkyboxUp = "http://www.roblox.com/Asset/?ID=12064131"
+        end
+    end
+})
+
+
+local Sky2 = GuiLibrary["ObjectsThatCanBeSaved"]["RenderWindow"]["Api"].CreateOptionsButton({
+    ["Name"] = "NightTime 2",
+    ["Function"] = function(v)
+        if v then
+            game.Lighting.Sky.SkyboxBk = "http://www.roblox.com/Asset/?ID=154185004"
+            game.Lighting.Sky.SkyboxDn = "http://www.roblox.com/Asset/?ID=154184960"
+            game.Lighting.Sky.SkyboxFt = "http://www.roblox.com/Asset/?ID=154185021"
+            game.Lighting.Sky.SkyboxLf = "http://www.roblox.com/Asset/?ID=154184943"
+            game.Lighting.Sky.SkyboxRt = "http://www.roblox.com/Asset/?ID=154184972"
+            game.Lighting.Sky.SkyboxUp = "http://www.roblox.com/Asset/?ID=154185031"
+        end
+    end
+})
+
+
+local Sky3 = GuiLibrary["ObjectsThatCanBeSaved"]["RenderWindow"]["Api"].CreateOptionsButton({
+    ["Name"] = "NightTime 3",
+    ["Function"] = function(v)
+        if v then
+            game.Lighting.Sky.SkyboxBk = "http://www.roblox.com/Asset/?ID=15983968922"
+            game.Lighting.Sky.SkyboxDn = "http://www.roblox.com/Asset/?ID=15983966825"
+            game.Lighting.Sky.SkyboxFt = "http://www.roblox.com/Asset/?ID=15983965025"
+            game.Lighting.Sky.SkyboxLf = "http://www.roblox.com/Asset/?ID=15983967420"
+            game.Lighting.Sky.SkyboxRt = "http://www.roblox.com/Asset/?ID=15983966246"
+            game.Lighting.Sky.SkyboxUp = "http://www.roblox.com/Asset/?ID=15983964246"
+        end
+    end
+})
+
+local SkyTP = {["Enabled"] = false}
+SkyTP =
+    GuiLibrary["ObjectsThatCanBeSaved"]["BlatantWindow"]["Api"].CreateOptionsButton(
+    {
+        ["Name"] = "SkyTp",
+        ["HoverText"] = "Puts you into the sky",
+        ["Function"] = function(v)
+            Skytp = v
+            if Skytp then
+                lplr.Character.HumanoidRootPart.CFrame =
+                    lplr.Character.HumanoidRootPart.CFrame + Vector3.new(0, Skyp["Value"], 0)
+                Workspace.Gravity = 0
+                wait(Skyd["Value"])
+                Workspace.Gravity = Skyg["Value"]
+            else
+                Workspace.Gravity = 196.2
+            end
+        end
+    }
+)
+Skyp =
+    SkyTP.CreateSlider(
+    {
+        ["Name"] = "Position",
+        ["Min"] = 100,
+        ["Max"] = 1000,
+        ["Function"] = function(val)
+        end,
+        ["Default"] = 1000
+    }
+)
+Skyd =
+    SkyTP.CreateSlider(
+    {
+        ["Name"] = "Delay",
+        ["Min"] = 0,
+        ["Max"] = 3,
+        ["Function"] = function(val)
+        end,
+        ["Default"] = 3
+    }
+)
+Skyg =
+    SkyTP.CreateSlider(
+    {
+        ["Name"] = "Gravity",
+        ["Min"] = 0,
+        ["Max"] = 196,
+        ["Function"] = function(val)
+        end,
+        ["Default"] = 196
+    }
+)
+
+runcode(function()
+    local hasTeleported = false
+    local TweenService = game:GetService("TweenService")
+
+    function findNearestPlayer()
+        local nearestPlayer = nil
+        local minDistance = math.huge
+
+        for _,v in pairs(game.Players:GetPlayers()) do
+            if v ~= lplr and v.Character and v.Character:FindFirstChild("HumanoidRootPart") and v.Team ~= lplr.Team and v.Character:FindFirstChild("Humanoid").Health > 0 then
+                local distance = (v.Character.HumanoidRootPart.Position - lplr.Character.HumanoidRootPart.Position).magnitude
+                if distance < minDistance then
+                    nearestPlayer = v
+                    minDistance = distance
+                end
+            end
+        end
+        return nearestPlayer
+    end
+
+
+    function tweenToNearestPlayer()
+        local nearestPlayer = findNearestPlayer()
+        if nearestPlayer and not hasTeleported then
+            hasTeleported = true
+
+            local tweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, 0, false, 0)
+
+            local tween = TweenService:Create(lplr.Character.HumanoidRootPart, TweenInfo.new(0.98), {CFrame = nearestPlayer.Character.HumanoidRootPart.CFrame + Vector3.new(1, 8, 1)})
+            tween:Play()
+        end
+    end
+
+    PlayerTp = GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
+        Name = "PlayerTp",
+        Function = function(callback)
+            if callback then
+                lplr.Character:FindFirstChildOfClass("Humanoid"):ChangeState(Enum.HumanoidStateType.Dead)
+                lplr.CharacterAdded:Connect(function()
+                    wait(0.2)
+                    tweenToNearestPlayer()
+                end)
+                hasTeleported = false
+                PlayerTp["ToggleButton"](false)
+            end
+        end,
+        ["HoverText"] = "Little flags will tween to a player"
+    })
+end)
+
+runcode(function()
+    local hasTeleported = false
+    local TweenService = game:GetService("TweenService")
+
+    function findNearestBed()
+        local nearestBed = nil
+        local minDistance = math.huge
+
+        for _,v in pairs(game.Workspace:GetDescendants()) do
+            if v.Name:lower() == "bed" and v:FindFirstChild("Covers") and v:FindFirstChild("Covers").BrickColor ~= lplr.Team.TeamColor then
+                local distance = (v.Position - lplr.Character.HumanoidRootPart.Position).magnitude
+                if distance < minDistance then
+                    nearestBed = v
+                    minDistance = distance
+                end
+            end
+        end
+        return nearestBed
+    end
+    function tweenToNearestBed()
+        local nearestBed = findNearestBed()
+        if nearestBed and not hasTeleported then
+            hasTeleported = true
+
+            local tweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, 0, false, 0)
+
+            local tween = TweenService:Create(lplr.Character.HumanoidRootPart, TweenInfo.new(0.93), {CFrame = nearestBed.CFrame + Vector3.new(3, 55, 3)})
+            tween:Play()
+        end
+    end
+    BedTpv3 = GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
+        Name = "BedTpv3",
+        Function = function(callback)
+            if callback then
+                lplr.Character:FindFirstChildOfClass("Humanoid"):ChangeState(Enum.HumanoidStateType.Dead)
+                lplr.CharacterAdded:Connect(function()
+                    wait(0.3) 
+                    tweenToNearestBed()
+                end)
+                hasTeleported = false
+                BedTpv3["ToggleButton"](false)
+            end
+        end,
+        ["HoverText"] = "Tweening you to a bed"
+    })
+end)
+
+runcode(function()
+    local ScytheDisabler = {Enabled = false}
+    ScytheDisabler = GuiLibrary.ObjectsThatCanBeSaved.CombatWindow.Api.CreateOptionsButton({
+        Name = "Scythe Disabler",
+        Function = function(callback)
+            if callback then
+                local runService = game:GetService('RunService')
+                
+                runService.Heartbeat:Connect(function()
+                    local args = {
+                        [1] = {
+                            ["direction"] = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame.LookVector
+                        }
+                    }
+                    
+                    game:GetService("ReplicatedStorage").rbxts_include.node_modules["@rbxts"].net.out._NetManaged.ScytheDash:FireServer(unpack(args))
+                end)
+            end
+        end,
+        Hovertext = "Scythe Disabler Highest speed 60 'old' "
+    })
+end)
+
+runcode(function()
+    local Leap = GuiLibrary.ObjectsThatCanBeSaved.CombatWindow.Api.CreateOptionsButton({
+        Name = "Leap",
+        Function = function(callback)
+            if callback then
+                local player = game.Players.LocalPlayer
+                local character = player.Character
+                local humanoidRootPart = character and character:FindFirstChild("HumanoidRootPart")
+                if humanoidRootPart then
+                    humanoidRootPart.Velocity = Vector3.new(0, 400, 0)
+                end
+            end
+        end,
+        Hovertext = "Will allow you to leap far"
+    })
+end)
+
+createwarning("Purple Theme","Fully loaded",5)
