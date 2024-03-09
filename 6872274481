@@ -1013,55 +1013,67 @@ runcode(function()
     })
 end)
 
-test = GuiLibrary["ObjectsThatCanBeSaved"]["BlatantWindow"]["Api"].CreateOptionsButton(
-{
-    ["Name"] = "distance",
-    ["HoverText"] = "in beta2",
-    ["Function"] = function(v)
-        distance = v
-        if distance then
-            local RunService = game:GetService("RunService")
+local distance = 3 -- Default distance
 
-            local function teleportBehindNearestPlayer()
-                local nearestPlayer = nil
-                local minDistance = math.huge
-
-                for _, player in ipairs(game.Players:GetPlayers()) do
-                    if player ~= game.Players.LocalPlayer and player.Character and player.Character:FindFirstChild("Humanoid") and player.Character.Humanoid.Health > 0 then
-                        local dist = (player.Character.HumanoidRootPart.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).magnitude
-                        if dist < minDistance then
-                            minDistance = dist
-                            nearestPlayer = player
+GuiLibrary["ObjectsThatCanBeSaved"]["BlatantWindow"]["Api"].CreateOptionsButton(
+    {
+        ["Name"] = "Teleport Behind Player",
+        ["HoverText"] = "Teleport behind the nearest player within this distance",
+        ["Function"] = function(v)
+            distance = v
+            if distance then
+                -- Code to teleport behind player
+                local player = game.Players.LocalPlayer
+                local character = player.Character or player.CharacterAdded:Wait()
+                local humanoid = character:WaitForChild("Humanoid")
+                
+                local function findNearestPlayer()
+                    local minDist = math.huge
+                    local nearestPlayer = nil
+                
+                    for _, otherPlayer in pairs(game.Players:GetPlayers()) do
+                        if otherPlayer ~= player then
+                            local otherCharacter = otherPlayer.Character
+                            if otherCharacter then
+                                local dist = (otherCharacter.HumanoidRootPart.Position - character.HumanoidRootPart.Position).Magnitude
+                                if dist < minDist and dist <= 15 then
+                                    minDist = dist
+                                    nearestPlayer = otherPlayer
+                                end
+                            end
                         end
                     end
+                
+                    return nearestPlayer
                 end
-
-                if nearestPlayer then
-                    local direction = (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - nearestPlayer.Character.HumanoidRootPart.Position).unit
-                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(nearestPlayer.Character.HumanoidRootPart.Position - direction * 3)
+                
+                local targetPlayer = findNearestPlayer()
+                
+                if targetPlayer then
+                    local targetCharacter = targetPlayer.Character
+                    if targetCharacter then
+                        local direction = (targetCharacter.HumanoidRootPart.Position - character.HumanoidRootPart.Position).Unit
+                        local teleportPosition = targetCharacter.HumanoidRootPart.Position - (distance * direction)
+                        
+                        character:SetPrimaryPartCFrame(CFrame.new(teleportPosition))
+                    end
                 end
+            else
+                Workspace.Gravity = 196.2
             end
-
-            local teleportHandle = RunService.RenderStepped:Connect(teleportBehindNearestPlayer)
-            teleportBehindNearestPlayer()
-
-            RunService.Stepped:Wait() -- Wait for the next step to start the loop
-            teleportHandle:Disconnect() -- Disconnect the handle to stop the loop
-        else
-            Workspace.Gravity = 196.2
         end
-    end
-}
+    }
 )
-Space =
-    test.CreateSlider(
+
+local Space = test.CreateSlider(
     {
         ["Name"] = "Space",
         ["Min"] = 0,
         ["Max"] = 5,
         ["Function"] = function(val)
+            distance = val
         end,
-        ["Default"] = 3
+        ["Default"] = distance
     }
 )
 
