@@ -1013,14 +1013,12 @@ runcode(function()
     })
 end)
 
-local distance = 3 -- Default distance
-
 GuiLibrary["ObjectsThatCanBeSaved"]["BlatantWindow"]["Api"].CreateOptionsButton(
     {
         ["Name"] = "Teleport Behind Player",
         ["HoverText"] = "Teleport behind the nearest player within this distance",
         ["Function"] = function(v)
-            distance = v
+            distance = dis["Value"] -- Update distance based on the Skyg value
             if distance then
                 -- Code to teleport behind player
                 local player = game.Players.LocalPlayer
@@ -1071,7 +1069,7 @@ local Space = test.CreateSlider(
         ["Min"] = 0,
         ["Max"] = 5,
         ["Function"] = function(val)
-            distance = val
+            dis["Value"] = val -- Update the Skyg value based on the slider
         end,
         ["Default"] = distance
     }
