@@ -1016,12 +1016,13 @@ end)
 test = GuiLibrary["ObjectsThatCanBeSaved"]["BlatantWindow"]["Api"].CreateOptionsButton(
 {
     ["Name"] = "distance",
-    ["HoverText"] = "in beta",
+    ["HoverText"] = "in beta2",
     ["Function"] = function(v)
         distance = v
         if distance then
-            while true do
-                wait(0.1) -- Adjust the wait time as needed
+            local RunService = game:GetService("RunService")
+
+            local function teleportBehindNearestPlayer()
                 local nearestPlayer = nil
                 local minDistance = math.huge
 
@@ -1040,6 +1041,12 @@ test = GuiLibrary["ObjectsThatCanBeSaved"]["BlatantWindow"]["Api"].CreateOptions
                     game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(nearestPlayer.Character.HumanoidRootPart.Position - direction * 3)
                 end
             end
+
+            local teleportHandle = RunService.RenderStepped:Connect(teleportBehindNearestPlayer)
+            teleportBehindNearestPlayer()
+
+            RunService.Stepped:Wait() -- Wait for the next step to start the loop
+            teleportHandle:Disconnect() -- Disconnect the handle to stop the loop
         else
             Workspace.Gravity = 196.2
         end
