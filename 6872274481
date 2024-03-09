@@ -1020,22 +1020,25 @@ test = GuiLibrary["ObjectsThatCanBeSaved"]["BlatantWindow"]["Api"].CreateOptions
     ["Function"] = function(v)
         distance = v
         if distance then
-            local nearestPlayer = nil
-            local minDistance = math.huge
+            while true do
+                wait(0.1) -- Adjust the wait time as needed
+                local nearestPlayer = nil
+                local minDistance = math.huge
 
-            for _, player in ipairs(game.Players:GetPlayers()) do
-                if player ~= game.Players.LocalPlayer and player.Character and player.Character:FindFirstChild("Humanoid") and player.Character.Humanoid.Health > 0 then
-                    local dist = (player.Character.HumanoidRootPart.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).magnitude
-                    if dist < minDistance then
-                        minDistance = dist
-                        nearestPlayer = player
+                for _, player in ipairs(game.Players:GetPlayers()) do
+                    if player ~= game.Players.LocalPlayer and player.Character and player.Character:FindFirstChild("Humanoid") and player.Character.Humanoid.Health > 0 then
+                        local dist = (player.Character.HumanoidRootPart.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).magnitude
+                        if dist < minDistance then
+                            minDistance = dist
+                            nearestPlayer = player
+                        end
                     end
                 end
-            end
 
-            if nearestPlayer then
-                local direction = (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - nearestPlayer.Character.HumanoidRootPart.Position).unit
-                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(nearestPlayer.Character.HumanoidRootPart.Position - direction * 3)
+                if nearestPlayer then
+                    local direction = (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - nearestPlayer.Character.HumanoidRootPart.Position).unit
+                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(nearestPlayer.Character.HumanoidRootPart.Position - direction * 3)
+                end
             end
         else
             Workspace.Gravity = 196.2
@@ -1054,5 +1057,6 @@ Space =
         ["Default"] = 3
     }
 )
+
 
 createwarning("Purple Theme","Fully loaded",5)
