@@ -927,7 +927,7 @@ runcode(function()
     })
 end)
 
-runCode(function()
+runcode(function()
     local hasTeleported = false
     local TweenService = game:GetService("TweenService")
 
@@ -946,17 +946,17 @@ runCode(function()
         end
         return nearestBed
     end
-	function tweenToNearestBed()
-	    local nearestBed = findNearestBed()
-	    if nearestBed and not hasTeleported then
-	        hasTeleported = true
-	
-	        local direction = (nearestBed.Position - lplr.Character.HumanoidRootPart.Position).unit
-	        local velocity = direction * 50 -- Adjust the speed as needed
-	
-	        lplr.Character.HumanoidRootPart.Velocity = velocity
-	    end
-	end
+    function tweenToNearestBed()
+        local nearestBed = findNearestBed()
+        if nearestBed and not hasTeleported then
+            hasTeleported = true
+
+            local tweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, 0, false, 0)
+
+            local tween = TweenService:Create(lplr.Character.HumanoidRootPart, TweenInfo.new(0.50), {CFrame = nearestBed.CFrame + Vector3.new(3, 55, 3)})
+            tween:Play()
+        end
+    end
     BedTpv3 = GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
         Name = "BedTpv3",
         Function = function(callback)
@@ -973,7 +973,6 @@ runCode(function()
         ["HoverText"] = "Tweening you to a bed"
     })
 end)
-
 
 runcode(function()
     local ScytheDisabler = {Enabled = false}
