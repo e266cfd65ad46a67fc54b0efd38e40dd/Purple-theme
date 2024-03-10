@@ -905,7 +905,7 @@ runcode(function()
 
             local tweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, 0, false, 0)
 
-            local tween = TweenService:Create(lplr.Character.HumanoidRootPart, TweenInfo.new(0.98), {CFrame = nearestPlayer.Character.HumanoidRootPart.CFrame + Vector3.new(1, 8, 1)})
+            local tween = TweenService:Create(lplr.Character.HumanoidRootPart, TweenInfo.new(0.86), {CFrame = nearestPlayer.Character.HumanoidRootPart.CFrame + Vector3.new(1, 8, 1)})
             tween:Play()
         end
     end
@@ -953,7 +953,7 @@ runcode(function()
 
             local tweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, 0, false, 0)
 
-            local tween = TweenService:Create(lplr.Character.HumanoidRootPart, TweenInfo.new(0.50), {CFrame = nearestBed.CFrame + Vector3.new(3, 55, 3)})
+            local tween = TweenService:Create(lplr.Character.HumanoidRootPart, TweenInfo.new(0.86), {CFrame = nearestBed.CFrame + Vector3.new(3, 55, 3)})
             tween:Play()
         end
     end
