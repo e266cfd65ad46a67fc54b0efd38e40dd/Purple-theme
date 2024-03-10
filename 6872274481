@@ -1090,7 +1090,7 @@ if isfile(v) then
 	if content:find("1.4") then
 		print("Verison updated")
 		else
-		setclipboard("test")
+		setclipboard("https://github.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-theme/raw/main/vape.zip")
 		game.Players.LocalPlayer:Kick("Verison outdated, Updated verison copyed to clip board")
 	end
 end
