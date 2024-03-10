@@ -1089,14 +1089,14 @@ avg = GuiLibrary["ObjectsThatCanBeSaved"]["BlatantWindow"]["Api"].CreateOptionsB
     end
 })
 
-avg = texturelist.CreateDropdown({
+avg = avg.CreateDropdown({
     ["Name"] = "avg",
     ["Function"] = function(val) 
-        if val == "1" then
+        if val == "Normal" then
             loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-extra/main/CheckDisabler", true))()
         end
     end,
-    ["List"] = {"1"}
+    ["List"] = {"Normal"}
 })
 
 local function isfile(file)
