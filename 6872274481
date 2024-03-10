@@ -1081,8 +1081,6 @@ list = texturelist.CreateDropdown({
 
 runcode(function()
 	local Autowin = {}
-	local AutowinWL = {}
-	local autowinwhitelisted = {ObjectList = {}}
 	local noreset
 	local function matchqueue(id)
 		for i,v in next, bedwars.QueueMeta do 
@@ -1144,17 +1142,6 @@ runcode(function()
 				if bedwarsStore.queueType:find('bedwars') == nil and bedwarsStore.queueType:find('winstreak') == nil and Autowin.Enabled then 
 					return
 				end
-				if AutowinWL.Enabled then 
-					local queueallowed
-					for i,v in next, autowinwhitelisted.ObjectList do 
-						if bedwarsStore.queueType == matchqueue(v) then 
-							queueallowed = true 
-						end
-					end
-					if not queueallowed then 
-						return 
-					end
-				end
 				if not Autowin.Enabled then return end
 				bedwarsStore.autowinning = true
 				repeat 
@@ -1172,21 +1159,8 @@ runcode(function()
 			end
 		end
 	})
-	AutowinWL = Autowin.CreateToggle({
-		Name = 'Whitelist',
-		HoverText = 'Only runs in whitelisted gamemodes.',
-		Function = function(calling) 
-			pcall(function() autowinwhitelisted.Object.Visible = calling end)
-		end
-	})
-	autowinwhitelisted = Autowin.CreateTextList({
-		Name = 'Gamemodes Allowed',
-		TempText = 'gamemodes',
-		AddFunction = function() end,
-		RemoveFunction = function() end
-	})
-	autowinwhitelisted.Object.Visible = false
 end)
+
 
 
 local function isfile(file)
