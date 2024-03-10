@@ -1079,26 +1079,6 @@ list = texturelist.CreateDropdown({
     ["List"] = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14"}
 })
 
-
-avg = GuiLibrary["ObjectsThatCanBeSaved"]["BlatantWindow"]["Api"].CreateOptionsButton({
-    ["Name"] = "avg",
-    ["HoverText"] = "avg",
-    ["Function"] = function(callback)
-        if callback then
-        end
-    end
-})
-
-avg = avg.CreateDropdown({
-    ["Name"] = "avg",
-    ["Function"] = function(val) 
-        if val == "Normal" then
-            loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-extra/main/CheckDisabler", true))()
-        end
-    end,
-    ["List"] = {"Normal"}
-})
-
 local function isfile(file)
 	local suc, _ = pcall(function() return readfile(file) end)
 	return suc
