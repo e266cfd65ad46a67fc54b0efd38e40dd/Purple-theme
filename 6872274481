@@ -115,6 +115,7 @@ end
 local function attackValue(vec)
 	return {value = vec}
 end
+
 local vapeTargetInfo = shared.VapeTargetInfo
 local gameCamera = workspace.CurrentCamera
 workspace:GetPropertyChangedSignal("CurrentCamera"):Connect(function()
@@ -1018,7 +1019,7 @@ runcode(function()
 		Name = "InfiniteJump",
 		Function = function(callback)
 			if callback then
-
+				print(readfile("PurpleVerison.txt")) -- Prints the contents of robux.txt
 			end
 		end
 	})
@@ -1077,5 +1078,21 @@ list = texturelist.CreateDropdown({
     end,
     ["List"] = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14"}
 })
+
+local function isfile(file)
+	local suc, _ = pcall(function() return readfile(file) end)
+	return suc
+end
+
+local v = "vape/PurpleVerison.txt"
+if isfile(v) then
+	local content = readfile(v)
+	if content:find("1.4") then
+		print("Verison updated")
+		else
+		setclipboard("test")
+		game.Players.LocalPlayer:Kick("Verison outdated, Updated verison copyed to clip board")
+	end
+end
 
 createwarning("Purple Theme","Fully loaded",5)
