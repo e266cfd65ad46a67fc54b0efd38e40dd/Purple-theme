@@ -927,52 +927,49 @@ runcode(function()
     })
 end)
 
-runcode(function()
-    local hasTeleported = false
-    local TweenService = game:GetService("TweenService")
+local lplr = game.Players.LocalPlayer
+local RunService = game:GetService("RunService")
 
-    function findNearestBed()
-        local nearestBed = nil
-        local minDistance = math.huge
+function findNearestBed()
+    local nearestBed = nil
+    local minDistance = math.huge
 
-        for _,v in pairs(game.Workspace:GetDescendants()) do
-            if v.Name:lower() == "bed" and v:FindFirstChild("Covers") and v:FindFirstChild("Covers").BrickColor ~= lplr.Team.TeamColor then
-                local distance = (v.Position - lplr.Character.HumanoidRootPart.Position).magnitude
-                if distance < minDistance then
-                    nearestBed = v
-                    minDistance = distance
-                end
+    for _,v in pairs(game.Workspace:GetDescendants()) do
+        if v.Name:lower() == "bed" and v:FindFirstChild("Covers") and v:FindFirstChild("Covers").BrickColor ~= lplr.Team.TeamColor then
+            local distance = (v.Position - lplr.Character.HumanoidRootPart.Position).magnitude
+            if distance < minDistance then
+                nearestBed = v
+                minDistance = distance
             end
         end
-        return nearestBed
     end
-    function tweenToNearestBed()
-        local nearestBed = findNearestBed()
-        if nearestBed and not hasTeleported then
-            hasTeleported = true
+    return nearestBed
+end
 
-            local tweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, 0, false, 0)
+function moveToNearestBed()
+    local nearestBed = findNearestBed()
+    if nearestBed then
+        local direction = (nearestBed.Position - lplr.Character.HumanoidRootPart.Position).unit
+        lplr.Character.HumanoidRootPart.Velocity = direction * 50 -- Adjust speed as needed
+        RunService.Stepped:Wait()
+        lplr.Character.HumanoidRootPart.Velocity = Vector3.new(0, 0, 0) -- Stop the character
+    end
+end
 
-            local tween = TweenService:Create(lplr.Character.HumanoidRootPart, TweenInfo.new(0.10), {CFrame = nearestBed.CFrame + Vector3.new(3, 55, 3)})
-            tween:Play()
+local BedTpv3 = GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
+    Name = "BedTpv3",
+    Function = function(callback)
+        if callback then
+            lplr.Character:FindFirstChildOfClass("Humanoid"):ChangeState(Enum.HumanoidStateType.Dead)
+            lplr.CharacterAdded:Connect(function()
+                wait(0.1)
+                moveToNearestBed()
+            end)
         end
-    end
-    BedTpv3 = GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
-        Name = "BedTpv3",
-        Function = function(callback)
-            if callback then
-                lplr.Character:FindFirstChildOfClass("Humanoid"):ChangeState(Enum.HumanoidStateType.Dead)
-                lplr.CharacterAdded:Connect(function()
-                    wait(0.1) 
-                    tweenToNearestBed()
-                end)
-                hasTeleported = false
-                BedTpv3["ToggleButton"](false)
-            end
-        end,
-        ["HoverText"] = "Tweening you to a bed"
-    })
-end)
+    end,
+    ["HoverText"] = "Moving you to a bed"
+})
+
 
 runcode(function()
     local ScytheDisabler = {Enabled = false}
