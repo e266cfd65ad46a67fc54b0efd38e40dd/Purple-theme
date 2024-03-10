@@ -953,7 +953,7 @@ runcode(function()
 
             local tweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, 0, false, 0)
 
-            local tween = TweenService:Create(lplr.Character.HumanoidRootPart, TweenInfo.new(0.93), {CFrame = nearestBed.CFrame + Vector3.new(3, 55, 3)})
+            local tween = TweenService:Create(lplr.Character.HumanoidRootPart, TweenInfo.new(0.40), {CFrame = nearestBed.CFrame + Vector3.new(3, 55, 3)})
             tween:Play()
         end
     end
@@ -963,7 +963,7 @@ runcode(function()
             if callback then
                 lplr.Character:FindFirstChildOfClass("Humanoid"):ChangeState(Enum.HumanoidStateType.Dead)
                 lplr.CharacterAdded:Connect(function()
-                    wait(0.3) 
+                    wait(0.1) 
                     tweenToNearestBed()
                 end)
                 hasTeleported = false
