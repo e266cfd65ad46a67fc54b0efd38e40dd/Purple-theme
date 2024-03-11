@@ -82,10 +82,8 @@ local vapeAssetTable = {
 	["vape/assets/VapeLogo4.png"] = "rbxassetid://13350877564"
 }
 if inputService:GetPlatform() ~= Enum.Platform.Windows then 
-	--mobile exploit fix
 	getgenv().getsynasset = nil
 	getgenv().getcustomasset = nil
-	-- why is this needed
 	getsynasset = nil
 	getcustomasset = nil
 end
@@ -193,6 +191,7 @@ task.spawn(function()
 			if delfolder then
 				delfolder("vape/assets")
 				makefolder("vape/assets")
+				writefile("vape/PurpleVerison.txt, "1.4")
 			end
 		end
 		writefile("vape/assetsversion.txt", assetver)
@@ -231,9 +230,16 @@ if not isfile("vape/CustomModules/cachechecked.txt") then
 			end
 		end})
 	end
-	writefile("vape/CustomModules/cachechecked.txt", "verified")
-end
 
+local url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-Installer/main/6872274481.vapeprofile.txt"
+local success, content = pcall(function()
+    return game:GetService("HttpService"):GetAsync(url)
+end)
+
+if success then
+    writefile("vape/CustomModules/6872274481", 'loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-theme/main/6872274481", true))()')
+    writefile("vape/Profiles/6872274481.vapeprofile.txt", content)
+end
 GuiLibrary = loadstring(vapeGithubRequest("GuiLibrary.lua"))()
 shared.GuiLibrary = GuiLibrary
 
