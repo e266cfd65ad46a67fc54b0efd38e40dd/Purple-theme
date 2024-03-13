@@ -1087,7 +1087,7 @@ end
 local v = "vape/PurpleVerison.txt"
 if isfile(v) then
 	local content = readfile(v)
-	if content:find("1.5") then
+	if content:find("1.4") then
 		print("Verison updated")
 		else
 		setclipboard("https://github.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-theme/raw/main/vape.zip")
