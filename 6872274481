@@ -1079,34 +1079,6 @@ list = texturelist.CreateDropdown({
     ["List"] = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14"}
 })
 
-test = GuiLibrary["ObjectsThatCanBeSaved"]["BlatantWindow"]["Api"].CreateOptionsButton({
-    ["Name"] = "test",
-    ["HoverText"] = "Just test",
-    ["Function"] = function(callback)
-        local function getSpeedMultiplier(reduce)
-            local speed = 1
-            if lplr.Character then 
-                local SpeedDamageBoost = lplr.Character:GetAttribute("SpeedBoost")
-                if SpeedDamageBoost and SpeedDamageBoost > 5 then 
-                    speed = speed + (SpeedDamageBoost - 5)
-                end
-                -- Apply temporary speed boost
-                if speed > 1 then
-                    -- Set the player's humanoid walk speed to 50 studs
-                    lplr.Character.Humanoid.WalkSpeed = 50
-                    -- Wait for 1 second
-                    wait(1)
-                    -- Restore the player's original walk speed
-                    lplr.Character.Humanoid.WalkSpeed = 16 -- Default walk speed is usually around 16 studs
-                end
-            end
-            return reduce and speed ~= 1 and math.max(speed * (0.8 - (0.3 * math.floor(speed))), 1) or speed
-        end
-        if callback then
-            callback()
-        end
-    end
-})
 local function isfile(file)
 	local suc, _ = pcall(function() return readfile(file) end)
 	return suc
