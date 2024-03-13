@@ -15,8 +15,6 @@ local ConfigBack5 = game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad4
 
 loadstring(game:HttpGet("https://raw.githubusercontent.com/7GrandDadPGN/VapeV4ForRoblox/main/NewMainScript.lua", true))()
 wait(20)
-GuiLibrary.SelfDestruct
-wait(2)
 game.Players.LocalPlayer:Kick("Rejoin in 10-15 seconds")
 wait(2)
 print("Stage 1 complete")
@@ -24,7 +22,7 @@ delfile("vape/CustomModules/6872274481.lua")
 delfile("vape/Universal.lua")
 writefile("vape/CustomModules/6872274481.lua", Modules)
 writefile("vape/Universal.lua", Versal)
-writefile("vape/PurpleVerison.txt", "1.5")
+writefile("vape/PurpleVerison.txt", "1.4")
 writefile("vape/Profiles/6872274481.vapeprofile.txt", ConfigMain)
 writefile("vape/Profiles/6872274481.vapeprofiles.txt", ConfigBack)
 writefile("vape/Profiles/1430993116GUIPositions.vapeprofile.txt", ConfigBack2)
