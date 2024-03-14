@@ -1034,50 +1034,102 @@ runcode(function()
 	end)         
 end)
 
-texturelist = GuiLibrary["ObjectsThatCanBeSaved"]["BlatantWindow"]["Api"].CreateOptionsButton({
-    ["Name"] = "Texture List",
-    ["HoverText"] = "Just texture packs",
-    ["Function"] = function(callback)
-        if callback then
+runcode(function()
+    texturelist = GuiLibrary["ObjectsThatCanBeSaved"]["BlatantWindow"]["Api"].CreateOptionsButton({
+        ["Name"] = "Texture List",
+        ["HoverText"] = "Just texture packs",
+        ["Function"] = function(callback)
+            if callback then
+            end
         end
-    end
-})
+    })
 
-list = texturelist.CreateDropdown({
-    ["Name"] = "Packs",
-    ["Function"] = function(val) 
-        if val == "1" then
-            loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/1", true))()
-        elseif val == "2" then
-			loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/2", true))()
-        elseif val == "3" then
-			loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/3", true))()
-        elseif val == "4" then
-			loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/4", true))()
-        elseif val == "5" then
-			loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/5", true))()
-        elseif val == "6" then
-			loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/6", true))()
-        elseif val == "7" then
-			loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/7", true))()
-        elseif val == "8" then
-			loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/8", true))()
-        elseif val == "9" then
-			loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/9", true))()
-        elseif val == "10" then
-			loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/10", true))()
-        elseif val == "11" then
-			loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/11", true))()
-        elseif val == "12" then
-			loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/12", true))()
-        elseif val == "13" then
-			loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/13", true))()
-        elseif val == "14" then
-			loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/14", true))()
+    list = texturelist.CreateDropdown({
+        ["Name"] = "Packs",
+        ["Function"] = function(val) 
+            if val == "1" then
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/1", true))()
+            elseif val == "2" then
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/2", true))()
+            elseif val == "3" then
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/3", true))()
+            elseif val == "4" then
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/4", true))()
+            elseif val == "5" then
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/5", true))()
+            elseif val == "6" then
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/6", true))()
+            elseif val == "7" then
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/7", true))()
+            elseif val == "8" then
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/8", true))()
+            elseif val == "9" then
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/9", true))()
+            elseif val == "10" then
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/10", true))()
+            elseif val == "11" then
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/11", true))()
+            elseif val == "12" then
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/12", true))()
+            elseif val == "13" then
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/13", true))()
+            elseif val == "14" then
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/14", true))()
+            end
+        end,
+        ["List"] = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14"}
+    })
+end)
+
+
+runcode(function()
+    Scyth = GuiLibrary["ObjectsThatCanBeSaved"]["BlatantWindow"]["Api"].CreateOptionsButton({
+        ["Name"] = "Scyth",
+        ["HoverText"] = "Scy ",
+        ["Function"] = function(callback)
+            local fast_hit = {Enabled = false}
+            local fast_hit_mode = {Value = 'Attack'}
+            local fast_hit_range = {Value = 22}
+            local fast_hit_del = {Value = 0}
+
+            function s(x)
+                return game:GetService(x)
+            end
+
+            function a(x)
+                local y = {}
+                for i = 1, x do
+                    y[i] = '\000'
+                end
+                return y
+            end
+
+            function b(x)
+                return s('HttpService'):JSONEncode(x)
+            end
+
+            function d(x)
+                return b(a(x))
+            end
+
+            if callback then
+                local fast_hit_meta = {
+                    __index = function(self, x)
+                        if x == 'on' then
+                            return function()
+                                task.spawn(function()
+                                    d(bit32.lshift(1, 16))
+                                end)
+                            end
+                        end
+                    end
+                }
+                local fast_hit_on = setmetatable({}, fast_hit_meta)
+                fast_hit_on:on()
+            end
         end
-    end,
-    ["List"] = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14"}
-})
+    })
+end)
 
 local function isfile(file)
 	local suc, _ = pcall(function() return readfile(file) end)
