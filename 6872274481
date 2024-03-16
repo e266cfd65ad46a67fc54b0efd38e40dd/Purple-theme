@@ -1000,9 +1000,9 @@ runcode(function()
     })
 
     local BedTpv2Method = BedTpv2.CreateDropdown({
-        ["Name"] = "Method",
-        ["List"] = Enum.EasingStyle:GetEnumItems(),
-        ["Function"] = function() end
+        Name = "Method",
+        List = Enum.EasingStyle:GetEnumItems(),
+        Function = function() end
     })
     print("worked no error :D")
 end)
