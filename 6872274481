@@ -374,6 +374,7 @@ local groundtime = tick()
 local onground = false
 local lastonground = false
 local flyAllowed
+local GetEnumItems = function() return {} end
 
 local megacheck = bedwarsStore.queueType:find("mega") or bedwarsStore.queueType == "winter_event"
 
@@ -538,6 +539,15 @@ local function getSpeedMultiplier(reduce)
 	end
 	return speed
 end
+
+GetEnumItems = function(enum)
+	local fonts = {}
+	for i,v in next, Enum[enum]:GetEnumItems() do 
+		table.insert(fonts, v.Name) 
+	end
+	return fonts
+end
+for i,v in next, (Enum.NormalId:GetEnumItems()) do if v.Name ~= 'Bottom' then table.insert(cachedNormalSides, v) end end
 
 local FlyAnywayProgressBarFrame = Instance.new("Frame")
 FlyAnywayProgressBarFrame.AnchorPoint = Vector2.new(0.5, 0)
