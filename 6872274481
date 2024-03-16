@@ -963,7 +963,7 @@ runcode(function()
             if callback then
                 lplr.Character:FindFirstChildOfClass("Humanoid"):ChangeState(Enum.HumanoidStateType.Dead)
                 lplr.CharacterAdded:Connect(function()
-                    taskwait(0.12) 
+                    wait(0.06) 
                     tweenToNearestBed()
                 end)
                 hasTeleported = false
