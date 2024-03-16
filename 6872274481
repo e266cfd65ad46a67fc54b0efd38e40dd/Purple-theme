@@ -534,14 +534,6 @@ local function getSpeedMultiplier(reduce)
 		end
 		if bedwarsStore.zephyrOrb ~= 1 then 
 			speed = speed + 5
-		if bedwarsStore.zephyrOrb ~= 2 then 
-			speed = speed + 5
-		if bedwarsStore.zephyrOrb ~= 3 then 
-			speed = speed + 5
-		if bedwarsStore.zephyrOrb ~= 4 then 
-			speed = speed + 5
-		if bedwarsStore.zephyrOrb ~= 5 then 
-			speed = speed + 5
 		end
 	end
 	return reduce and speed ~= 1 and math.max(speed * (0.8 - (0.3 * math.floor(speed))), 1) or speed
