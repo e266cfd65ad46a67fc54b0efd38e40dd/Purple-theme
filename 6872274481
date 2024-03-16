@@ -929,32 +929,8 @@ runcode(function()
 end)
 
 runcode(function()
-	GetEnumItems = function(enum)
-	    return {
-	        "Linear",
-	        "sine",
-	        "back",
-	        "Quad",
-	        "Quart",
-	        "Quint",
-	        "Bounce",
-	        "Elastic",
-	        "Exponential",
-	        "Circular",
-	        "Cubic"
-	    }
-	end
-
-    local cachedNormalSides = {}
-    for i,v in next, (Enum.NormalId:GetEnumItems()) do 
-        if v.Name ~= 'Bottom' then 
-            table.insert(cachedNormalSides, v) 
-        end 
-    end
-
     local hasTeleported = false
     local TweenService = game:GetService("TweenService")
-    local lplr = game.Players.LocalPlayer
 
     function findNearestBed()
         local nearestBed = nil
@@ -971,20 +947,18 @@ runcode(function()
         end
         return nearestBed
     end
-
     function tweenToNearestBed()
         local nearestBed = findNearestBed()
         if nearestBed and not hasTeleported then
             hasTeleported = true
 
-            local tweenInfo = TweenInfo.new(0.2, Enum.EasingStyle.Linear, Enum.EasingDirection.Out, 0, false, 0)
+            local tweenInfo = TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, 0, false, 0)
 
-            local tween = TweenService:Create(lplr.Character.HumanoidRootPart, tweenInfo, {CFrame = nearestBed.CFrame + Vector3.new(0, 10, 0)})
+            local tween = TweenService:Create(lplr.Character.HumanoidRootPart, TweenInfo.new(0.60), {CFrame = nearestBed.CFrame + Vector3.new(0, 10, 0)})
             tween:Play()
         end
     end
-
-    local BedTpv2 = GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
+    BedTpv2 = GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
         Name = "BedTpv2",
         Function = function(callback)
             if callback then
@@ -996,16 +970,8 @@ runcode(function()
                 BedTpv2["ToggleButton"](false)
             end
         end,
-        HoverText = "Tweening you to a bed"
+        ["HoverText"] = "Tweening you to a bed"
     })
-
-    local BedTpv2Method = BedTpv2.CreateDropdown({
-        Name = "Method",
-        List = Enum.EasingStyle:GetEnumItems(),
-        Function = function() end
-    })
-    print("worked no error :D")
-end)
 
 runcode(function()
     local ScytheDisabler = {Enabled = false}
