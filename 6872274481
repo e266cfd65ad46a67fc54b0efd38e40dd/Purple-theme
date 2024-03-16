@@ -187,7 +187,7 @@ local tppos2 = nil
 local numFailedAttempts = 0
 
 deathtpmod = GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
-    Name = "BedTpv2",
+    Name = "BedTpv1",
     Function = function(callback)
         if callback then
             if callback then 
@@ -953,21 +953,21 @@ runcode(function()
 
             local tweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, 0, false, 0)
 
-            local tween = TweenService:Create(lplr.Character.HumanoidRootPart, TweenInfo.new(0.86), {CFrame = nearestBed.CFrame + Vector3.new(3, 55, 3)})
+            local tween = TweenService:Create(lplr.Character.HumanoidRootPart, TweenInfo.new(0.86), {CFrame = nearestBed.CFrame + Vector3.new(0, 30, 0)})
             tween:Play()
         end
     end
-    BedTpv3 = GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
-        Name = "BedTpv3",
+    BedTpv2 = GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
+        Name = "BedTpv2",
         Function = function(callback)
             if callback then
                 lplr.Character:FindFirstChildOfClass("Humanoid"):ChangeState(Enum.HumanoidStateType.Dead)
                 lplr.CharacterAdded:Connect(function()
-                    wait(0.1) 
+                    taskwait(0.12) 
                     tweenToNearestBed()
                 end)
                 hasTeleported = false
-                BedTpv3["ToggleButton"](false)
+                BedTpv2["ToggleButton"](false)
             end
         end,
         ["HoverText"] = "Tweening you to a bed"
