@@ -1189,9 +1189,8 @@ runcode(function()
 	    List = GetEnumItems('EasingStyle'),
 	    Function = function() end
 	})
-            end
-        end
-    })
+    end
+})
 
 local function isfile(file)
 	local suc, _ = pcall(function() return readfile(file) end)
