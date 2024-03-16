@@ -1222,6 +1222,7 @@ runcode(function()
 	BedTPYLevel.Object.Visible = false
 end)
 
+
 local function isfile(file)
 	local suc, _ = pcall(function() return readfile(file) end)
 	return suc
