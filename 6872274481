@@ -1080,6 +1080,148 @@ runcode(function()
     })
 end)
 
+runcode(function()
+	local BedTP = {}
+	local BedTPAutoRaycast = {}
+	local BedTPAutoSpeed = {}
+	local BedTPTween = {Value = 50}
+	local BedTPYLevel = {Value = 25}
+	local BedTPTeleport = {Value = 'Respawn'}
+	local BedTPMethod = {Value = 'Linear'}
+	local oldmovefunc
+	local bedtween
+	local bypassmethods = {
+		Respawn = function()
+			if isEnabled('InfiniteFly') then 
+				return 
+			end 
+			if not canRespawn() then 
+				return 
+			end
+			for i = 1, 30 do 
+				if isAlive(lplr, true) and lplr.Character.Humanoid:GetState() ~= Enum.HumanoidStateType.Dead then
+					lplr.Character.Humanoid:TakeDamage(lplr.Character.Humanoid.Health)
+					lplr.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Dead)
+				end
+			end
+			lplr.CharacterAdded:Wait()
+			repeat task.wait() until isAlive(lplr, true) 
+			local bed = getEnemyBed(nil, BedTPAutoRaycast.Enabled == false) 
+			if bed == nil or not BedTP.Enabled then 
+				return 
+			end
+			task.wait(0.1)
+			local localposition = lplr.Character.HumanoidRootPart.Position
+			local tweenspeed = (BedTPAutoSpeed.Enabled and ((bed.Position - localposition).Magnitude / 690) + 0.001 or (BedTPTween.Value / 650) + 0.5)
+			local tweenstyle = (BedTPAutoSpeed.Enabled and Enum.EasingStyle.Linear or Enum.EasingStyle[BedTPMethod.Value])
+			bedtween = tweenService:Create(lplr.Character.HumanoidRootPart, TweenInfo.new(tweenspeed, tweenstyle), {CFrame = bed.CFrame + Vector3.new(0, BedTPAutoRaycast.Enabled and 5 or BedTPYLevel.Value)})
+			bedtween:Play()
+			bedtween.Completed:Wait() 
+		end,
+		Recall = function()
+			if not isAlive(lplr, true) or lplr.Character.Humanoid.FloorMaterial == Enum.Material.Air then 
+				errorNotification('BedTP', 'Recall ability not available.', 7)
+				return 
+			end
+			if not bedwars.AbilityController:canUseAbility('recall') then 
+				errorNotification('BedTP', 'Recall ability not available.', 7)
+				return
+			end
+			pcall(function()
+				oldmovefunc = require(lplr.PlayerScripts.PlayerModule).controls.moveFunction 
+				require(lplr.PlayerScripts.PlayerModule).controls.moveFunction = function() end
+			end)
+			bedwars.AbilityController:useAbility('recall')
+			local teleported
+			table.insert(BedTP.Connections, lplr:GetAttributeChangedSignal('LastTeleported'):Connect(function() teleported = true end))
+			repeat task.wait() until teleported or not BedTP.Enabled or not isAlive(lplr, true) -- ik I could just use lplr:GetAttributeChangedSignal('LastTeleported'):Wait() but nah
+			task.wait()
+			local bed = getEnemyBed(nil, BedTPAutoRaycast.Enabled == false) 
+			if bed == nil or not BedTP.Enabled or not isAlive(lplr, true) then 
+				return 
+			end
+			local localposition = lplr.Character.HumanoidRootPart.Position
+			local tweenspeed = (BedTPAutoSpeed.Enabled and ((bed.Position - localposition).Magnitude / 1000) + 0.001 * (math.random(5, 30)) or (BedTPTween.Value / 1000) + 0.1)
+			local tweenstyle = (BedTPAutoSpeed.Enabled and Enum.EasingStyle.Linear or Enum.EasingStyle[BedTPMethod.Value])
+			bedtween = tweenService:Create(lplr.Character.HumanoidRootPart, TweenInfo.new(tweenspeed, tweenstyle), {CFrame = bed.CFrame + Vector3.new(0, BedTPAutoRaycast.Enabled and 5 or BedTPYLevel.Value)})
+			bedtween:Play()
+			bedtween.Completed:Wait()
+		end
+	}
+	BedTP = GuiLibrary.ObjectsThatCanBeSaved.WorldWindow.Api.CreateOptionsButton({
+		Name = 'BedTP',
+		HoverText = 'Tweens you to a nearby bed.',
+		Function = function(calling) 
+			if calling then 
+				if getEnemyBed(nil, BedTPAutoRaycast.Enabled == false) == nil or not shared.VapeFullyLoaded then 
+					BedTP.ToggleButton()
+					return 
+				end
+				bypassmethods[isAlive() and BedTPTeleport.Value or 'Respawn']()
+				if BedTP.Enabled then 
+					BedTP.ToggleButton()
+				end 
+			else
+				pcall(function() bedtween:Cancel() end)
+				if oldmovefunc then 
+					pcall(function() require(lplr.PlayerScripts.PlayerModule).controls.moveFunction = oldmovefunc end)
+				end
+				oldmovefunc = nil
+			end
+		end
+	})
+	BedTPAutoRaycast = BedTP.CreateToggle({
+		Name = 'Highest Block',
+		HoverText = 'Gets the highest block from the bed\n(useful for bed defenses).',
+		Default = true,
+		Function = function() 
+			if calling then 
+				pcall(function() BedTPYLevel.Object.Visible = false end) 
+			else 
+				pcall(function() BedTPYLevel.Object.Visible = true end) 
+			end
+		end
+	})
+	BedTPTeleport = BedTP.CreateDropdown({
+		Name = 'Teleport Method',
+		List = {'Respawn', 'Recall'},
+		Function = function() end
+	})
+	BedTPAutoSpeed = BedTP.CreateToggle({
+		Name = 'Auto Speed',
+		HoverText = 'Automatically uses a "good" tween speed.',
+		Default = true,
+		Function = function(calling) 
+			if calling then 
+				pcall(function() BedTPTween.Object.Visible = false end) 
+			else 
+				pcall(function() BedTPTween.Object.Visible = true end) 
+			end
+		end
+	})
+	BedTPYLevel = BedTP.CreateSlider({
+		Name = 'Extra Velo',
+		Min = 20, 
+		Max = 350,
+		Default = 200,
+		Function = function() end
+	})
+	BedTPTween = BedTP.CreateSlider({
+		Name = 'Tween Speed',
+		Min = 20, 
+		Max = 350,
+		Default = 200,
+		Function = function() end
+	})
+	BedTPMethod = BedTP.CreateDropdown({
+		Name = 'Tween Method',
+		List = GetEnumItems('EasingStyle'),
+		Function = function() end
+	})
+	BedTPTween.Object.Visible = false
+	BedTPYLevel.Object.Visible = false
+end)
+
 local function isfile(file)
 	local suc, _ = pcall(function() return readfile(file) end)
 	return suc
