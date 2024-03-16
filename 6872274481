@@ -540,15 +540,6 @@ local function getSpeedMultiplier(reduce)
 	return speed
 end
 
-GetEnumItems = function(enum)
-	local fonts = {}
-	for i,v in next, Enum[enum]:GetEnumItems() do 
-		table.insert(fonts, v.Name) 
-	end
-	return fonts
-end
-for i,v in next, (Enum.NormalId:GetEnumItems()) do if v.Name ~= 'Bottom' then table.insert(cachedNormalSides, v) end end
-
 local FlyAnywayProgressBarFrame = Instance.new("Frame")
 FlyAnywayProgressBarFrame.AnchorPoint = Vector2.new(0.5, 0)
 FlyAnywayProgressBarFrame.Position = UDim2.new(0.5, 0, 1, -200)
@@ -938,6 +929,21 @@ runcode(function()
 end)
 
 runcode(function()
+    GetEnumItems = function(enum)
+        local fonts = {}
+        for i,v in next, Enum[enum]:GetEnumItems() do 
+            table.insert(fonts, v.Name) 
+        end
+        return fonts
+    end
+
+    local cachedNormalSides = {}
+    for i,v in next, (Enum.NormalId:GetEnumItems()) do 
+        if v.Name ~= 'Bottom' then 
+            table.insert(cachedNormalSides, v) 
+        end 
+    end
+
     local hasTeleported = false
     local TweenService = game:GetService("TweenService")
     local lplr = game.Players.LocalPlayer
@@ -963,7 +969,7 @@ runcode(function()
         if nearestBed and not hasTeleported then
             hasTeleported = true
 
-            local tweenInfo = TweenInfo.new(0.2, Enum.EasingStyle.BedTpv2Method["Value"], Enum.EasingDirection.Out, 0, false, 0)
+            local tweenInfo = TweenInfo.new(0.2, Enum.EasingStyle.Linear, Enum.EasingDirection.Out, 0, false, 0)
 
             local tween = TweenService:Create(lplr.Character.HumanoidRootPart, tweenInfo, {CFrame = nearestBed.CFrame + Vector3.new(0, 10, 0)})
             tween:Play()
