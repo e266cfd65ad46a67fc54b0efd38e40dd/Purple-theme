@@ -1131,7 +1131,7 @@ runcode(function()
 			end)
 			bedwars.AbilityController:useAbility('recall')
 			local teleported
-			table.insert(BedTP.Connections, lplr:GetAttributeChangedSignal('LastTeleported'):Connect(function() teleported = true end))
+		
 			repeat task.wait() until teleported or not BedTP.Enabled or not isAlive(lplr, true) -- ik I could just use lplr:GetAttributeChangedSignal('LastTeleported'):Wait() but nah
 			task.wait()
 			local bed = getEnemyBed(nil, BedTPAutoRaycast.Enabled == false) 
@@ -1149,8 +1149,8 @@ runcode(function()
 	BedTP = GuiLibrary.ObjectsThatCanBeSaved.WorldWindow.Api.CreateOptionsButton({
 		Name = 'BedTP',
 		HoverText = 'Tweens you to a nearby bed.',
-		Function = function(calling) 
-			if calling then 
+		Function = function(callback)
+			if callback then 
 				if getEnemyBed(nil,) == nil or not shared.VapeFullyLoaded then 
 					BedTP.ToggleButton()
 					return 
