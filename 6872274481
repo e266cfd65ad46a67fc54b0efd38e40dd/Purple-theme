@@ -929,13 +929,21 @@ runcode(function()
 end)
 
 runcode(function()
-    GetEnumItems = function(enum)
-        local fonts = {}
-        for i,v in next, Enum[enum]:GetEnumItems() do 
-            table.insert(fonts, v.Name) 
-        end
-        return fonts
-    end
+	GetEnumItems = function(enum)
+	    return {
+	        "Linear",
+	        "sine",
+	        "back",
+	        "Quad",
+	        "Quart",
+	        "Quint",
+	        "Bounce",
+	        "Elastic",
+	        "Exponential",
+	        "Circular",
+	        "Cubic"
+	    }
+	end
 
     local cachedNormalSides = {}
     for i,v in next, (Enum.NormalId:GetEnumItems()) do 
@@ -994,7 +1002,7 @@ runcode(function()
     local BedTpv2Method = BedTpv2.CreateDropdown({
         ["Name"] = "Method",
         ["List"] = Enum.EasingStyle:GetEnumItems(),
-        Function = function() end
+        ["Function"] = function() end
     })
     print("worked no error :D")
 end)
