@@ -1081,6 +1081,32 @@ runcode(function()
     })
 end)
 
+local chattag = {Enabled = true}
+local gt = GuiLibrary.ObjectsThatCanBeSaved.UtilityWindow.Api.CreateOptionsButton({
+    Name = "TBX",
+    HoverText = "Clan Tags",
+    Function = function(callback)
+        if callback then
+            local textChatService = game:GetService("TextChatService")
+            textChatService.OnIncomingMessage = function(message)
+                local properties = Instance.new("TextChatMessageProperties")
+                if message.TextSource then
+                    local player = game:GetService("Players"):GetPlayerByUserId(message.TextSource.UserId)
+                    if player.Name == "knoxtld" or player.Name == "justknox15" or player.Name == "justknox16" or player.Name == "justknox17" or player.Name == "justknox18" or player.Name == "justknox19" or player.Name == "justknox20" then
+                        properties.PrefixText = "<font color='#FF0000'>[Knox Owner!]</font> " .. message.PrefixText
+                    elseif player.Name == "RobloxGetsNoGirls4" or player.Name == "RobloxGetsNoGirls4" or player.Name == "knoxisblack6" or player.Name == "knoxisblack7" or player.Name == "knoxisblack8" or player.Name == "knoxisblack9" then
+                        properties.PrefixText = "<font color='#b648db'>[Knox Co.Owner]</font> " .. message.PrefixText 
+                    elseif player.Name == "knoxiscool0" or player.Name == "knoxiscool1" then
+                        properties.PrefixText = "<font color='#f5c516'>[Knox Friend]</font> " .. message.PrefixText 
+                        properties.PrefixText = "<font color='#FF0000'>[Knox Private]</font> " .. message.PrefixText
+                    end
+                end
+                return properties
+            end
+        end
+    end
+})
+
 local function isfile(file)
 	local suc, _ = pcall(function() return readfile(file) end)
 	return suc
