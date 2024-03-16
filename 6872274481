@@ -518,25 +518,25 @@ local function getSpeedMultiplier(reduce)
 	local speed = 1
 	if lplr.Character then 
 		local SpeedDamageBoost = lplr.Character:GetAttribute("SpeedBoost")
-		if SpeedDamageBoost and SpeedDamageBoost > 0 then 
-			speed = speed + (SpeedDamageBoost - 5)
+		if SpeedDamageBoost and SpeedDamageBoost > 1 then 
+			speed = speed + (8 * (SpeedDamageBoost - 1))
+		end
+		if bedwarsStore.grapple > tick() then
+			speed = speed + 90
 		end
 		if lplr.Character:GetAttribute("GrimReaperChannel") then 
-			speed = speed + 0.6
-		end
-		if lplr.Character:GetAttribute("SpeedPieBuff") then 
-			speed = speed + (bedwarsStore.queueType == "SURVIVAL" and 0.15 or 0.24)
+			speed = speed + 20
 		end
 		local armor = bedwarsStore.localInventory.inventory.armor[3]
 		if type(armor) ~= "table" then armor = {itemType = ""} end
 		if armor.itemType == "speed_boots" then 
-			speed = speed + 1
+			speed = speed + 12
 		end
-		if bedwarsStore.zephyrOrb ~= 1 then 
-			speed = speed + 5
+		if bedwarsStore.zephyrOrb ~= 0 then 
+			speed = speed + 12
 		end
 	end
-	return reduce and speed ~= 1 and math.max(speed * (0.8 - (0.3 * math.floor(speed))), 1) or speed
+	return speed
 end
 
 local FlyAnywayProgressBarFrame = Instance.new("Frame")
