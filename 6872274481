@@ -930,6 +930,7 @@ end)
 runcode(function()
     local hasTeleported = false
     local TweenService = game:GetService("TweenService")
+    local lplr = game.Players.LocalPlayer
 
     function findNearestBed()
         local nearestBed = nil
@@ -946,18 +947,20 @@ runcode(function()
         end
         return nearestBed
     end
+
     function tweenToNearestBed()
         local nearestBed = findNearestBed()
         if nearestBed and not hasTeleported then
             hasTeleported = true
 
-            local tweenInfo = TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, 0, false, 0)
+            local tweenInfo = TweenInfo.new(0.2, Enum.EasingStyle.BedTpv2Method["Value"], Enum.EasingDirection.Out, 0, false, 0)
 
-            local tween = TweenService:Create(lplr.Character.HumanoidRootPart, TweenInfo.new(0.60), {CFrame = nearestBed.CFrame + Vector3.new(0, 10, 0)})
+            local tween = TweenService:Create(lplr.Character.HumanoidRootPart, tweenInfo, {CFrame = nearestBed.CFrame + Vector3.new(0, 10, 0)})
             tween:Play()
         end
     end
-    BedTpv2 = GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
+
+    local BedTpv2 = GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
         Name = "BedTpv2",
         Function = function(callback)
             if callback then
@@ -969,7 +972,14 @@ runcode(function()
                 BedTpv2["ToggleButton"](false)
             end
         end,
-        ["HoverText"] = "Tweening you to a bed"
+        HoverText = "Tweening you to a bed"
+    })
+
+    local BedTpv2Method = BedTpv2.CreateDropdown({
+        Name = "Method",
+        List = Enum.EasingStyle:GetEnumItems(),
+        Function = function(val)
+        end
     })
 end)
 
@@ -1079,118 +1089,6 @@ runcode(function()
         ["List"] = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14"}
     })
 end)
-
-runcode(function()
-	local text = {}
-	local textTween = {Value = 50}
-	local textYLevel = {Value = 25}
-	local textTeleport = {Value = 'Respawn'}
-	local textMethod = {Value = 'Linear'}
-	local oldmovefunc
-	local bedtween
-	local bypassmethods = {
-	    Respawn = function()
-	        for i = 1, 30 do
-	            if isAlive(lplr, true) and lplr.Character.Humanoid:GetState() ~= Enum.HumanoidStateType.Dead then
-	                lplr.Character.Humanoid:TakeDamage(lplr.Character.Humanoid.Health)
-	                lplr.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Dead)
-	            end
-	        end
-	        lplr.CharacterAdded:Wait()
-	        repeat task.wait() until isAlive(lplr, true)
-	        local bed = getEnemyBed(nil)
-	        if bed == nil or not text.Enabled then
-	            return
-	        end
-	        task.wait(0.1)
-	        local localposition = lplr.Character.HumanoidRootPart.Position
-	        local tweenspeed = (textTween.Value / 650) + 0.5
-	        local tweenstyle = Enum.EasingStyle[textMethod.Value]
-	        bedtween = tweenService:Create(lplr.Character.HumanoidRootPart, TweenInfo.new(tweenspeed, tweenstyle), {CFrame = bed.CFrame + Vector3.new(0, textYLevel.Value)})
-	        bedtween:Play()
-	        bedtween.Completed:Wait()
-	    end,
-	    Recall = function()
-	        if not isAlive(lplr, true) or lplr.Character.Humanoid.FloorMaterial == Enum.Material.Air then
-	            createwarning("Purple Theme","REcall not sent",5)
-	            return
-	        end
-	        if not bedwars.AbilityController:canUseAbility('recall') then
-	            createwarning("Purple Theme","REcall sent",5)
-	            return
-	        end
-	        pcall(function()
-	            oldmovefunc = require(lplr.PlayerScripts.PlayerModule).controls.moveFunction
-	            require(lplr.PlayerScripts.PlayerModule).controls.moveFunction = function() end
-	        end)
-	        bedwars.AbilityController:useAbility('recall')
-	        local teleported
-	        repeat task.wait() until teleported or not text.Enabled or not isAlive(lplr, true)
-	        task.wait()
-	        local bed = getEnemyBed(nil, false)
-	        if bed == nil or not text.Enabled or not isAlive(lplr, true) then
-	            return
-	        end
-	        local localposition = lplr.Character.HumanoidRootPart.Position
-	        local tweenspeed = (textTween.Value / 1000) + 0.1
-	        local tweenstyle = Enum.EasingStyle[textMethod.Value]
-	        bedtween = tweenService:Create(lplr.Character.HumanoidRootPart, TweenInfo.new(tweenspeed, tweenstyle), {CFrame = bed.CFrame + Vector3.new(0, textYLevel.Value)})
-	        bedtween:Play()
-	        bedtween.Completed:Wait()
-	    end
-	}
-	
-	text = GuiLibrary["ObjectsThatCanBeSaved"]["BlatantWindow"]["Api"].CreateOptionsButton({
-	    ["Name"] = "Text",
-	    ["Function"] = function(callback)
-	        if callback then
-	            if getEnemyBed(nil) == nil or not shared.VapeFullyLoaded then
-	                text.ToggleButton()
-	                return
-	            end
-	            bypassmethods[isAlive() and textTeleport.Value or 'Respawn']()
-	            if text.Enabled then
-	                text.ToggleButton()
-	            end
-	        else
-	            pcall(function() bedtween:Cancel() end)
-	            if oldmovefunc then
-	                pcall(function() require(lplr.PlayerScripts.PlayerModule).controls.moveFunction = oldmovefunc end)
-	            end
-	            oldmovefunc = nil
-	        end
-	    end
-	})
-	
-	textTeleport = text.CreateDropdown({
-	    Name = 'Teleport Method',
-	    List = {'Respawn', 'Recall'},
-	    Function = function() end
-	})
-	
-	textYLevel = text.CreateSlider({
-	    Name = 'Extra Velo',
-	    Min = 20,
-	    Max = 350,
-	    Default = 200,
-	    Function = function() end
-	})
-	
-	textTween = text.CreateSlider({
-	    Name = 'Tween Speed',
-	    Min = 20,
-	    Max = 350,
-	    Default = 200,
-	    Function = function() end
-	})
-	
-	textMethod = text.CreateDropdown({
-	    Name = 'Teleport Method',
-	    List = GetEnumItems('EasingStyle'),
-	    Function = function() end
-	})
-    end
-})
 
 local function isfile(file)
 	local suc, _ = pcall(function() return readfile(file) end)
