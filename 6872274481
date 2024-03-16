@@ -518,7 +518,7 @@ local function getSpeedMultiplier(reduce)
 	local speed = 1
 	if lplr.Character then 
 		local SpeedDamageBoost = lplr.Character:GetAttribute("SpeedBoost")
-		if SpeedDamageBoost and SpeedDamageBoost > 50 then 
+		if SpeedDamageBoost and SpeedDamageBoost > 1 then 
 			speed = speed + (SpeedDamageBoost - 50)
 		end
 		if lplr.Character:GetAttribute("GrimReaperChannel") then 
@@ -533,7 +533,7 @@ local function getSpeedMultiplier(reduce)
 			speed = speed + 1
 		end
 		if bedwarsStore.zephyrOrb ~= 0 then 
-			speed = speed + 1
+			speed = speed + 5
 		end
 	end
 	return reduce and speed ~= 1 and math.max(speed * (0.8 - (0.3 * math.floor(speed))), 1) or speed
