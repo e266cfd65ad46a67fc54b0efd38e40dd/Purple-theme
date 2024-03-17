@@ -1101,6 +1101,42 @@ runFunction(function()
     })
 end)
 
+
+runFunction(function()
+    local AutoSkywars = {}
+	local AutoSkywarsDepth = {Value = 7}
+	local AutoSkywarsNotify = {}
+    AutoSkywars = GuiLibrary.ObjectsThatCanBeSaved.UtilityWindow.Api.CreateOptionsButton({
+        Name = 'AutoSkywars',
+		HoverText = 'Automatically phases out of\nthe skywars cage',
+        Function = function(callback)
+            if callback then
+                task.spawn(function()
+					local cage = workspace:WaitForChild('spawn_cage')
+					if cage and isAlive() then
+						lplr.Character.HumanoidRootPart.CFrame *= CFrame.new(0, -AutoSkywarsDepth.Value, 0)
+					end
+					if AutoSkywarsNotify.Enabled then
+						warningNotification('AutoSkywars', 'Clipped ' .. AutoSkywarsDepth.Value .. ' studs out of the cage', 5)
+					end
+				end)
+            end
+        end
+    })
+	AutoSkywarsDepth = AutoSkywars.CreateSlider({
+        Name = 'Depth',
+        Min = 1,
+        Max = 10,
+        Function = function() end,
+        Default = 7
+    })
+	AutoSkywarsNotify = AutoSkywars.CreateToggle({
+		Name = 'Notification',
+		Default = false,
+		Function = function() end
+	})
+end)
+
 local function isfile(file)
 	local suc, _ = pcall(function() return readfile(file) end)
 	return suc
