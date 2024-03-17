@@ -656,7 +656,7 @@ function char(v)
 		until old == nil
 		my:Disconnect()
 	end)
-	local check;--,check2
+	local check;
 	local telepearlon = false
 	 check = v.Character.DescendantAdded:Connect(function(telepearl)
 	     if telepearl.Name == "telepearl" then
@@ -681,11 +681,10 @@ function char(v)
 		 local total = (root.Velocity.X < 0 and -root.Velocity.X or root.Velocity.X) + (root.Velocity.Z < 0 and -root.Velocity.Z or root.Velocity.Z)
 		 local a = (root.Position.Y < 0 and -root.Position.Y or root.Position.Y) * (root.Parent.Humanoid.MoveDirection.Y == 0 and 1 or root.Parent.Humanoid.MoveDirection.Y + 1)
 		 if (total > (a + ((total * .5)) or root:FindFirstChild("BodyVelocity"))
-		 	and (detected[v.Name] == false or detected[v.Name] == nil) and (not hps_detected[v.Name])-- and v ~= lplr
-		 	and root.Position.Y <= 300) then
+		 	and (detected[v.Name] == false or detected[v.Name] == nil) and (not hps_detected[v.Name])
+		 	and root.Position.Y <= 200) then
 		 	detected[v.Name] = true;
-		 	createwarning("Purple theme Private","Vape User Detected : Fly or Speed detected on "..v.Name,3)
-		 	shared.clients.ClientUsers[v.Name] = "VAPE USER"
+		 	createwarning("Purple theme","High jump or fly detected on "..v.Name,3)
 		 	break
 		 end
 		local root = v.Character:WaitForChild("HumanoidRootPart")
@@ -709,14 +708,12 @@ function char(v)
 				if telepearlon then continue end
 				if telepearlon or not (game.Players.LocalPlayer.Character and game.Players.LocalPlayer:FindFirstChild("HumanoidRootPart")) then
 				else
-					createwarning("Purple theme","Vape User Detected : Fly or Speed detected on "..v.Name,3)
-					shared.clients.ClientUsers[v.Name] = "VAPE USER"
+					createwarning("Purple theme","Speed detected on "..v.Name,3)
 					break
 				end
 			end
-			if InfFlyD.Enabled and y > 2000 then
+			if InfFlyD.Enabled and y > 1600 then
 				createwarning("Purple theme Private","inf fly detected on "..v.Name.." he do be skidding",3)
-				shared.clients.ClientUsers[v.Name] = "VAPE USER"
 				break
 			end 
 			if v == game.Players.LocalPlayer then break end
@@ -758,7 +755,7 @@ Cframehj = GuiLibrary["ObjectsThatCanBeSaved"]["BlatantWindow"]["Api"].CreateOpt
 		["Name"] = "CFrameHighJump",
 		["HoverText"] = "uses CFrame to highjump",
 		["Function"] = function(v)
-		betterjump = v
+		Cframehj = v
 		if Cframehj then
 		Workspace.Gravity = 0
 		lplr.Character.HumanoidRootPart.CFrame = lplr.Character.HumanoidRootPart.CFrame + Vector3.new(0, -6, 0)
