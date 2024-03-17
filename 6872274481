@@ -933,20 +933,6 @@ runcode(function()
     local TweenService = game:GetService("TweenService")
     local lplr = game.Players.LocalPlayer
 
-    local easingStyles = {
-        Cubic = Enum.EasingStyle.Cubic,
-        Linear = Enum.EasingStyle.Linear,
-        Sine = Enum.EasingStyle.Sine,
-        Back = Enum.EasingStyle.Back,
-        Quad = Enum.EasingStyle.Quad,
-        Quart = Enum.EasingStyle.Quart,
-        Quint = Enum.EasingStyle.Quint,
-        Bounce = Enum.EasingStyle.Bounce,
-        Elastic = Enum.EasingStyle.Elastic,
-        Exponential = Enum.EasingStyle.Exponential,
-        Circular = Enum.EasingStyle.Circular
-    }
-
     function findNearestBed()
         local nearestBed = nil
         local minDistance = math.huge
@@ -963,27 +949,29 @@ runcode(function()
         return nearestBed
     end
 
-    function tweenToNearestBed(method)
+    function tweenToNearestBed()
         local nearestBed = findNearestBed()
         if nearestBed and not hasTeleported then
             hasTeleported = true
 
-            local tweenInfo = TweenInfo.new(0.2, easingStyles[method], Enum.EasingDirection.Out, 0, false, 0)
+            local easingStyle = Enum.EasingStyle[meth.Value]
+            local tweenInfo = TweenInfo.new(0.2, easingStyle, Enum.EasingDirection.Out, 0, false, 0)
+
             local tween = TweenService:Create(lplr.Character.HumanoidRootPart, tweenInfo, {CFrame = nearestBed.CFrame + Vector3.new(0, 10, 0)})
             tween:Play()
         end
     end
 
-    local BedTpv2 = GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
+    BedTpv2 = GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
         Name = "BedTpv2",
         Function = function(callback)
             if callback then
                 lplr.Character:FindFirstChildOfClass("Humanoid"):ChangeState(Enum.HumanoidStateType.Dead)
                 lplr.CharacterAdded:Connect(function()
-                    tweenToNearestBed("Linear") -- Default to Linear easing
+                    tweenToNearestBed()
                 end)
                 hasTeleported = false
-                BedTpv2["ToggleButton"](false)
+                BedTpv2.ToggleButton(false)
             end
         end,
         HoverText = "Tweening you to a bed"
@@ -991,10 +979,7 @@ runcode(function()
 
     local meth = BedTpv2.CreateDropdown({
         Name = "method",
-        Function = function(val) 
-            print("Selected method: " .. val)
-            tweenToNearestBed(val)
-        end,
+        Function = function(val) end,
         List = {"Cubic", "Linear", "Sine", "Back", "Quad", "Quart", "Quint", "Bounce", "Elastic", "Exponential", "Circular", "Cubic"}
     })
 end)
