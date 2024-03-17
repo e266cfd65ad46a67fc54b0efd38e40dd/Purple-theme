@@ -619,151 +619,138 @@ local lplr = game.Players.LocalPlayer
 local setcallback = {}
 local hpsset = {}
 local InfFlyD = {["Enabled"] = false,}
-local SpeedD = {["Enabled"] = false,}
-local flyD = {["Enabled"] = false,}
-
 function char(v)
-    repeat task.wait() until v.Character
-    v.Character:WaitForChild("Humanoid").Changed:Connect(function ()
-        if v.Character:WaitForChild("Humanoid").Health ~= 100 then
-            if not hpsset[v.Name] then
-                hpsset[v.Name] = v.Character.Humanoid.Health
-            end
-            if hps_detected[v.Name] then
-                if not setcallback[v.Name] then setcallback[v.Name] = {} end
-                if hpsset[v.Name] >= v.Character.Humanoid.Health then
-                    setcallback[v.Name][#setcallback[v.Name] + 1] = true;
-                    hpsset[v.Name] = v.Character.Humanoid.Health
-                end
-                return
-            end
-            hps_detected[v.Name] = true;
-            task.wait(0.25)
-            local number = # (setcallback[v.Name] or {})
-            repeat task.wait()
-                for i,z in pairs(setcallback[v.Name] or {}) do
-                    task.wait(0.25)
-                    table.remove(setcallback[v.Name],i)
-                end
-            until # (setcallback[v.Name] or {}) == 0
-            task.wait(0.1)
-            hps_detected[v.Name] = false;
-        end
-    end)
-    local old
-    local my;
-    my = v.Character.Humanoid.Died:Connect(function()
-        repeat task.wait()
-            old = nil
-            task.wait()
-        until old == nil
-        my:Disconnect()
-    end)
-    local check;
-    local telepearlon = false
-    check = v.Character.DescendantAdded:Connect(function(telepearl)
-        if telepearl.Name == "telepearl" then
-            telepearlon = true;
-        end
-    end)
-    check2 = v.Character.DescendantRemoving:Connect(function(telepearl)
-        if telepearl.Name == "telepearl" then
-            telepearlon = false;
-        end
-    end)
-    v:GetAttributeChangedSignal("LastTeleported"):Connect(function()
-        if (workspace:GetServerTimeNow() - lplr:GetAttribute("LastTeleported")) < 3 then
-            telepearlon = true
-            task.wait(2)
-            telepearlon = false;
-        end
-    end)
-    while task.wait(0.1) do
-        repeat task.wait() until v.Character
-        local root = v.Character:WaitForChild("HumanoidRootPart")
-        local total = (root.Velocity.X < 0 and -root.Velocity.X or root.Velocity.X) + (root.Velocity.Z < 0 and -root.Velocity.Z or root.Velocity.Z)
-        local a = (root.Position.Y < 0 and -root.Position.Y or root.Position.Y) * (root.Parent.Humanoid.MoveDirection.Y == 0 and 1 or root.Parent.Humanoid.MoveDirection.Y + 1)
-        if (total > (a + ((total * .5)) or root:FindFirstChild("BodyVelocity"))
-            and (detected[v.Name] == false or detected[v.Name] == nil) and (not hps_detected[v.Name])-- and v ~= lplr
-            and root.Position.Y <= 300) then
-            detected[v.Name] = true;
-            createwarning("Purple theme","Fly detected on "..v.Name,3)
-            break
-        end
-        local root = v.Character:WaitForChild("HumanoidRootPart")
-        if old then
-            local pos = root.Position
-            local x,y,z = (pos.X < 0 and -pos.X or pos.X),(pos.Y < 0 and -pos.Y or pos.Y),(pos.Z < 0 and -pos.Z or pos.Z)
-            local ox,oy,oz = (old.X < 0 and -old.X or old.X),(old.Y < 0 and -old.Y or old.Y),(old.Z < 0 and -old.Z or old.Z)
-            local hecker
-            if ox + (v.Character.Humanoid.WalkSpeed * 0.9) < x then
-                hecker = true
-            elseif oy + (v.Character.Humanoid.WalkSpeed * 0.725) < y then
-                hecker = true
-            elseif oz + (v.Character.Humanoid.WalkSpeed * 0.9) < z then
-                hecker = true
-            end
-            if hecker and not detected[v.Name] and v ~= game.Players.LocalPlayer
-                and bedwarsStore.matchState ~= 0 and not bedwarsStore.secs and not telepearlon
-                and not hps_detected[v.Name]  then
-                detected[v.Name] = true;
-                task.wait(0.1)
-                if telepearlon then continue end
-                if telepearlon or not (game.Players.LocalPlayer.Character and game.Players.LocalPlayer:FindFirstChild("HumanoidRootPart")) then
-                else
-                    createwarning("Purple theme","Speed detected on "..v.Name,3)
-                    break
-                end
-            end
-            if InfFlyD.Enabled and y > 2000 then
-                createwarning("Purple theme","inf fly detected on "..v.Name..",3)
-                break
-            end 
-            if v == game.Players.LocalPlayer then break end
-        end
-        old = root.Position
-    end
+	repeat task.wait() until v.Character
+	v.Character:WaitForChild("Humanoid").Changed:Connect(function ()
+		if v.Character:WaitForChild("Humanoid").Health ~= 100 then
+			if not hpsset[v.Name] then
+				hpsset[v.Name] = v.Character.Humanoid.Health
+			end
+			if hps_detected[v.Name] then
+				if not setcallback[v.Name] then setcallback[v.Name] = {} end
+				if hpsset[v.Name] >= v.Character.Humanoid.Health then
+					setcallback[v.Name][#setcallback[v.Name] + 1] = true;
+					hpsset[v.Name] = v.Character.Humanoid.Health
+				end
+				return
+			end
+			hps_detected[v.Name] = true;
+			task.wait(0.25)
+			local number = # (setcallback[v.Name] or {})
+			repeat task.wait()
+				for i,z in pairs(setcallback[v.Name] or {}) do
+					task.wait(0.25)
+					table.remove(setcallback[v.Name],i)
+				end
+			until # (setcallback[v.Name] or {}) == 0
+			task.wait(0.1)
+			hps_detected[v.Name] = false;
+		end
+	end)
+	local old
+	local my;
+	my = v.Character.Humanoid.Died:Connect(function()
+		repeat task.wait()
+			old = nil
+			task.wait()
+		until old == nil
+		my:Disconnect()
+	end)
+	local check;--,check2
+	local telepearlon = false
+	 check = v.Character.DescendantAdded:Connect(function(telepearl)
+	     if telepearl.Name == "telepearl" then
+	         telepearlon = true;
+	     end
+	 end)
+	 check2 = v.Character.DescendantRemoving:Connect(function(telepearl)
+	     if telepearl.Name == "telepearl" then
+	         telepearlon = false;
+	     end
+	 end)
+	v:GetAttributeChangedSignal("LastTeleported"):Connect(function()
+		if (workspace:GetServerTimeNow() - lplr:GetAttribute("LastTeleported")) < 3 then
+			telepearlon = true
+			task.wait(2)
+			telepearlon = false;
+		end
+	end)
+	while task.wait(0.1) do
+		repeat task.wait() until v.Character
+		 local root = v.Character:WaitForChild("HumanoidRootPart")
+		 local total = (root.Velocity.X < 0 and -root.Velocity.X or root.Velocity.X) + (root.Velocity.Z < 0 and -root.Velocity.Z or root.Velocity.Z)
+		 local a = (root.Position.Y < 0 and -root.Position.Y or root.Position.Y) * (root.Parent.Humanoid.MoveDirection.Y == 0 and 1 or root.Parent.Humanoid.MoveDirection.Y + 1)
+		 if (total > (a + ((total * .5)) or root:FindFirstChild("BodyVelocity"))
+		 	and (detected[v.Name] == false or detected[v.Name] == nil) and (not hps_detected[v.Name])-- and v ~= lplr
+		 	and root.Position.Y <= 300) then
+		 	detected[v.Name] = true;
+		 	createwarning("Purple theme Private","Vape User Detected : Fly or Speed detected on "..v.Name,3)
+		 	shared.clients.ClientUsers[v.Name] = "VAPE USER"
+		 	break
+		 end
+		local root = v.Character:WaitForChild("HumanoidRootPart")
+		if old then
+			local pos = root.Position
+			local x,y,z = (pos.X < 0 and -pos.X or pos.X),(pos.Y < 0 and -pos.Y or pos.Y),(pos.Z < 0 and -pos.Z or pos.Z)
+			local ox,oy,oz = (old.X < 0 and -old.X or old.X),(old.Y < 0 and -old.Y or old.Y),(old.Z < 0 and -old.Z or old.Z)
+			local hecker
+			if ox + (v.Character.Humanoid.WalkSpeed * 0.9) < x then
+				hecker = true
+				 elseif oy + (v.Character.Humanoid.WalkSpeed * 0.725) < y then
+				 	hecker = true
+			elseif oz + (v.Character.Humanoid.WalkSpeed * 0.9) < z then
+				hecker = true
+			end
+			if hecker and not detected[v.Name] and v ~= game.Players.LocalPlayer
+				and bedwarsStore.matchState ~= 0 and not bedwarsStore.secs and not telepearlon
+				and not hps_detected[v.Name]  then
+				detected[v.Name] = true;
+				task.wait(0.1)
+				if telepearlon then continue end
+				if telepearlon or not (game.Players.LocalPlayer.Character and game.Players.LocalPlayer:FindFirstChild("HumanoidRootPart")) then
+				else
+					createwarning("Purple theme","Vape User Detected : Fly or Speed detected on "..v.Name,3)
+					shared.clients.ClientUsers[v.Name] = "VAPE USER"
+					break
+				end
+			end
+			if InfFlyD.Enabled and y > 2000 then
+				createwarning("Purple theme Private","inf fly detected on "..v.Name.." he do be skidding",3)
+				shared.clients.ClientUsers[v.Name] = "VAPE USER"
+				break
+			end 
+			if v == game.Players.LocalPlayer then break end
+		end
+		old = root.Position
+	end
 end
-
 local Detection;Detection = GuiLibrary.ObjectsThatCanBeSaved.WorldWindow.Api.CreateOptionsButton({
-    Name = "Vape User Detection",
-    Function = function (enabled)
-        if enabled then
-            task.spawn(function()
-                for i,v in pairs(plrs) do
-                    task.spawn(function ()
-                        char(v)
-                    end)
-                    task.spawn(function ()
-                        v.CharacterAdded:Connect(function ()
-                            task.wait(5)
-                            char(v)
-                        end)
-                    end)
-                end
-                game.Players.PlayerAdded:Connect(function(v)
-                    task.wait(5)
-                    char(v)
-                end)
-            end)
-        end
-    end,
+	Name = "Vape User Detection",
+	Function = function (enabled)
+		if enabled then
+			task.spawn(function()
+				for i,v in pairs(plrs) do
+					task.spawn(function ()
+						char(v)
+					end)
+					task.spawn(function ()
+						v.CharacterAdded:Connect(function ()
+							task.wait(5)
+							char(v)
+						end)
+					end)
+				end
+				game.Players.PlayerAdded:Connect(function(v)
+					task.wait(5)
+					char(v)
+				end)
+			end)
+		end
+	end,
 })
 InfFlyD = Detection.CreateToggle({
-    Name = "Inf Fly detector",
-    Function = function() end,
-})
-SpeedD = Detection.CreateToggle({
-    Name = "Speed detector",
-    Function = function(enabled)
-        SpeedD.Enabled = enabled
-    end,
-})
-flyD = Detection.CreateToggle({
-    Name = "Fly detector",
-    Function = function(enabled)
-        flyD.Enabled = enabled
-    end,
+	Name = "Inf Fly detector",
+	Function = function() end,
 })
 
 local Cframehj = {["Enabled"] = false}
