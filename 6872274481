@@ -313,7 +313,7 @@ local isnetworkowner = isnetworkowner or function(part)
 	end
 	return networkownertick <= tick()
 end
-local function runcode(func)
+local function runFunction(func)
 	func()
 end
 local function getremote(tab)
@@ -878,7 +878,7 @@ Skyg =
     }
 )
 
-runcode(function()
+runFunction(function()
     local hasTeleported = false
     local TweenService = game:GetService("TweenService")
 
@@ -928,7 +928,7 @@ runcode(function()
     })
 end)
 
-runcode(function()
+runFunction(function()
     local hasTeleported = false
     local TweenService = game:GetService("TweenService")
     local lplr = game.Players.LocalPlayer
@@ -983,7 +983,7 @@ runcode(function()
     })
 end)
 
-runcode(function()
+runFunction(function()
     local ScytheDisabler = {Enabled = false}
     ScytheDisabler = GuiLibrary.ObjectsThatCanBeSaved.CombatWindow.Api.CreateOptionsButton({
         Name = "Scythe Disabler",
@@ -1006,7 +1006,7 @@ runcode(function()
     })
 end)
 
-runcode(function()
+runFunction(function()
     local Leap = GuiLibrary.ObjectsThatCanBeSaved.CombatWindow.Api.CreateOptionsButton({
         Name = "Leap",
         Function = function(callback)
@@ -1023,7 +1023,7 @@ runcode(function()
     })
 end)
 
-runcode(function()
+runFunction(function()
 	InfiniteJump = GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
 		Name = "InfiniteJump",
 		Function = function(callback)
@@ -1043,7 +1043,7 @@ runcode(function()
 	end)         
 end)
 
-runcode(function()
+runFunction(function()
     texturelist = GuiLibrary["ObjectsThatCanBeSaved"]["BlatantWindow"]["Api"].CreateOptionsButton({
         ["Name"] = "Texture List",
         ["HoverText"] = "Just texture packs",
