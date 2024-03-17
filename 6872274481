@@ -950,7 +950,6 @@ end)
 runFunction(function()
     local hasTeleported = false
     local TweenService = game:GetService("TweenService")
-    local lplr = game.Players.LocalPlayer
 
     function findNearestBed()
         local nearestBed = nil
@@ -967,38 +966,31 @@ runFunction(function()
         end
         return nearestBed
     end
-
     function tweenToNearestBed()
         local nearestBed = findNearestBed()
         if nearestBed and not hasTeleported then
             hasTeleported = true
 
-            local tweenInfo = TweenInfo.new(0.2, Enum.EasingStyle.method23["Value"], Enum.EasingDirection.Out, 0, false, 0)
+            local tweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, 0, false, 0)
 
-            local tween = TweenService:Create(lplr.Character.HumanoidRootPart, tweenInfo, {CFrame = nearestBed.CFrame + Vector3.new(0, 10, 0)})
+            local tween = TweenService:Create(lplr.Character.HumanoidRootPart, TweenInfo.new(0.86), {CFrame = nearestBed.CFrame + Vector3.new(0, 30, 0)})
             tween:Play()
         end
     end
-
     BedTpv2 = GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
         Name = "BedTpv2",
         Function = function(callback)
             if callback then
                 lplr.Character:FindFirstChildOfClass("Humanoid"):ChangeState(Enum.HumanoidStateType.Dead)
                 lplr.CharacterAdded:Connect(function()
+                    wait(0.06) 
                     tweenToNearestBed()
                 end)
                 hasTeleported = false
-                BedTpv2.ToggleButton(false)
+                BedTpv2["ToggleButton"](false)
             end
         end,
-        HoverText = "Tweening you to a bed"
-    })
-
-    local method23 = BedTpv2.CreateDropdown({
-        Name = "method23",
-        Function = function(val) end,
-        List = {"Cubic", "Linear", "Sine", "Back", "Quad", "Quart", "Quint", "Bounce", "Elastic", "Exponential", "Circular", "Cubic"}
+        ["HoverText"] = "Tweening you to a bed"
     })
 end)
 
