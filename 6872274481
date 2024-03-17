@@ -954,7 +954,7 @@ runcode(function()
         if nearestBed and not hasTeleported then
             hasTeleported = true
 
-            local tweenInfo = TweenInfo.new(0.2, Enum.EasingStyle[meth.Value], Enum.EasingDirection.Out, 0, false, 0)
+            local tweenInfo = TweenInfo.new(0.2, Enum.EasingStyle.method23["Value"], Enum.EasingDirection.Out, 0, false, 0)
 
             local tween = TweenService:Create(lplr.Character.HumanoidRootPart, tweenInfo, {CFrame = nearestBed.CFrame + Vector3.new(0, 10, 0)})
             tween:Play()
@@ -976,8 +976,8 @@ runcode(function()
         HoverText = "Tweening you to a bed"
     })
 
-    local meth = BedTpv2.CreateDropdown({
-        Name = "method",
+    local method23 = BedTpv2.CreateDropdown({
+        Name = "method23",
         Function = function(val) end,
         List = {"Cubic", "Linear", "Sine", "Back", "Quad", "Quart", "Quint", "Bounce", "Elastic", "Exponential", "Circular", "Cubic"}
     })
