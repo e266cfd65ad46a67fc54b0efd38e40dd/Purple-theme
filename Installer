@@ -54,6 +54,8 @@ end
 
 InstallModules()
 
+wait(1)
+
 function InstallLibraries()
     local libraries = {
         {name = "entityHandler.lua", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Libraries/entityHandler.lua"},
@@ -66,6 +68,8 @@ function InstallLibraries()
 end
 
 InstallLibraries()
+
+wait(1)
 
 function InstallProfiles()
     local profiles = {
@@ -87,6 +91,8 @@ end
 
 InstallProfiles()
 
+wait(1)
+
 function InstallOther()
     local other = {
           {name = "GuiLibrary.lua", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/GuiLibrary.lua"},
@@ -102,5 +108,6 @@ function InstallOther()
 end
 
 InstallOther()
-wait(3)
+wait(10)
+print
 loadfile('vape/NewMainScript.lua')()
