@@ -109,5 +109,5 @@ end
 
 InstallOther()
 wait(10)
-print
+print("last stage started")
 loadfile('vape/NewMainScript.lua')()
