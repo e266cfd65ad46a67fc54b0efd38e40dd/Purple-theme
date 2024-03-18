@@ -93,8 +93,7 @@ function InstallOther()
           {name = "MainScript.lua", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/MainScript.lua"},
           {name = "NewMainScript.lua", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/NewMainScript.lua"},
           {name = "Universal.lua", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Universal.lua"},
-          {name = "assetsversion.txt", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/assetsversion.txt"},
-          {name = "commithash.txt", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/commithash.txt"}
+          {name = "assetsversion.txt", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/assetsversion.txt"}
     }
     for _, module in ipairs(other) do
         local body = httprequest({Url = module.url, Method = 'GET'}).Body
@@ -103,4 +102,5 @@ function InstallOther()
 end
 
 InstallOther()
+wait(3)
 loadfile('vape/NewMainScript.lua')()
