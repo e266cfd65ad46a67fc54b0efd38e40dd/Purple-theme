@@ -1,2 +1,106 @@
-setclipboard("https://github.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-theme/raw/main/vape.zip")
-game.Players.LocalPlayer:Kick("Installer add to clip borad")
+local httpService = game:GetService('HttpService')
+local httprequest = (http and http.request or http_request or fluxus and fluxus.request or request or function() end)
+local isfile = isfile or function(file)
+    local success, filecontents = pcall(function() return readfile(file) end)
+    return success and type(filecontents) == 'string'
+end 
+
+function apiRequest(endpoint)
+    return httprequest({Url = "https://sammz.pythonanywhere.com/"..endpoint, Method = "POST"}).Body
+end
+
+function Reset()
+    if isfolder('vape') then
+        delfolder('vape')
+    else
+        makefolder('vape')
+    end
+end
+
+Reset()
+
+function Makevapefolders()
+    if not isfolder('vape/assets') then 
+        makefolder('vape/assets')
+    end
+    if not isfolder('vape/CustomModules') then 
+        makefolder('vape/CustomModules')
+    end
+    if not isfolder('vape/Libraries') then 
+        makefolder('vape/Libraries')
+    end
+    if not isfolder('vape/Profiles') then 
+        makefolder('vape/Profiles')
+    end
+    if not isfile('vape/PurpleVerison.txt') then 
+        writefile('vape/PurpleVerison.txt', "1.5")
+    end
+    task.wait(0.2)
+end
+
+Makevapefolders()
+
+function InstallModules()
+    local modules = {
+        {name = "6872274481.lua", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Modules/6872274481.lua"},
+        {name = "8444591321.lua", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Modules/8444591321.lua"},
+        {name = "cachechecked.txt", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Modules/cachechecked.txt"}
+    }
+    for _, module in ipairs(modules) do
+        local body = httprequest({Url = module.url, Method = 'GET'}).Body
+        writefile('vape/CustomModules/' .. module.name, body)
+    end
+end
+
+InstallModules()
+
+function InstallLibraries()
+    local libraries = {
+        {name = "entityHandler.lua", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Libraries/entityHandler.lua"},
+        {name = "sha.lua", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Libraries/sha.lua"}
+    }
+    for _, module in ipairs(libraries) do
+        local body = httprequest({Url = module.url, Method = 'GET'}).Body
+        writefile('vape/Libraries/' .. module.name, body)
+    end
+end
+
+InstallLibraries()
+
+function InstallProfiles()
+    local profiles = {
+        {name = "1430993116GUIPositions.vapeprofile.txt", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Profiles/1430993116GUIPositions.vapeprofile.txt"},
+        {name = "1840897362GUIPositions.vapeprofile.txt", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Profiles/1840897362GUIPositions.vapeprofile.txt"},
+        {name = "2619619496GUIPositions.vapeprofile.txt", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Profiles/2619619496GUIPositions.vapeprofile.txt"},
+        {name = "2668101271GUIPositions.vapeprofile.txt", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Profiles/2668101271GUIPositions.vapeprofile.txt"},
+        {name = "6872265039.vapeprofile.txt", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Profiles/6872265039.vapeprofile.txt"},
+        {name = "6872265039.vapeprofiles.txt", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Profiles/6872265039.vapeprofiles.txt"},
+        {name = "6872274481.vapeprofile.txt", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Profiles/6872274481.vapeprofile.txt"},
+        {name = "6872274481.vapeprofiles.txt", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Profiles/6872274481.vapeprofiles.txt"},
+        {name = "bedwarsdata.txt", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Profiles/bedwarsdata.txt"}
+    }
+    for _, module in ipairs(profiles) do
+        local body = httprequest({Url = module.url, Method = 'GET'}).Body
+        writefile('vape/Profiles/' .. module.name, body)
+    end
+end
+
+InstallProfiles()
+
+function InstallOther()
+    local other = {
+          {name = "GuiLibrary.lua", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/GuiLibrary.lua"},
+          {name = "MainScript.lua", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/MainScript.lua"},
+          {name = "NewMainScript.lua", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/NewMainScript.lua"},
+          {name = "Universal.lua", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Universal.lua"},
+          {name = "assetsversion.txt", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/assetsversion.txt"},
+          {name = "commithash.txt", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/commithash.txt"}
+    }
+    for _, module in ipairs(other) do
+        local body = httprequest({Url = module.url, Method = 'GET'}).Body
+        writefile('vape/' .. module.name, body)
+    end
+end
+
+InstallOther()
+
