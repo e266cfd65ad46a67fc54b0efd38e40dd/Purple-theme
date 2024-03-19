@@ -1037,6 +1037,7 @@ runFunction(function()
     })
 end)
 
+--[[
 runFunction(function()
     local Leap = GuiLibrary.ObjectsThatCanBeSaved.MovementWindow.Api.CreateOptionsButton({
         Name = "Leap",
@@ -1061,6 +1062,7 @@ runFunction(function()
         Hovertext = "Will allow you to leap far"
     })
 end)
+--]]
 
 runFunction(function()
 	local transformed = false
@@ -1617,40 +1619,40 @@ end)
 
 
 runFunction(function()
-	InfiniteJump = GuiLibrary.ObjectsThatCanBeSaved.MovementWindow.Api.CreateOptionsButton({
-		Name = "InfiniteJump",
-		Function = function(callback)
-			if callback then
-		            local UserInputService = game:GetService("UserInputService")
-		            local player = game.Players.LocalPlayer
-		
-		            local function onJumpRequest(input, gameProcessedEvent)
-		                if input.KeyCode == Enum.KeyCode.Space and not gameProcessedEvent then
-		                    player.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
-		                end
-		            end
-		
-		            UserInputService.InputBegan:Connect(onJumpRequest)
-			end
-		end
-	})
+    InfiniteJump = GuiLibrary.ObjectsThatCanBeSaved.MovementWindow.Api.CreateOptionsButton({
+        Name = "InfiniteJump",
+        Function = function(callback)
+            if callback then
+                local UserInputService = game:GetService("UserInputService")
+                local player = game.Players.LocalPlayer
+
+                local function onJumpRequest(input, gameProcessedEvent)
+                    if input.KeyCode == Enum.KeyCode.Space and not gameProcessedEvent then
+                        player.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                    end
+                end
+
+                UserInputService.InputBegan:Connect(onJumpRequest)
+            end
+        end
+    })
+end)
 
 runFunction(function()
-	local SkyWC = {}
-	SkyWC = GuiLibrary.ObjectsThatCanBeSaved.UtilityWindow.Api.CreateOptionsButton({
-	    Name = 'Skywars clip',
-	    Function = function(callback)
-	        if callback then
-			wait(3)
-	                local lplr = game.Players.LocalPlayer
-	                local cage = game.Workspace.SpectatorPlatform.Root
-	                if cage and lplr.Character and lplr.Character:FindFirstChild("HumanoidRootPart") then
-	                    lplr.Character.HumanoidRootPart.CFrame *= CFrame.new(0, -5, 0)
-	                end
-	            end
-	        end
-	    end
-	end
+    local SkyWC = {}
+    SkyWC = GuiLibrary.ObjectsThatCanBeSaved.UtilityWindow.Api.CreateOptionsButton({
+        Name = 'Skywars clip',
+        Function = function(callback)
+            if callback then
+                wait(3)
+                local lplr = game.Players.LocalPlayer
+                local cage = game.Workspace.SpectatorPlatform.Root
+                if cage and lplr.Character and lplr.Character:FindFirstChild("HumanoidRootPart") then
+                    lplr.Character.HumanoidRootPart.CFrame *= CFrame.new(0, -5, 0)
+                end
+            end
+        end
+    })
 end)
 
 local function isfile(file)
