@@ -33,7 +33,7 @@ function Makevapefolders()
         makefolder('vape/Profiles')
     end
     if not isfile('vape/PurpleVerison.txt') then 
-        writefile('vape/PurpleVerison.txt', "1.5")
+        writefile('vape/PurpleVerison.txt', "1.6")
     end
     task.wait(0.2)
 end
