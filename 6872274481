@@ -971,13 +971,13 @@ runFunction(function()
         if nearestBed and not hasTeleported then
             hasTeleported = true
 
-           local direction = (nearestBed.Position - lplr.Character.HumanoidRootPart.Position).unit
-           local speed = 50
+            local tweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, 0, false, 0)
 
-           lplr.Character.HumanoidRootPart.Velocity = direction * speed
+            local tween = TweenService:Create(lplr.Character.HumanoidRootPart, TweenInfo.new(0.86), {CFrame = nearestBed.CFrame + Vector3.new(0, 30, 0)})
+            tween:Play()
         end
     end
-    BedTpv2 = GuiLibrary.ObjectsThatCanBeSaved.MovementWindow.Api.CreateOptionsButton({
+    BedTpv2 = GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
         Name = "BedTpv2",
         Function = function(callback)
             if callback then
