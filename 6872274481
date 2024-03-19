@@ -823,6 +823,7 @@ runFunction(function()
     end
 end)
 
+--[[
 runFunction(function()
     local SkyTp = {Enabled = false}
     SkyTp = GuiLibrary.ObjectsThatCanBeSaved.MovementWindow.Api.CreateOptionsButton{
@@ -864,6 +865,7 @@ Skyg = SkyTp.CreateSlider{
     Function = function(val) end,
     Default = 168
 }
+--]]
 
 runFunction(function()
     local hasTeleported = false
