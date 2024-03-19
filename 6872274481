@@ -1037,7 +1037,6 @@ runFunction(function()
     })
 end)
 
---[[
 runFunction(function()
     local Leap = GuiLibrary.ObjectsThatCanBeSaved.MovementWindow.Api.CreateOptionsButton({
         Name = "Leap",
@@ -1050,19 +1049,28 @@ runFunction(function()
                     local initialVelocity = 400
                     local acceleration = 200
                     humanoidRootPart.Velocity = Vector3.new(0, initialVelocity, 0)
-                    game:GetService("RunService").Stepped:Connect(function()
-                        if humanoidRootPart and humanoidRootPart.Velocity.Y > 0 then
-                            humanoidRootPart.Velocity = humanoidRootPart.Velocity + Vector3.new(0, acceleration, 0)
+                    local runService = game:GetService("RunService")
+                    local steppedConnection
+                    steppedConnection = runService.Stepped:Connect(function()
+                        if humanoidRootPart and humanoidRootPart.Velocity then
+                            if humanoidRootPart.Velocity.Y > 0 then
+                                humanoidRootPart.Velocity = humanoidRootPart.Velocity + Vector3.new(0, acceleration, 0)
+                            else
+                                steppedConnection:Disconnect()
+                            end
+                        else
+                            steppedConnection:Disconnect()
                         end
                     end)
                 end
-                tpdim.ToggleButton(false)
+                if Leap and Leap.ToggleButton then
+                    Leap.ToggleButton(false)
+                end
             end
         end,
         Hovertext = "Will allow you to leap far"
     })
 end)
---]]
 
 runFunction(function()
 	local transformed = false
