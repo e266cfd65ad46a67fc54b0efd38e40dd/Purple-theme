@@ -824,46 +824,46 @@ runFunction(function()
 end)
 
 runFunction(function()
-	local SkyTp = Enabled = false
-	SkyTp = GuiLibrary.ObjectsThatCanBeSaved.MovementWindow.Api.CreateOptionsButton(
-	        Name = "SkyTp",
-	        HoverText = "Puts you into the sky",
-	        Function = function(v)
-	            Skytp = v
-	            if Skytp then
-	                lplr.Character.HumanoidRootPart.CFrame =
-	                    lplr.Character.HumanoidRootPart.CFrame + Vector3.new(0, Skyp["Value"], 0)
-	                Workspace.Gravity = 0
-	                wait(Skyd["Value"])
-	                Workspace.Gravity = Skyg["Value"]
-	            else
-	                Workspace.Gravity = 196.2
-	            end
-	        end
-	    end
-	end
-end
-Skyp = SkyTp.CreateSlider(
-        Name = "Position",
-        Min = 5,
-        Max = 2500,
-        Function = function(val) end,
-        Default = 1265
-)
-Skyd = SkyTp.CreateSlider(
-        Name = "Delay",
-        Min = 0,
-        Max = 3,
-        Function = function(val) end,
-        Default = 2
-)
-Skyg = SkyTp.CreateSlider(
-        Name = "Gravity",
-        Min = 0,
-        Max = 300,
-        Function"] = function(val) end,
-        ["Default"] = 168
-)
+    local SkyTp = {Enabled = false}
+    SkyTp = GuiLibrary.ObjectsThatCanBeSaved.MovementWindow.Api.CreateOptionsButton{
+        Name = "SkyTp",
+        HoverText = "Puts you into the sky",
+        Function = function(v)
+            SkyTp.Enabled = v
+            if SkyTp.Enabled then
+                lplr.Character.HumanoidRootPart.CFrame =
+                    lplr.Character.HumanoidRootPart.CFrame + Vector3.new(0, Skyp["Value"], 0)
+                Workspace.Gravity = 0
+                wait(Skyd["Value"])
+                Workspace.Gravity = Skyg["Value"]
+            else
+                Workspace.Gravity = 196.2
+            end
+        end
+    }
+end)
+
+Skyp = SkyTp.CreateSlider{
+    Name = "Position",
+    Min = 5,
+    Max = 2500,
+    Function = function(val) end,
+    Default = 1265
+}
+Skyd = SkyTp.CreateSlider{
+    Name = "Delay",
+    Min = 0,
+    Max = 3,
+    Function = function(val) end,
+    Default = 2
+}
+Skyg = SkyTp.CreateSlider{
+    Name = "Gravity",
+    Min = 0,
+    Max = 300,
+    Function = function(val) end,
+    Default = 168
+}
 
 runFunction(function()
     local hasTeleported = false
