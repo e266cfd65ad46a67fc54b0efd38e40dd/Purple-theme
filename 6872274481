@@ -750,29 +750,30 @@ InfFlyD = Detection.CreateToggle({
 	Function = function() end,
 })
 
-local Cframehj = {["Enabled"] = false}
-Cframehj = GuiLibrary["ObjectsThatCanBeSaved"]["BlatantWindow"]["Api"].CreateOptionsButton({
-		["Name"] = "CFrameHighJump",
-		["HoverText"] = "uses CFrame to highjump",
-		["Function"] = function(v)
-		Cframehj = v
-		if Cframehj then
-		Workspace.Gravity = 0
-		lplr.Character.HumanoidRootPart.CFrame = lplr.Character.HumanoidRootPart.CFrame + Vector3.new(0, -6, 0)
-		spawn(function()
-					repeat
-		if (not Cframehj) then return end
-		Workspace.Gravity = 0
-		lplr.Character.HumanoidRootPart.CFrame = lplr.Character.HumanoidRootPart.CFrame + Vector3.new(0, 12, 0)
-		task.wait(0.07)
-		lplr.Character.HumanoidRootPart.CFrame = lplr.Character.HumanoidRootPart.CFrame + Vector3.new(0, 6, 0)
-		until (not Cframehj) 
-			end)	
-		else
-		Workspace.Gravity = 196.2
-		end
-	end
-})
+runFunction(function()
+    local Cframehj = false
+    Cframehj = GuiLibrary.ObjectsThatCanBeSaved.MovementWindow.Api.CreateOptionsButton({
+        Name = "CFrameHighJump",
+        Function = function(v)
+            Cframehj = v
+            if Cframehj then
+                Workspace.Gravity = 1
+                lplr.Character.HumanoidRootPart.CFrame = lplr.Character.HumanoidRootPart.CFrame + Vector3.new(0, -8, 0)
+                spawn(function()
+                    while Cframehj do
+                        Workspace.Gravity = 0
+                        lplr.Character.HumanoidRootPart.CFrame = lplr.Character.HumanoidRootPart.CFrame + Vector3.new(0, 8, 0)
+                        task.wait(0.03)
+                        lplr.Character.HumanoidRootPart.CFrame = lplr.Character.HumanoidRootPart.CFrame + Vector3.new(0, 6, 0)
+                    end
+                    Workspace.Gravity = 196.2
+                end)
+            else
+                Workspace.Gravity = 196.2
+            end
+        end
+    })
+end)
 
 local Velcoityhj = {["Enabled"] = false}
 Velcoityhj = GuiLibrary["ObjectsThatCanBeSaved"]["BlatantWindow"]["Api"].CreateOptionsButton({
