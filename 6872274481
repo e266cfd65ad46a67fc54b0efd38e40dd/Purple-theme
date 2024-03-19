@@ -1607,38 +1607,21 @@ runFunction(function()
 	})
 end)
 
-runFunction(function()
-    local AutoSkywars = {}
-    local AutoSkywarsDepth = {Value = 7}
-    AutoSkywars = GuiLibrary.ObjectsThatCanBeSaved.UtilityWindow.Api.CreateOptionsButton({
-        Name = 'AutoSkywars',
-        Function = function(callback)
-            if callback then
-                task.spawn(function()
-					local cage = workspace:WaitForChild('spawn_cage')
-					if cage and isAlive() then
-						lplr.Character.HumanoidRootPart.CFrame *= CFrame.new(0, -AutoSkywarsDepth.Value, 0)
-					end
-					if AutoSkywarsNotify.Enabled then
-						createwarning("Purple Theme","Fully loaded",5)
-					end
-				end)
-            end
+local AutoSkywars = {}
+AutoSkywars = GuiLibrary.ObjectsThatCanBeSaved.UtilityWindow.Api.CreateOptionsButton({
+    Name = 'AutoSkywars',
+    Function = function(callback)
+        if callback then
+            task.spawn(function()
+                local lplr = game.Players.LocalPlayer
+                local cage = game.Workspace.SpectatorPlatform.Root
+                if cage and lplr.Character and lplr.Character:FindFirstChild("HumanoidRootPart") then
+                    lplr.Character.HumanoidRootPart.CFrame *= CFrame.new(0, -5, 0)
+                end
+            end)
         end
-    })
-	AutoSkywarsDepth = AutoSkywars.CreateSlider({
-        Name = 'Depth',
-        Min = 1,
-        Max = 10,
-        Function = function() end,
-        Default = 7
-    })
-	AutoSkywarsNotify = AutoSkywars.CreateToggle({
-		Name = 'Notification',
-		Default = false,
-		Function = function() end
-	})
-end)
+    end
+})
 
 local function isfile(file)
 	local suc, _ = pcall(function() return readfile(file) end)
