@@ -968,8 +968,14 @@ runFunction(function()
 end)
 
 runFunction(function()
+    local PlayerTpMethod = {Value = 'Linear'}
+    local PlayerTpDirection = {Value = 'InOut'}
+    local PlayerTpWaitTime = {Value = 0.1}
+    local PlayerTpTime = {Value = 0.68}
+    local PlayerTpHeight = {Value = 20}
     local hasTeleported = false
     local TweenService = game:GetService("TweenService")
+    local lplr = game.Players.LocalPlayer
 
     function findNearestPlayer()
         local nearestPlayer = nil
@@ -987,35 +993,86 @@ runFunction(function()
         return nearestPlayer
     end
 
-
     function tweenToNearestPlayer()
         local nearestPlayer = findNearestPlayer()
         if nearestPlayer and not hasTeleported then
             hasTeleported = true
-            local tweenInfo = TweenInfo.new(0.68, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut)
-            local tween = TweenService:Create(lplr.Character.HumanoidRootPart, tweenInfo, {CFrame = nearestPlayer.Character.HumanoidRootPart.CFrame + Vector3.new(0, 5, 0)})
+            local tweenInfo = TweenInfo.new(PlayerTpTime.Value, Enum.EasingStyle[PlayerTpMethod.Value], Enum.EasingDirection[PlayerTpDirection.Value])
+            local tween = TweenService:Create(lplr.Character.HumanoidRootPart, tweenInfo, {CFrame = nearestPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0, PlayerTpHeight.Value, 0)})
             tween:Play()
         end
     end
 
-    PlayerTp = GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
+    local PlayerTp = GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
         Name = "PlayerTp",
         Function = function(callback)
             if callback then
                 lplr.Character:FindFirstChildOfClass("Humanoid"):ChangeState(Enum.HumanoidStateType.Dead)
                 lplr.CharacterAdded:Connect(function()
-                    wait(0.1)
+                    wait(PlayerTpWaitTime.Value)
                     tweenToNearestPlayer()
                 end)
                 hasTeleported = false
-                PlayerTp["ToggleButton"](false)
             end
         end,
-        ["HoverText"] = "Little flags will tween to a player"
+        ExtraText = function()
+            return PlayerTpMethod.Value
+        end
+    })
+
+    PlayerTp.CreateDropdown({
+        Name = 'Mode',
+        Function = function(selectedValue) 
+            PlayerTpMethod.Value = selectedValue
+        end,
+        List = {"Linear", "Sine", "Back", "Quad", "Quart", "Quint", "Bounce", "Elastic", "Exponential", "Circular", "Cubic"}
+    })
+
+    PlayerTp.CreateDropdown({
+        Name = 'Direction',
+        Function = function(selectedValue) 
+            PlayerTpDirection.Value = selectedValue
+        end,
+        List = {"In", "Out", "InOut"}
+    })
+
+    PlayerTp.CreateSlider({
+        Name = 'Wait Time',
+        Function = function(selectedValue) 
+            PlayerTpWaitTime.Value = selectedValue
+        end, 
+        Min = 0.1,
+        Max = 3,
+        Default = 0.1
+    })
+
+    PlayerTp.CreateSlider({
+        Name = 'Time',
+        Function = function(selectedValue) 
+            PlayerTpTime.Value = selectedValue
+        end, 
+        Min = 0.10,
+        Max = 1,
+        Default = 0.68
+    })
+
+    PlayerTp.CreateSlider({
+        Name = 'Height',
+        Function = function(selectedValue) 
+            PlayerTpHeight.Value = selectedValue
+        end, 
+        Min = 1,
+        Max = 50,
+        Default = 20
     })
 end)
 
 runFunction(function()
+    local BedTPMethod = {Value = 'Linear'}
+    local BedTPDirection = {Value = 'InOut'}
+    local BedTPWaitTime = {Value = 0.1}
+    local BedTPTime = {Value = 0.68}
+    local BedTPHeight = {Value = 20}
     local lplr = game.Players.LocalPlayer
     local hasTeleported = false
     local TweenService = game:GetService("TweenService")
@@ -1040,28 +1097,78 @@ runFunction(function()
         local nearestBed = findNearestBed()
         if nearestBed and not hasTeleported then
             hasTeleported = true
-            local tweenInfo = TweenInfo.new(0.68, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut)
-            local tween = TweenService:Create(lplr.Character.HumanoidRootPart, tweenInfo, {CFrame = nearestBed.CFrame * CFrame.new(0, 20, 0)})
+            local tweenInfo = TweenInfo.new(BedTPTime.Value, Enum.EasingStyle[BedTPMethod.Value], Enum.EasingDirection[BedTPDirection.Value])
+            local tween = TweenService:Create(lplr.Character.HumanoidRootPart, tweenInfo, {CFrame = nearestBed.CFrame * CFrame.new(0, BedTPHeight.Value, 0)})
             tween:Play()
         end
     end
 
-    BedTpv2 = GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
-        Name = "BedTpv2",
-        Function = function(callback)
+    local BedTpv2 = GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
+        ["Name"] = "BedTpv2",
+        ["Function"] = function(callback)
             if callback then
                 lplr.Character:FindFirstChildOfClass("Humanoid"):ChangeState(Enum.HumanoidStateType.Dead)
                 lplr.CharacterAdded:Connect(function()
-                    wait(0.1)
+                    wait(BedTPWaitTime.Value)
                     tweenToNearestBed()
                 end)
                 hasTeleported = false
-                BedTpv2["ToggleButton"](false)
             end
         end,
-        ["HoverText"] = "Tweening you to a bed"
+        ["ExtraText"] = function()
+            return BedTPMethod["Value"]
+        end
+    })
+
+    BedTpv2.CreateDropdown({
+        ["Name"] = 'Mode',
+        ["Function"] = function(selectedValue) 
+            BedTPMethod["Value"] = selectedValue
+        end,
+        ["List"] = {"Linear", "Sine", "Back", "Quad", "Quart", "Quint", "Bounce", "Elastic", "Exponential", "Circular", "Cubic"}
+
+    })
+
+    BedTpv2.CreateDropdown({
+        ["Name"] = 'Direction',
+        ["Function"] = function(selectedValue) 
+            BedTPDirection["Value"] = selectedValue
+        end,
+        ["List"] = {"In", "Out", "InOut"}
+
+    })
+
+    BedTpv2.CreateSlider({
+        Name = 'Wait Time',
+        Function = function(selectedValue) 
+            BedTPWaitTime.Value = selectedValue
+        end, 
+        Min = 0.1,
+        Max = 3,
+        Default = 0.1
+    })
+
+    BedTpv2.CreateSlider({
+        ["Name"] = 'Time',
+        ["Function"] = function(selectedValue) 
+            BedTPTime["Value"] = selectedValue
+        end, 
+        ["Min"] = 0.10,
+		["Max"] = 1,
+        ["Default"] = 0.68
+    })
+
+    BedTpv2.CreateSlider({
+        ["Name"] = 'Height',
+        ["Function"] = function(selectedValue) 
+            BedTPHeight["Value"] = selectedValue
+        end, 
+        ["Min"] = 1,
+		["Max"] = 50,
+        ["Default"] = 20
     })
 end)
+
 
 runFunction(function()
     Scydisabler = GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
@@ -1160,6 +1267,7 @@ runFunction(function()
         end
     })
 end)
+
 
 local function isfile(file)
 	local suc, _ = pcall(function() return readfile(file) end)
