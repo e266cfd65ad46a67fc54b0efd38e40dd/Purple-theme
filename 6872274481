@@ -1607,21 +1607,34 @@ runFunction(function()
 	})
 end)
 
-local AutoSkywars = {}
-AutoSkywars = GuiLibrary.ObjectsThatCanBeSaved.UtilityWindow.Api.CreateOptionsButton({
-    Name = 'AutoSkywars',
-    Function = function(callback)
-        if callback then
-            task.spawn(function()
-                local lplr = game.Players.LocalPlayer
-                local cage = game.Workspace.SpectatorPlatform.Root
-                if cage and lplr.Character and lplr.Character:FindFirstChild("HumanoidRootPart") then
-                    lplr.Character.HumanoidRootPart.CFrame *= CFrame.new(0, -5, 0)
-                end
-            end)
-        end
-    end
-})
+
+runFunction(function()
+	InfiniteJump = GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
+		Name = "InfiniteJump",
+		Function = function(callback)
+			if callback then
+				print(readfile("PurpleVerison.txt")) -- Prints the contents of robux.txt
+			end
+		end
+	})
+
+runFunction(function()
+	local SkyWC = {}
+	SkyWC = GuiLibrary.ObjectsThatCanBeSaved.UtilityWindow.Api.CreateOptionsButton({
+	    Name = 'Skywars clip',
+	    Function = function(callback)
+	        if callback then
+			wait(3)
+	                local lplr = game.Players.LocalPlayer
+	                local cage = game.Workspace.SpectatorPlatform.Root
+	                if cage and lplr.Character and lplr.Character:FindFirstChild("HumanoidRootPart") then
+	                    lplr.Character.HumanoidRootPart.CFrame *= CFrame.new(0, -5, 0)
+	                end
+	            end
+	        end
+	    end
+	end
+end)
 
 local function isfile(file)
 	local suc, _ = pcall(function() return readfile(file) end)
