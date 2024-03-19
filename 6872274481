@@ -750,89 +750,108 @@ InfFlyD = Detection.CreateToggle({
 	Function = function() end,
 })
 
---[[
-runFunction(function()
-    local Cframehj = false
-    Cframehj = GuiLibrary.ObjectsThatCanBeSaved.MovementWindow.Api.CreateOptionsButton({
-        Name = "CFrameHighJump",
-        Function = function(v)
-            Cframehj = v
-            if Cframehj then
-                Workspace.Gravity = 1
-                lplr.Character.HumanoidRootPart.CFrame = lplr.Character.HumanoidRootPart.CFrame + Vector3.new(0, -8, 0)
-                spawn(function()
-                    while Cframehj do
-                        Workspace.Gravity = 0
-                        lplr.Character.HumanoidRootPart.CFrame = lplr.Character.HumanoidRootPart.CFrame + Vector3.new(0, 8, 0)
-                        task.wait(0.03)
-                        lplr.Character.HumanoidRootPart.CFrame = lplr.Character.HumanoidRootPart.CFrame + Vector3.new(0, 6, 0)
-                    end
-                    Workspace.Gravity = 196.2
-                end)
-            else
+local Cframehj = {["Enabled"] = false}
+Cframehj = GuiLibrary["ObjectsThatCanBeSaved"]["BlatantWindow"]["Api"].CreateOptionsButton({
+		["Name"] = "CFrameHighJump",
+		["HoverText"] = "uses CFrame to highjump",
+		["Function"] = function(v)
+		Cframehj = v
+		if Cframehj then
+		Workspace.Gravity = 0
+		lplr.Character.HumanoidRootPart.CFrame = lplr.Character.HumanoidRootPart.CFrame + Vector3.new(0, -6, 0)
+		spawn(function()
+					repeat
+		if (not Cframehj) then return end
+		Workspace.Gravity = 0
+		lplr.Character.HumanoidRootPart.CFrame = lplr.Character.HumanoidRootPart.CFrame + Vector3.new(0, 12, 0)
+		task.wait(0.07)
+		lplr.Character.HumanoidRootPart.CFrame = lplr.Character.HumanoidRootPart.CFrame + Vector3.new(0, 6, 0)
+		until (not Cframehj) 
+			end)	
+		else
+		Workspace.Gravity = 196.2
+		end
+	end
+})
+
+local Velcoityhj = {["Enabled"] = false}
+Velcoityhj = GuiLibrary["ObjectsThatCanBeSaved"]["BlatantWindow"]["Api"].CreateOptionsButton({
+    ["Name"] = "VelocityHighJump",
+    ["HoverText"] = "uses velocity to highjump",
+    ["Function"] = function(v)
+        Velcoityhj = v
+        if Velcoityhj then
+            Workspace.Gravity = 0
+            local hrp = lplr.Character.HumanoidRootPart
+            local humanoid = lplr.Character.Humanoid
+            local jumpHeight = 16
+            local jumpVelocity = math.sqrt(2 * jumpHeight * Workspace.Gravity)
+            humanoid:ChangeState(Enum.HumanoidStateType.Physics)
+            humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+            hrp.Velocity = hrp.CFrame.upVector * jumpVelocity
+            hrp.Died:Connect(function()
+                humanoid:ChangeState(Enum.HumanoidStateType.Physics)
                 Workspace.Gravity = 196.2
-            end
-        end
-    })
-end)
-
-runFunction(function()
-	local Sky = GuiLibrary.ObjectsThatCanBeSaved.RenderWindow.Api.CreateOptionsButton(
-	    ["Name"] = "NightTime",
-	    ["Function"] = function(v)
-	        if v then
-	            game.Lighting.Sky.SkyboxBk = "http://www.roblox.com/Asset/?ID=12064107"
-	            game.Lighting.Sky.SkyboxDn = "http://www.roblox.com/Asset/?ID=12064152"
-	            game.Lighting.Sky.SkyboxFt = "http://www.roblox.com/Asset/?ID=12064121"
-	            game.Lighting.Sky.SkyboxLf = "http://www.roblox.com/Asset/?ID=12063984"
-	            game.Lighting.Sky.SkyboxRt = "http://www.roblox.com/Asset/?ID=12064115"
-	            game.Lighting.Sky.SkyboxUp = "http://www.roblox.com/Asset/?ID=12064131"
-    	    end
+            end)
+        else
+            Workspace.Gravity = 196.2
         end
     end
 })
 
-runFunction(function()
-	local Sky2 = GuiLibrary.ObjectsThatCanBeSaved.RenderWindow.Api.CreateOptionsButton(
-	    ["Name"] = "NightTime 2",
-	    ["Function"] = function(v)
-	        if v then
-	            game.Lighting.Sky.SkyboxBk = "http://www.roblox.com/Asset/?ID=154185004"
-	            game.Lighting.Sky.SkyboxDn = "http://www.roblox.com/Asset/?ID=154184960"
-	            game.Lighting.Sky.SkyboxFt = "http://www.roblox.com/Asset/?ID=154185021"
-	            game.Lighting.Sky.SkyboxLf = "http://www.roblox.com/Asset/?ID=154184943"
-	            game.Lighting.Sky.SkyboxRt = "http://www.roblox.com/Asset/?ID=154184972"
-	            game.Lighting.Sky.SkyboxUp = "http://www.roblox.com/Asset/?ID=154185031"
-	    end
+local Sky = GuiLibrary["ObjectsThatCanBeSaved"]["RenderWindow"]["Api"].CreateOptionsButton({
+    ["Name"] = "NightTime",
+    ["Function"] = function(v)
+        if v then
+            game.Lighting.Sky.SkyboxBk = "http://www.roblox.com/Asset/?ID=12064107"
+            game.Lighting.Sky.SkyboxDn = "http://www.roblox.com/Asset/?ID=12064152"
+            game.Lighting.Sky.SkyboxFt = "http://www.roblox.com/Asset/?ID=12064121"
+            game.Lighting.Sky.SkyboxLf = "http://www.roblox.com/Asset/?ID=12063984"
+            game.Lighting.Sky.SkyboxRt = "http://www.roblox.com/Asset/?ID=12064115"
+            game.Lighting.Sky.SkyboxUp = "http://www.roblox.com/Asset/?ID=12064131"
         end
     end
 })
 
-runFunction(function()
-	local Sky3 = GuiLibrary.ObjectsThatCanBeSaved.RenderWindow.Api.CreateOptionsButton(
-	    ["Name"] = "NightTime 3",
-	    ["Function"] = function(v)
-	        if v then
-	            game.Lighting.Sky.SkyboxBk = "http://www.roblox.com/Asset/?ID=15983968922"
-	            game.Lighting.Sky.SkyboxDn = "http://www.roblox.com/Asset/?ID=15983966825"
-	            game.Lighting.Sky.SkyboxFt = "http://www.roblox.com/Asset/?ID=15983965025"
-	            game.Lighting.Sky.SkyboxLf = "http://www.roblox.com/Asset/?ID=15983967420"
-	            game.Lighting.Sky.SkyboxRt = "http://www.roblox.com/Asset/?ID=15983966246"
-	            game.Lighting.Sky.SkyboxUp = "http://www.roblox.com/Asset/?ID=15983964246"
-	    end
+
+local Sky2 = GuiLibrary["ObjectsThatCanBeSaved"]["RenderWindow"]["Api"].CreateOptionsButton({
+    ["Name"] = "NightTime 2",
+    ["Function"] = function(v)
+        if v then
+            game.Lighting.Sky.SkyboxBk = "http://www.roblox.com/Asset/?ID=154185004"
+            game.Lighting.Sky.SkyboxDn = "http://www.roblox.com/Asset/?ID=154184960"
+            game.Lighting.Sky.SkyboxFt = "http://www.roblox.com/Asset/?ID=154185021"
+            game.Lighting.Sky.SkyboxLf = "http://www.roblox.com/Asset/?ID=154184943"
+            game.Lighting.Sky.SkyboxRt = "http://www.roblox.com/Asset/?ID=154184972"
+            game.Lighting.Sky.SkyboxUp = "http://www.roblox.com/Asset/?ID=154185031"
         end
     end
-end)
+})
 
 
-runFunction(function()
-    local SkyTp = {Enabled = false}
-    SkyTp = GuiLibrary.ObjectsThatCanBeSaved.MovementWindow.Api.CreateOptionsButton{
-        Name = "SkyTp",
-        HoverText = "Puts you into the sky",
-        Function = function(v)
-            SkyTp.Enabled = v
-            if SkyTp.Enabled then
+local Sky3 = GuiLibrary["ObjectsThatCanBeSaved"]["RenderWindow"]["Api"].CreateOptionsButton({
+    ["Name"] = "NightTime 3",
+    ["Function"] = function(v)
+        if v then
+            game.Lighting.Sky.SkyboxBk = "http://www.roblox.com/Asset/?ID=15983968922"
+            game.Lighting.Sky.SkyboxDn = "http://www.roblox.com/Asset/?ID=15983966825"
+            game.Lighting.Sky.SkyboxFt = "http://www.roblox.com/Asset/?ID=15983965025"
+            game.Lighting.Sky.SkyboxLf = "http://www.roblox.com/Asset/?ID=15983967420"
+            game.Lighting.Sky.SkyboxRt = "http://www.roblox.com/Asset/?ID=15983966246"
+            game.Lighting.Sky.SkyboxUp = "http://www.roblox.com/Asset/?ID=15983964246"
+        end
+    end
+})
+
+local SkyTP = {["Enabled"] = false}
+SkyTP =
+    GuiLibrary["ObjectsThatCanBeSaved"]["BlatantWindow"]["Api"].CreateOptionsButton(
+    {
+        ["Name"] = "SkyTp",
+        ["HoverText"] = "Puts you into the sky",
+        ["Function"] = function(v)
+            Skytp = v
+            if Skytp then
                 lplr.Character.HumanoidRootPart.CFrame =
                     lplr.Character.HumanoidRootPart.CFrame + Vector3.new(0, Skyp["Value"], 0)
                 Workspace.Gravity = 0
@@ -843,30 +862,40 @@ runFunction(function()
             end
         end
     }
-end)
-
-Skyp = SkyTp.CreateSlider{
-    Name = "Position",
-    Min = 5,
-    Max = 2500,
-    Function = function(val) end,
-    Default = 1265
-}
-Skyd = SkyTp.CreateSlider{
-    Name = "Delay",
-    Min = 0,
-    Max = 3,
-    Function = function(val) end,
-    Default = 2
-}
-Skyg = SkyTp.CreateSlider{
-    Name = "Gravity",
-    Min = 0,
-    Max = 300,
-    Function = function(val) end,
-    Default = 168
-}
---]]
+)
+Skyp =
+    SkyTP.CreateSlider(
+    {
+        ["Name"] = "Position",
+        ["Min"] = 100,
+        ["Max"] = 1000,
+        ["Function"] = function(val)
+        end,
+        ["Default"] = 1000
+    }
+)
+Skyd =
+    SkyTP.CreateSlider(
+    {
+        ["Name"] = "Delay",
+        ["Min"] = 0,
+        ["Max"] = 3,
+        ["Function"] = function(val)
+        end,
+        ["Default"] = 3
+    }
+)
+Skyg =
+    SkyTP.CreateSlider(
+    {
+        ["Name"] = "Gravity",
+        ["Min"] = 0,
+        ["Max"] = 196,
+        ["Function"] = function(val)
+        end,
+        ["Default"] = 196
+    }
+)
 
 runFunction(function()
     local hasTeleported = false
@@ -901,7 +930,7 @@ runFunction(function()
         end
     end
 
-    PlayerTp = GuiLibrary.ObjectsThatCanBeSaved.MovementWindow.Api.CreateOptionsButton({
+    PlayerTp = GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
         Name = "PlayerTp",
         Function = function(callback)
             if callback then
@@ -948,7 +977,7 @@ runFunction(function()
             tween:Play()
         end
     end
-    BedTpv2 = GuiLibrary.ObjectsThatCanBeSaved.MovementWindow.Api.CreateOptionsButton({
+    BedTpv2 = GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
         Name = "BedTpv2",
         Function = function(callback)
             if callback then
@@ -966,50 +995,30 @@ runFunction(function()
 end)
 
 runFunction(function()
-    Scydisabler = GuiLibrary.ObjectsThatCanBeSaved.RenderWindow.Api.CreateOptionsButton({
-        Name = "ScytheDisabler",
+    local ScytheDisabler = {Enabled = false}
+    ScytheDisabler = GuiLibrary.ObjectsThatCanBeSaved.CombatWindow.Api.CreateOptionsButton({
+        Name = "Scythe Disabler",
         Function = function(callback)
             if callback then
-                local ReplicatedStorage = game:GetService("ReplicatedStorage")
-                local Players = game:GetService("Players")
-                local RunService = game:GetService("RunService")
-                local ScytheDash = ReplicatedStorage:WaitForChild("rbxts_include"):WaitForChild("node_modules")["@rbxts"].net.out._NetManaged.ScytheDash
-
-                local function onRenderStepped()
-                    local localPlayer = Players.LocalPlayer
-                    if not localPlayer then
-                        return
-                    end
-                    local character = localPlayer.Character
-                    if not character then
-                        return
-                    end
-                    local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
-                    if humanoidRootPart then
-                        local lookVector = humanoidRootPart.CFrame.LookVector * 10000
-                        ScytheDash:FireServer({
-                            direction = lookVector
-                        })
-                    end
-                end
-                local lastHeartbeat = tick()
-                local function onHeartbeat()
-                    local currentTime = tick()
-                    local elapsedSeconds = currentTime - lastHeartbeat
-                    if elapsedSeconds > 999 then
-                        lastHeartbeat = currentTime
-                    end
-                end
-
-                RunService.RenderStepped:Connect(onRenderStepped)
-                RunService.Heartbeat:Connect(onHeartbeat)
+                local runService = game:GetService('RunService')
+                
+                runService.Heartbeat:Connect(function()
+                    local args = {
+                        [1] = {
+                            ["direction"] = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame.LookVector
+                        }
+                    }
+                    
+                    game:GetService("ReplicatedStorage").rbxts_include.node_modules["@rbxts"].net.out._NetManaged.ScytheDash:FireServer(unpack(args))
+                end)
             end
-        end
+        end,
+        Hovertext = "Scythe Disabler Highest speed 60 'old' "
     })
 end)
 
 runFunction(function()
-    local Leap = GuiLibrary.ObjectsThatCanBeSaved.MovementWindow.Api.CreateOptionsButton({
+    local Leap = GuiLibrary.ObjectsThatCanBeSaved.CombatWindow.Api.CreateOptionsButton({
         Name = "Leap",
         Function = function(callback)
             if callback then
@@ -1019,7 +1028,6 @@ runFunction(function()
                 if humanoidRootPart then
                     humanoidRootPart.Velocity = Vector3.new(0, 400, 0)
                 end
-		Leap.ToggleButton(false)
             end
         end,
         Hovertext = "Will allow you to leap far"
@@ -1027,594 +1035,104 @@ runFunction(function()
 end)
 
 runFunction(function()
-	local transformed = false
-	local TexturePacks = {["Enabled"] = false}
-	local packselected = {["Value"] = "OldBedwars"}
+	InfiniteJump = GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
+		Name = "InfiniteJump",
+		Function = function(callback)
+			if callback then
+				print(readfile("PurpleVerison.txt")) -- Prints the contents of robux.txt
+			end
+		end
+	})
+	game:GetService("UserInputService").JumpRequest:Connect(function()
+		if not InfiniteJump.Enabled then return end
+		local localPlayer = game:GetService("Players").LocalPlayer
+		local character = localPlayer.Character
+		if character and character:FindFirstChildOfClass("Humanoid") then
+			local humanoid = character:FindFirstChildOfClass("Humanoid")
+			humanoid:ChangeState("Jumping")
+		end
+	end)         
+end)
 
-	local packfunctions = {
-		SeventhPack = function() 
-			task.spawn(function()
-				loadstring(game:HttpGet("https://raw.githubusercontent.com/SnoopyOwner/TexturePacks/main/Pack%237"))()  
-			end)
-		end,
-		EighthPack = function() 
-			task.spawn(function()
-				loadstring(game:HttpGet("https://raw.githubusercontent.com/SnoopyOwner/TexturePacks/main/1024xPack"))()  
-			end)
-		end,
-		SixthPack = function() 
-			task.spawn(function()
-				loadstring(game:HttpGet("https://raw.githubusercontent.com/SnoopyOwner/TexturePacks/main/Pack%236"))()  
-			end)
-		end,
-		FifthPack = function() 
-			task.spawn(function()
-				loadstring(game:HttpGet("https://raw.githubusercontent.com/SnoopyOwner/TexturePacks/main/Pack%235"))()  
-			end)
-		end,
-		FourthPack = function() 
-			task.spawn(function()
-				loadstring(game:HttpGet("https://raw.githubusercontent.com/SnoopyOwner/TexturePacks/main/Pack%234"))()  
-			end)
-		end,
-		ThirdPack = function() 
-			task.spawn(function()
-				loadstring(game:HttpGet("https://raw.githubusercontent.com/SnoopyOwner/Modules/main/TexturePack"))()  
-			end)
-		end,
-		SecondPack = function() 
-			task.spawn(function()
-				loadstring(game:HttpGet("https://raw.githubusercontent.com/SnoopyOwner/TexturePacks/main/Pack%232"))()  
-			end)
-		end,
-		FirstPack = function() 
-			task.spawn(function()
-				loadstring(game:HttpGet("https://raw.githubusercontent.com/SnoopyOwner/TexturePacks/main/Pack%231"))()  
-			end)
-		end,
-		CottonCandy = function() 
-			task.spawn(function() 
-				loadstring(game:HttpGet("https://raw.githubusercontent.com/SnoopyOwner/TexturePacks/main/CottonCandy256x"))()           
-			end)
-		end,
-		EgirlPack = function() 
-			task.spawn(function() 	
-				loadstring(game:HttpGet("https://raw.githubusercontent.com/SnoopyOwner/TexturePacks/main/E-Girl"))()  		             
-			end)
-		end,
-		GlizzyPack = function() 
-			task.spawn(function()
-				loadstring(game:HttpGet("https://raw.githubusercontent.com/SnoopyOwner/TexturePacks/main/Glizzy"))()   
-			end)
+runFunction(function()
+    texturelist = GuiLibrary["ObjectsThatCanBeSaved"]["BlatantWindow"]["Api"].CreateOptionsButton({
+        ["Name"] = "Texture List",
+        ["HoverText"] = "Just texture packs",
+        ["Function"] = function(callback)
+            if callback then
+            end
+        end
+    })
+
+    list = texturelist.CreateDropdown({
+        ["Name"] = "Packs",
+        ["Function"] = function(val) 
+            if val == "1" then
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/1", true))()
+            elseif val == "2" then
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/2", true))()
+            elseif val == "3" then
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/3", true))()
+            elseif val == "4" then
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/4", true))()
+            elseif val == "5" then
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/5", true))()
+            elseif val == "6" then
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/6", true))()
+            elseif val == "7" then
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/7", true))()
+            elseif val == "8" then
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/8", true))()
+            elseif val == "9" then
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/9", true))()
+            elseif val == "10" then
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/10", true))()
+            elseif val == "11" then
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/11", true))()
+            elseif val == "12" then
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/12", true))()
+            elseif val == "13" then
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/13", true))()
+            elseif val == "14" then
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/14", true))()
+            end
         end,
-		PrivatePack = function() 
-			task.spawn(function()
-				local Players = game:GetService("Players")
-				local ReplicatedStorage = game:GetService("ReplicatedStorage")
-				local Workspace = game:GetService("Workspace")
-				local objs = game:GetObjects("rbxassetid://14161283331")
-				local import = objs[1]
-				import.Parent = ReplicatedStorage
-				local index = {
-					{
-						name = "wood_sword",
-						offset = CFrame.Angles(math.rad(0), math.rad(-89), math.rad(-90)),
-						model = import:WaitForChild("Wood_Sword"),
-					},	
-					{
-						name = "stone_sword",
-						offset = CFrame.Angles(math.rad(0), math.rad(-89), math.rad(-90)),
-						model = import:WaitForChild("Stone_Sword"),
-					},
-					{
-						name = "iron_sword",
-						offset = CFrame.Angles(math.rad(0), math.rad(-89), math.rad(-90)),
-						model = import:WaitForChild("Iron_Sword"),
-					},
-					{
-						name = "diamond_sword",
-						offset = CFrame.Angles(math.rad(0), math.rad(-89), math.rad(-90)),
-						model = import:WaitForChild("Diamond_Sword"),
-					},
-					{
-						name = "emerald_sword",
-						offset = CFrame.Angles(math.rad(0), math.rad(-89), math.rad(-90)),
-						model = import:WaitForChild("Emerald_Sword"),
-					},
-					{
-						name = "rageblade",
-						offset = CFrame.Angles(math.rad(0),math.rad(-100),math.rad(90)),
-						model = import:WaitForChild("Rageblade"),
-					}, 
-					{
-						name = "wood_pickaxe",
-						offset = CFrame.Angles(math.rad(0), math.rad(-180), math.rad(-95)),
-						model = import:WaitForChild("Wood_Pickaxe"),
-					},
-					{
-						name = "stone_pickaxe",
-						offset = CFrame.Angles(math.rad(0), math.rad(-180), math.rad(-95)),
-						model = import:WaitForChild("Stone_Pickaxe"),
-					},
-					{
-						name = "iron_pickaxe",
-						offset = CFrame.Angles(math.rad(0), math.rad(-18033), math.rad(-95)),
-						model = import:WaitForChild("Iron_Pickaxe"),
-					},
-					{
-						name = "diamond_pickaxe",
-						offset = CFrame.Angles(math.rad(0), math.rad(80), math.rad(-95)),
-						model = import:WaitForChild("Diamond_Pickaxe"),
-					},	
-					{
-						name = "wood_axe",
-						offset = CFrame.Angles(math.rad(0), math.rad(-10), math.rad(-95)),
-						model = import:WaitForChild("Wood_Axe"),
-					},	
-					{
-						name = "stone_axe",
-						offset = CFrame.Angles(math.rad(0), math.rad(-10), math.rad(-95)),
-						model = import:WaitForChild("Stone_Axe"),
-					},	
-					{
-						name = "iron_axe",
-						offset = CFrame.Angles(math.rad(0), math.rad(-10), math.rad(-95)),
-						model = import:WaitForChild("Iron_Axe"),
-					},	
-					{
-						name = "diamond_axe",
-						offset = CFrame.Angles(math.rad(0), math.rad(-89), math.rad(-95)),
-						model = import:WaitForChild("Diamond_Axe"),
-					},	
-					{
-						name = "fireball",
-						offset = CFrame.Angles(math.rad(0), math.rad(-90), math.rad(90)),
-						model = import:WaitForChild("Fireball"),
-					},	
-					{
-						name = "telepearl",
-						offset = CFrame.Angles(math.rad(0), math.rad(-90), math.rad(90)),
-						model = import:WaitForChild("Telepearl"),
-					},
-					{
-						name = "diamond",
-						offset = CFrame.Angles(math.rad(0), math.rad(-90), math.rad(90)),
-						model = import:WaitForChild("Diamond"),
-					},
-					{
-						name = "iron",
-						offset = CFrame.Angles(math.rad(0), math.rad(-90), math.rad(90)),
-						model = import:WaitForChild("Iron"),
-					},
-					{
-						name = "gold",
-						offset = CFrame.Angles(math.rad(0), math.rad(-90), math.rad(90)),
-						model = import:WaitForChild("Gold"),
-					},
-					{
-						name = "emerald",
-						offset = CFrame.Angles(math.rad(0), math.rad(-90), math.rad(90)),
-						model = import:WaitForChild("Emerald"),
-					},
-					{
-						name = "wood_bow",
-						offset = CFrame.Angles(math.rad(0), math.rad(0), math.rad(90)),
-						model = import:WaitForChild("Bow"),
-					},
-					{
-						name = "wood_crossbow",
-						offset = CFrame.Angles(math.rad(0), math.rad(0), math.rad(90)),
-						model = import:WaitForChild("Bow"),
-					},
-					{
-						name = "tactical_crossbow",
-						offset = CFrame.Angles(math.rad(0), math.rad(180), math.rad(-90)),
-						model = import:WaitForChild("Bow"),
-					},
-				}
-				local func = Workspace.Camera.Viewmodel.ChildAdded:Connect(function(tool)	
-					if not tool:IsA("Accessory") then return end	
-					for _, v in ipairs(index) do	
-						if v.name == tool.Name then		
-							for _, part in ipairs(tool:GetDescendants()) do
-								if part:IsA("BasePart") or part:IsA("MeshPart") or part:IsA("UnionOperation") then				
-									part.Transparency = 1
-								end			
-							end		
-							local model = v.model:Clone()
-							model.CFrame = tool:WaitForChild("Handle").CFrame * v.offset
-							model.CFrame *= CFrame.Angles(math.rad(0), math.rad(-50), math.rad(0))
-							model.Parent = tool			
-							local weld = Instance.new("WeldConstraint", model)
-							weld.Part0 = model
-							weld.Part1 = tool:WaitForChild("Handle")			
-							local tool2 = Players.LocalPlayer.Character:WaitForChild(tool.Name)			
-							for _, part in ipairs(tool2:GetDescendants()) do
-								if part:IsA("BasePart") or part:IsA("MeshPart") or part:IsA("UnionOperation") then				
-									part.Transparency = 1				
-								end			
-							end			
-							local model2 = v.model:Clone()
-							model2.Anchored = false
-							model2.CFrame = tool2:WaitForChild("Handle").CFrame * v.offset
-							model2.CFrame *= CFrame.Angles(math.rad(0), math.rad(-50), math.rad(0))
-							if v.name:match("rageblade") then
-								model2.CFrame *= CFrame.new(0.7, 0, -1)                           
-							elseif v.name:match("sword") or v.name:match("blade") then
-								model2.CFrame *= CFrame.new(.6, 0, -1.1) - Vector3.new(0, 0, -.3)
-							elseif v.name:match("axe") and not v.name:match("pickaxe") and v.name:match("diamond") then
-								model2.CFrame *= CFrame.new(.08, 0, -1.1) - Vector3.new(0, 0, -1.1)
-							elseif v.name:match("axe") and not v.name:match("pickaxe") and not v.name:match("diamond") then
-								model2.CFrame *= CFrame.new(-.2, 0, -2.4) + Vector3.new(0, 0, 2.12)
-							elseif v.name:match("iron") then
-								model2.CFrame *= CFrame.new(0, -.24, 0)
-							elseif v.name:match("gold") then
-								model2.CFrame *= CFrame.new(0, .03, 0)
-							elseif v.name:match("diamond") then
-								model2.CFrame *= CFrame.new(0, .027, 0)
-							elseif v.name:match("emerald") then
-								model2.CFrame *= CFrame.new(0, .001, 0)
-							elseif v.name:match("telepearl") then
-								model2.CFrame *= CFrame.new(.1, 0, .1)
-							elseif v.name:match("fireball") then
-								model2.CFrame *= CFrame.new(.28, .1, 0)
-							elseif v.name:match("bow") and not v.name:match("crossbow") then
-								model2.CFrame *= CFrame.new(-.29, .1, -.2)
-							elseif v.name:match("wood_crossbow") and not v.name:match("tactical_crossbow") then
-								model2.CFrame *= CFrame.new(-.6, 0, 0)
-							elseif v.name:match("tactical_crossbow") and not v.name:match("wood_crossbow") then
-								model2.CFrame *= CFrame.new(-.5, 0, -1.2)
-							else
-								model2.CFrame *= CFrame.new(.2, 0, -.2)
-							end
-							model2.Parent = tool2
-							local weld2 = Instance.new("WeldConstraint", model)
-							weld2.Part0 = model2
-							weld2.Part1 = tool2:WaitForChild("Handle")
-						end
+        ["List"] = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14"}
+    })
+end)
+
+
+runFunction(function()
+    local AutoSkywars = {}
+    local AutoSkywarsDepth = {Value = 7}
+    AutoSkywars = GuiLibrary.ObjectsThatCanBeSaved.UtilityWindow.Api.CreateOptionsButton({
+        Name = 'AutoSkywars',
+        Function = function(callback)
+            if callback then
+                task.spawn(function()
+					local cage = workspace:WaitForChild('spawn_cage')
+					if cage and isAlive() then
+						lplr.Character.HumanoidRootPart.CFrame *= CFrame.new(0, -AutoSkywarsDepth.Value, 0)
 					end
-				end)            
-			end)
-        end,
-		DemonSlayerPack = function() 
-			task.spawn(function()
-				local Players = game:GetService("Players")
-				local ReplicatedStorage = game:GetService("ReplicatedStorage")
-				local Workspace = game:GetService("Workspace")
-				local objs = game:GetObjects("rbxassetid://14241215869")
-				local import = objs[1]
-				import.Parent = ReplicatedStorage
-				local index = {
-					{
-						name = "wood_sword",
-						offset = CFrame.Angles(math.rad(0), math.rad(-89), math.rad(-90)),
-						model = import:WaitForChild("Wood_Sword"),
-					},	
-					{
-						name = "stone_sword",
-						offset = CFrame.Angles(math.rad(0), math.rad(-89), math.rad(-90)),
-						model = import:WaitForChild("Stone_Sword"),
-					},
-					{
-						name = "iron_sword",
-						offset = CFrame.Angles(math.rad(0), math.rad(-89), math.rad(-90)),
-						model = import:WaitForChild("Iron_Sword"),
-					},
-					{
-						name = "diamond_sword",
-						offset = CFrame.Angles(math.rad(0), math.rad(-89), math.rad(-90)),
-						model = import:WaitForChild("Diamond_Sword"),
-					},
-					{
-						name = "emerald_sword",
-						offset = CFrame.Angles(math.rad(0), math.rad(-89), math.rad(-90)),
-						model = import:WaitForChild("Emerald_Sword"),
-					},
-					{
-						name = "wood_pickaxe",
-						offset = CFrame.Angles(math.rad(0), math.rad(-180), math.rad(-95)),
-						model = import:WaitForChild("Wood_Pickaxe"),
-					},
-					{
-						name = "stone_pickaxe",
-						offset = CFrame.Angles(math.rad(0), math.rad(-180), math.rad(-95)),
-						model = import:WaitForChild("Stone_Pickaxe"),
-					},
-					{
-						name = "iron_pickaxe",
-						offset = CFrame.Angles(math.rad(0), math.rad(-180), math.rad(-95)),
-						model = import:WaitForChild("Iron_Pickaxe"),
-					},
-					{
-						name = "diamond_pickaxe",
-						offset = CFrame.Angles(math.rad(0), math.rad(90), math.rad(-95)),
-						model = import:WaitForChild("Diamond_Pickaxe"),
-					},	
-					{
-						name = "fireball",
-						offset = CFrame.Angles(math.rad(0), math.rad(-90), math.rad(90)),
-						model = import:WaitForChild("Fireball"),
-					},	
-					{
-						name = "telepearl",
-						offset = CFrame.Angles(math.rad(0), math.rad(-90), math.rad(90)),
-						model = import:WaitForChild("Telepearl"),
-					},
-					{
-						name = "diamond",
-						offset = CFrame.Angles(math.rad(0), math.rad(-90), math.rad(-90)),
-						model = import:WaitForChild("Diamond"),
-					},
-					{
-						name = "iron",
-						offset = CFrame.Angles(math.rad(0), math.rad(-90), math.rad(90)),
-						model = import:WaitForChild("Iron"),
-					},
-					{
-						name = "gold",
-						offset = CFrame.Angles(math.rad(0), math.rad(-90), math.rad(90)),
-						model = import:WaitForChild("Gold"),
-					},
-					{
-						name = "emerald",
-						offset = CFrame.Angles(math.rad(0), math.rad(-90), math.rad(-90)),
-						model = import:WaitForChild("Emerald"),
-					},
-					{
-						name = "wood_bow",
-						offset = CFrame.Angles(math.rad(0), math.rad(0), math.rad(90)),
-						model = import:WaitForChild("Bow"),
-					},
-					{
-						name = "wood_crossbow",
-						offset = CFrame.Angles(math.rad(0), math.rad(0), math.rad(90)),
-						model = import:WaitForChild("Bow"),
-					},
-					{
-						name = "tactical_crossbow",
-						offset = CFrame.Angles(math.rad(0), math.rad(180), math.rad(-90)),
-						model = import:WaitForChild("Bow"),
-					},
-					{
-						name = "wood_dao",
-						offset = CFrame.Angles(math.rad(0), math.rad(89), math.rad(-90)),
-						model = import:WaitForChild("Wood_Sword"),
-					},
-					{
-						name = "stone_dao",
-						offset = CFrame.Angles(math.rad(0), math.rad(89), math.rad(-90)),
-						model = import:WaitForChild("Stone_Sword"),
-					},
-					{
-						name = "iron_dao",
-						offset = CFrame.Angles(math.rad(0), math.rad(89), math.rad(-90)),
-						model = import:WaitForChild("Iron_Sword"),
-					},
-					{
-						name = "diamond_dao",
-						offset = CFrame.Angles(math.rad(0), math.rad(89), math.rad(-90)),
-						model = import:WaitForChild("Diamond_Sword"),
-					},
-				}
-				local func = Workspace.Camera.Viewmodel.ChildAdded:Connect(function(tool)	
-					if not tool:IsA("Accessory") then return end	
-					for _, v in ipairs(index) do	
-						if v.name == tool.Name then		
-							for _, part in ipairs(tool:GetDescendants()) do
-								if part:IsA("BasePart") or part:IsA("MeshPart") or part:IsA("UnionOperation") then				
-									part.Transparency = 1
-								end			
-							end		
-							local model = v.model:Clone()
-							model.CFrame = tool:WaitForChild("Handle").CFrame * v.offset
-							model.CFrame *= CFrame.Angles(math.rad(0), math.rad(-50), math.rad(0))
-							model.Parent = tool			
-							local weld = Instance.new("WeldConstraint", model)
-							weld.Part0 = model
-							weld.Part1 = tool:WaitForChild("Handle")			
-							local tool2 = Players.LocalPlayer.Character:WaitForChild(tool.Name)			
-							for _, part in ipairs(tool2:GetDescendants()) do
-								if part:IsA("BasePart") or part:IsA("MeshPart") or part:IsA("UnionOperation") then				
-									part.Transparency = 1				
-								end			
-							end			
-							local model2 = v.model:Clone()
-							model2.Anchored = false
-							model2.CFrame = tool2:WaitForChild("Handle").CFrame * v.offset
-							model2.CFrame *= CFrame.Angles(math.rad(0), math.rad(-50), math.rad(0))
-							if v.name:match("rageblade") then
-								model2.CFrame *= CFrame.new(0.7, 0, -.7)                           
-							elseif v.name:match("sword") or v.name:match("blade") then
-								model2.CFrame *= CFrame.new(.2, 0, -.8)
-							elseif v.name:match("dao") then
-								model2.CFrame *= CFrame.new(.7, 0, -1.3)
-							elseif v.name:match("axe") and not v.name:match("pickaxe") and v.name:match("diamond") then
-								model2.CFrame *= CFrame.new(.08, 0, -1.1) - Vector3.new(0, 0, -1.1)
-							elseif v.name:match("axe") and not v.name:match("pickaxe") and not v.name:match("diamond") then
-								model2.CFrame *= CFrame.new(-.2, 0, -2.4) + Vector3.new(0, 0, 2.12)
-							elseif v.name:match("diamond_pickaxe") then
-								model2.CFrame *= CFrame.new(.2, 0, -.26)
-							elseif v.name:match("iron") and not v.name:match("iron_pickaxe") then
-								model2.CFrame *= CFrame.new(0, -.24, 0)
-							elseif v.name:match("gold") then
-								model2.CFrame *= CFrame.new(0, .03, 0)
-							elseif v.name:match("diamond") or v.name:match("emerald") then
-								model2.CFrame *= CFrame.new(0, -.03, 0)
-							elseif v.name:match("telepearl") then
-								model2.CFrame *= CFrame.new(.1, 0, .1)
-							elseif v.name:match("fireball") then
-								model2.CFrame *= CFrame.new(.28, .1, 0)
-							elseif v.name:match("bow") and not v.name:match("crossbow") then
-								model2.CFrame *= CFrame.new(-.2, .1, -.05)
-							elseif v.name:match("wood_crossbow") and not v.name:match("tactical_crossbow") then
-								model2.CFrame *= CFrame.new(-.5, 0, .05)
-							elseif v.name:match("tactical_crossbow") and not v.name:match("wood_crossbow") then
-								model2.CFrame *= CFrame.new(-.35, 0, -1.2)
-							else
-								model2.CFrame *= CFrame.new(.0, 0, -.06)
-							end
-							model2.Parent = tool2
-							local weld2 = Instance.new("WeldConstraint", model)
-							weld2.Part0 = model2
-							weld2.Part1 = tool2:WaitForChild("Handle")
-						end
+					if AutoSkywarsNotify.Enabled then
+						createwarning("Purple Theme","Fully loaded",5)
 					end
 				end)
-			end)
-		end,
-        FirstHighResPack = function() 
-            task.spawn(function()
-                loadstring(game:HttpGet("https://raw.githubusercontent.com/SnoopyOwner/TexturePacks/main/512xPack"))()   
-           end)
-		end,
-        RandomPack = function() 
-            task.spawn(function()  
-				local Players = game:GetService("Players")
-				local ReplicatedStorage = game:GetService("ReplicatedStorage")
-				local Workspace = game:GetService("Workspace")
-				local objs = game:GetObjects("rbxassetid://14282106674")
-				local import = objs[1]
-				import.Parent = game:GetService("ReplicatedStorage")
-				index = {
-					{
-						name = "wood_sword",
-						offset = CFrame.Angles(math.rad(0),math.rad(-89),math.rad(-90)),
-						model = import:WaitForChild("Wood_Sword"),
-					},
-					{
-						name = "stone_sword",
-						offset = CFrame.Angles(math.rad(0),math.rad(-89),math.rad(-90)),
-						model = import:WaitForChild("Stone_Sword"),
-					},
-					{
-						name = "iron_sword",
-						offset = CFrame.Angles(math.rad(0),math.rad(-89),math.rad(-90)),
-						model = import:WaitForChild("Iron_Sword"),
-					},
-					{
-						name = "diamond_sword",
-						offset = CFrame.Angles(math.rad(0),math.rad(-89),math.rad(-90)),
-						model = import:WaitForChild("Diamond_Sword"),
-					},
-					{
-						name = "emerald_sword",
-						offset = CFrame.Angles(math.rad(0),math.rad(-89),math.rad(-90)),
-						model = import:WaitForChild("Emerald_Sword"),
-					},
-				}
-				local func = Workspace:WaitForChild("Camera").Viewmodel.ChildAdded:Connect(function(tool)
-					if(not tool:IsA("Accessory")) then return end
-					for i,v in pairs(index) do
-						if(v.name == tool.Name) then
-							for i,v in pairs(tool:GetDescendants()) do
-								if(v:IsA("Part") or v:IsA("MeshPart") or v:IsA("UnionOperation")) then
-									v.Transparency = 1
-								end
-							end
-							local model = v.model:Clone()
-							model.CFrame = tool:WaitForChild("Handle").CFrame * v.offset
-							model.CFrame *= CFrame.Angles(math.rad(0),math.rad(-50),math.rad(0))
-							model.Parent = tool
-							local weld = Instance.new("WeldConstraint",model)
-							weld.Part0 = model
-							weld.Part1 = tool:WaitForChild("Handle")
-							local tool2 = Players.LocalPlayer.Character:WaitForChild(tool.Name)
-							for i,v in pairs(tool2:GetDescendants()) do
-								if(v:IsA("Part") or v:IsA("MeshPart") or v:IsA("UnionOperation")) then
-									v.Transparency = 1
-								end            
-							end            
-							local model2 = v.model:Clone()
-							model2.Anchored = false
-							model2.CFrame = tool2:WaitForChild("Handle").CFrame * v.offset
-							model2.CFrame *= CFrame.Angles(math.rad(0),math.rad(-50),math.rad(0))
-							model2.CFrame *= CFrame.new(0.6,0,-.9)
-							model2.Parent = tool2
-							local weld2 = Instance.new("WeldConstraint",model)
-							weld2.Part0 = model2
-							weld2.Part1 = tool2:WaitForChild("Handle")
-						end
-					end
-				end)   
-           end)
-		end,
-		SecondHighResPack = function() 
-            task.spawn(function()
-                loadstring(game:HttpGet("https://raw.githubusercontent.com/SnoopyOwner/TexturePacks/main/1024xPack"))()   
-           end)
-		end
-	}
-
-	TexturePacks = GuiLibrary.ObjectsThatCanBeSaved.RenderWindow.Api.CreateOptionsButton({
-		["Name"] = "TexturePacks",
-		["Function"] = function(callback) 
-			if callback then 
-				if not transformed then
-					transformed = true
-					packfunctions[packselected["Value"]]()
-				end
-            else 
-                if TexturePacks.Enabled == false then
-                    task.wait()
-                    func:disconnect()
-                end
-			end
-		end,
-		["ExtraText"] = function()
-			return packselected["Value"]
-		end
-	})
-	packselected = TexturePacks.CreateDropdown({
-		["Name"] = "Pack",
-		["Function"] = function() end,
-		["List"] = {"GlizzyPack", 
-		"FirstPack", "SecondPack", 
-		"ThirdPack", "FourthPack", 
-		"FifthPack", "SixthPack", 
-		"SeventhPack","EighthPack", 
-		"EgirlPack", "CottonCandy", 
-		"Pack512x", "Pack1056x",
-	    "PrivatePack", "DemonSlayerPack",
-	    "RandomPack"}
-	})
-end)
-
-
-runFunction(function()
-    InfiniteJump = GuiLibrary.ObjectsThatCanBeSaved.MovementWindow.Api.CreateOptionsButton({
-        Name = "InfiniteJump",
-        Function = function(callback)
-            if callback then
-                local UserInputService = game:GetService("UserInputService")
-                local player = game.Players.LocalPlayer
-
-                local function onJumpRequest(input, gameProcessedEvent)
-                    if input.KeyCode == Enum.KeyCode.Space and not gameProcessedEvent then
-                        player.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
-                    end
-                end
-
-                UserInputService.InputBegan:Connect(onJumpRequest)
             end
         end
     })
-end)
-
-runFunction(function()
-    local SkyWC = {}
-    SkyWC = GuiLibrary.ObjectsThatCanBeSaved.UtilityWindow.Api.CreateOptionsButton({
-        Name = 'Skywars clip',
-        Function = function(callback)
-            if callback then
-                wait(3)
-                local lplr = game.Players.LocalPlayer
-                local cage = game.Workspace.SpectatorPlatform.Root
-                if cage and lplr.Character and lplr.Character:FindFirstChild("HumanoidRootPart") then
-                    lplr.Character.HumanoidRootPart.CFrame *= CFrame.new(0, -5, 0)
-                end
-            end
-        end
+	AutoSkywarsDepth = AutoSkywars.CreateSlider({
+        Name = 'Depth',
+        Min = 1,
+        Max = 10,
+        Function = function() end,
+        Default = 7
     })
+	AutoSkywarsNotify = AutoSkywars.CreateToggle({
+		Name = 'Notification',
+		Default = false,
+		Function = function() end
+	})
 end)
 
 local function isfile(file)
