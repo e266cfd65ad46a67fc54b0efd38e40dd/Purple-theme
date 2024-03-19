@@ -862,549 +862,68 @@ runFunction(function()
 end)
 
 runFunction(function()
-	local transformed = false
-	local TexturePacks = {["Enabled"] = false}
-	local packselected = {["Value"] = "OldBedwars"}
+    texturelist = GuiLibrary["ObjectsThatCanBeSaved"]["BlatantWindow"]["Api"].CreateOptionsButton({
+        ["Name"] = "Texture List",
+        ["HoverText"] = "Just texture packs",
+        ["Function"] = function(callback)
+            if callback then
+            end
+        end
+    })
 
-	local packfunctions = {
-		SeventhPack = function() 
-			task.spawn(function()
-				loadstring(game:HttpGet("https://raw.githubusercontent.com/SnoopyOwner/TexturePacks/main/Pack%237"))()  
-			end)
-		end,
-		EighthPack = function() 
-			task.spawn(function()
-				loadstring(game:HttpGet("https://raw.githubusercontent.com/SnoopyOwner/TexturePacks/main/1024xPack"))()  
-			end)
-		end,
-		SixthPack = function() 
-			task.spawn(function()
-				loadstring(game:HttpGet("https://raw.githubusercontent.com/SnoopyOwner/TexturePacks/main/Pack%236"))()  
-			end)
-		end,
-		FifthPack = function() 
-			task.spawn(function()
-				loadstring(game:HttpGet("https://raw.githubusercontent.com/SnoopyOwner/TexturePacks/main/Pack%235"))()  
-			end)
-		end,
-		FourthPack = function() 
-			task.spawn(function()
-				loadstring(game:HttpGet("https://raw.githubusercontent.com/SnoopyOwner/TexturePacks/main/Pack%234"))()  
-			end)
-		end,
-		ThirdPack = function() 
-			task.spawn(function()
-				loadstring(game:HttpGet("https://raw.githubusercontent.com/SnoopyOwner/Modules/main/TexturePack"))()  
-			end)
-		end,
-		SecondPack = function() 
-			task.spawn(function()
-				loadstring(game:HttpGet("https://raw.githubusercontent.com/SnoopyOwner/TexturePacks/main/Pack%232"))()  
-			end)
-		end,
-		FirstPack = function() 
-			task.spawn(function()
-				loadstring(game:HttpGet("https://raw.githubusercontent.com/SnoopyOwner/TexturePacks/main/Pack%231"))()  
-			end)
-		end,
-		CottonCandy = function() 
-			task.spawn(function() 
-				loadstring(game:HttpGet("https://raw.githubusercontent.com/SnoopyOwner/TexturePacks/main/CottonCandy256x"))()           
-			end)
-		end,
-		EgirlPack = function() 
-			task.spawn(function() 	
-				loadstring(game:HttpGet("https://raw.githubusercontent.com/SnoopyOwner/TexturePacks/main/E-Girl"))()  		             
-			end)
-		end,
-		GlizzyPack = function() 
-			task.spawn(function()
-				loadstring(game:HttpGet("https://raw.githubusercontent.com/SnoopyOwner/TexturePacks/main/Glizzy"))()   
-			end)
+    list = texturelist.CreateDropdown({
+        ["Name"] = "Packs",
+        ["Function"] = function(val) 
+            if val == "1" then
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/1", true))()
+            elseif val == "2" then
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/2", true))()
+            elseif val == "3" then
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/3", true))()
+            elseif val == "4" then
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/4", true))()
+            elseif val == "5" then
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/5", true))()
+            elseif val == "6" then
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/6", true))()
+            elseif val == "7" then
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/7", true))()
+            elseif val == "8" then
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/8", true))()
+            elseif val == "9" then
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/9", true))()
+            elseif val == "10" then
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/10", true))()
+            elseif val == "11" then
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/11", true))()
+            elseif val == "12" then
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/12", true))()
+            elseif val == "13" then
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/13", true))()
+            elseif val == "14" then
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/14", true))()
+            elseif val == "15" then
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/SnoopyOwner/TexturePacks/main/Pack%231"))()
+            elseif val == "16" then
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/SnoopyOwner/TexturePacks/main/Pack%232"))()
+            elseif val == "17" then
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/SnoopyOwner/Modules/main/TexturePack"))() 
+            elseif val == "18" then
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/SnoopyOwner/TexturePacks/main/Pack%234"))() 
+            elseif val == "19" then
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/SnoopyOwner/TexturePacks/main/Pack%235"))()  
+            elseif val == "20" then
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/SnoopyOwner/TexturePacks/main/Pack%236"))() 
+            elseif val == "21" then
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/SnoopyOwner/TexturePacks/main/1024xPack"))()  
+            elseif val == "22" then
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/SnoopyOwner/TexturePacks/main/Pack%237"))()  
+            end
         end,
-		PrivatePack = function() 
-			task.spawn(function()
-				local Players = game:GetService("Players")
-				local ReplicatedStorage = game:GetService("ReplicatedStorage")
-				local Workspace = game:GetService("Workspace")
-				local objs = game:GetObjects("rbxassetid://14161283331")
-				local import = objs[1]
-				import.Parent = ReplicatedStorage
-				local index = {
-					{
-						name = "wood_sword",
-						offset = CFrame.Angles(math.rad(0), math.rad(-89), math.rad(-90)),
-						model = import:WaitForChild("Wood_Sword"),
-					},	
-					{
-						name = "stone_sword",
-						offset = CFrame.Angles(math.rad(0), math.rad(-89), math.rad(-90)),
-						model = import:WaitForChild("Stone_Sword"),
-					},
-					{
-						name = "iron_sword",
-						offset = CFrame.Angles(math.rad(0), math.rad(-89), math.rad(-90)),
-						model = import:WaitForChild("Iron_Sword"),
-					},
-					{
-						name = "diamond_sword",
-						offset = CFrame.Angles(math.rad(0), math.rad(-89), math.rad(-90)),
-						model = import:WaitForChild("Diamond_Sword"),
-					},
-					{
-						name = "emerald_sword",
-						offset = CFrame.Angles(math.rad(0), math.rad(-89), math.rad(-90)),
-						model = import:WaitForChild("Emerald_Sword"),
-					},
-					{
-						name = "rageblade",
-						offset = CFrame.Angles(math.rad(0),math.rad(-100),math.rad(90)),
-						model = import:WaitForChild("Rageblade"),
-					}, 
-					{
-						name = "wood_pickaxe",
-						offset = CFrame.Angles(math.rad(0), math.rad(-180), math.rad(-95)),
-						model = import:WaitForChild("Wood_Pickaxe"),
-					},
-					{
-						name = "stone_pickaxe",
-						offset = CFrame.Angles(math.rad(0), math.rad(-180), math.rad(-95)),
-						model = import:WaitForChild("Stone_Pickaxe"),
-					},
-					{
-						name = "iron_pickaxe",
-						offset = CFrame.Angles(math.rad(0), math.rad(-18033), math.rad(-95)),
-						model = import:WaitForChild("Iron_Pickaxe"),
-					},
-					{
-						name = "diamond_pickaxe",
-						offset = CFrame.Angles(math.rad(0), math.rad(80), math.rad(-95)),
-						model = import:WaitForChild("Diamond_Pickaxe"),
-					},	
-					{
-						name = "wood_axe",
-						offset = CFrame.Angles(math.rad(0), math.rad(-10), math.rad(-95)),
-						model = import:WaitForChild("Wood_Axe"),
-					},	
-					{
-						name = "stone_axe",
-						offset = CFrame.Angles(math.rad(0), math.rad(-10), math.rad(-95)),
-						model = import:WaitForChild("Stone_Axe"),
-					},	
-					{
-						name = "iron_axe",
-						offset = CFrame.Angles(math.rad(0), math.rad(-10), math.rad(-95)),
-						model = import:WaitForChild("Iron_Axe"),
-					},	
-					{
-						name = "diamond_axe",
-						offset = CFrame.Angles(math.rad(0), math.rad(-89), math.rad(-95)),
-						model = import:WaitForChild("Diamond_Axe"),
-					},	
-					{
-						name = "fireball",
-						offset = CFrame.Angles(math.rad(0), math.rad(-90), math.rad(90)),
-						model = import:WaitForChild("Fireball"),
-					},	
-					{
-						name = "telepearl",
-						offset = CFrame.Angles(math.rad(0), math.rad(-90), math.rad(90)),
-						model = import:WaitForChild("Telepearl"),
-					},
-					{
-						name = "diamond",
-						offset = CFrame.Angles(math.rad(0), math.rad(-90), math.rad(90)),
-						model = import:WaitForChild("Diamond"),
-					},
-					{
-						name = "iron",
-						offset = CFrame.Angles(math.rad(0), math.rad(-90), math.rad(90)),
-						model = import:WaitForChild("Iron"),
-					},
-					{
-						name = "gold",
-						offset = CFrame.Angles(math.rad(0), math.rad(-90), math.rad(90)),
-						model = import:WaitForChild("Gold"),
-					},
-					{
-						name = "emerald",
-						offset = CFrame.Angles(math.rad(0), math.rad(-90), math.rad(90)),
-						model = import:WaitForChild("Emerald"),
-					},
-					{
-						name = "wood_bow",
-						offset = CFrame.Angles(math.rad(0), math.rad(0), math.rad(90)),
-						model = import:WaitForChild("Bow"),
-					},
-					{
-						name = "wood_crossbow",
-						offset = CFrame.Angles(math.rad(0), math.rad(0), math.rad(90)),
-						model = import:WaitForChild("Bow"),
-					},
-					{
-						name = "tactical_crossbow",
-						offset = CFrame.Angles(math.rad(0), math.rad(180), math.rad(-90)),
-						model = import:WaitForChild("Bow"),
-					},
-				}
-				local func = Workspace.Camera.Viewmodel.ChildAdded:Connect(function(tool)	
-					if not tool:IsA("Accessory") then return end	
-					for _, v in ipairs(index) do	
-						if v.name == tool.Name then		
-							for _, part in ipairs(tool:GetDescendants()) do
-								if part:IsA("BasePart") or part:IsA("MeshPart") or part:IsA("UnionOperation") then				
-									part.Transparency = 1
-								end			
-							end		
-							local model = v.model:Clone()
-							model.CFrame = tool:WaitForChild("Handle").CFrame * v.offset
-							model.CFrame *= CFrame.Angles(math.rad(0), math.rad(-50), math.rad(0))
-							model.Parent = tool			
-							local weld = Instance.new("WeldConstraint", model)
-							weld.Part0 = model
-							weld.Part1 = tool:WaitForChild("Handle")			
-							local tool2 = Players.LocalPlayer.Character:WaitForChild(tool.Name)			
-							for _, part in ipairs(tool2:GetDescendants()) do
-								if part:IsA("BasePart") or part:IsA("MeshPart") or part:IsA("UnionOperation") then				
-									part.Transparency = 1				
-								end			
-							end			
-							local model2 = v.model:Clone()
-							model2.Anchored = false
-							model2.CFrame = tool2:WaitForChild("Handle").CFrame * v.offset
-							model2.CFrame *= CFrame.Angles(math.rad(0), math.rad(-50), math.rad(0))
-							if v.name:match("rageblade") then
-								model2.CFrame *= CFrame.new(0.7, 0, -1)                           
-							elseif v.name:match("sword") or v.name:match("blade") then
-								model2.CFrame *= CFrame.new(.6, 0, -1.1) - Vector3.new(0, 0, -.3)
-							elseif v.name:match("axe") and not v.name:match("pickaxe") and v.name:match("diamond") then
-								model2.CFrame *= CFrame.new(.08, 0, -1.1) - Vector3.new(0, 0, -1.1)
-							elseif v.name:match("axe") and not v.name:match("pickaxe") and not v.name:match("diamond") then
-								model2.CFrame *= CFrame.new(-.2, 0, -2.4) + Vector3.new(0, 0, 2.12)
-							elseif v.name:match("iron") then
-								model2.CFrame *= CFrame.new(0, -.24, 0)
-							elseif v.name:match("gold") then
-								model2.CFrame *= CFrame.new(0, .03, 0)
-							elseif v.name:match("diamond") then
-								model2.CFrame *= CFrame.new(0, .027, 0)
-							elseif v.name:match("emerald") then
-								model2.CFrame *= CFrame.new(0, .001, 0)
-							elseif v.name:match("telepearl") then
-								model2.CFrame *= CFrame.new(.1, 0, .1)
-							elseif v.name:match("fireball") then
-								model2.CFrame *= CFrame.new(.28, .1, 0)
-							elseif v.name:match("bow") and not v.name:match("crossbow") then
-								model2.CFrame *= CFrame.new(-.29, .1, -.2)
-							elseif v.name:match("wood_crossbow") and not v.name:match("tactical_crossbow") then
-								model2.CFrame *= CFrame.new(-.6, 0, 0)
-							elseif v.name:match("tactical_crossbow") and not v.name:match("wood_crossbow") then
-								model2.CFrame *= CFrame.new(-.5, 0, -1.2)
-							else
-								model2.CFrame *= CFrame.new(.2, 0, -.2)
-							end
-							model2.Parent = tool2
-							local weld2 = Instance.new("WeldConstraint", model)
-							weld2.Part0 = model2
-							weld2.Part1 = tool2:WaitForChild("Handle")
-						end
-					end
-				end)            
-			end)
-        end,
-		DemonSlayerPack = function() 
-			task.spawn(function()
-				local Players = game:GetService("Players")
-				local ReplicatedStorage = game:GetService("ReplicatedStorage")
-				local Workspace = game:GetService("Workspace")
-				local objs = game:GetObjects("rbxassetid://14241215869")
-				local import = objs[1]
-				import.Parent = ReplicatedStorage
-				local index = {
-					{
-						name = "wood_sword",
-						offset = CFrame.Angles(math.rad(0), math.rad(-89), math.rad(-90)),
-						model = import:WaitForChild("Wood_Sword"),
-					},	
-					{
-						name = "stone_sword",
-						offset = CFrame.Angles(math.rad(0), math.rad(-89), math.rad(-90)),
-						model = import:WaitForChild("Stone_Sword"),
-					},
-					{
-						name = "iron_sword",
-						offset = CFrame.Angles(math.rad(0), math.rad(-89), math.rad(-90)),
-						model = import:WaitForChild("Iron_Sword"),
-					},
-					{
-						name = "diamond_sword",
-						offset = CFrame.Angles(math.rad(0), math.rad(-89), math.rad(-90)),
-						model = import:WaitForChild("Diamond_Sword"),
-					},
-					{
-						name = "emerald_sword",
-						offset = CFrame.Angles(math.rad(0), math.rad(-89), math.rad(-90)),
-						model = import:WaitForChild("Emerald_Sword"),
-					},
-					{
-						name = "wood_pickaxe",
-						offset = CFrame.Angles(math.rad(0), math.rad(-180), math.rad(-95)),
-						model = import:WaitForChild("Wood_Pickaxe"),
-					},
-					{
-						name = "stone_pickaxe",
-						offset = CFrame.Angles(math.rad(0), math.rad(-180), math.rad(-95)),
-						model = import:WaitForChild("Stone_Pickaxe"),
-					},
-					{
-						name = "iron_pickaxe",
-						offset = CFrame.Angles(math.rad(0), math.rad(-180), math.rad(-95)),
-						model = import:WaitForChild("Iron_Pickaxe"),
-					},
-					{
-						name = "diamond_pickaxe",
-						offset = CFrame.Angles(math.rad(0), math.rad(90), math.rad(-95)),
-						model = import:WaitForChild("Diamond_Pickaxe"),
-					},	
-					{
-						name = "fireball",
-						offset = CFrame.Angles(math.rad(0), math.rad(-90), math.rad(90)),
-						model = import:WaitForChild("Fireball"),
-					},	
-					{
-						name = "telepearl",
-						offset = CFrame.Angles(math.rad(0), math.rad(-90), math.rad(90)),
-						model = import:WaitForChild("Telepearl"),
-					},
-					{
-						name = "diamond",
-						offset = CFrame.Angles(math.rad(0), math.rad(-90), math.rad(-90)),
-						model = import:WaitForChild("Diamond"),
-					},
-					{
-						name = "iron",
-						offset = CFrame.Angles(math.rad(0), math.rad(-90), math.rad(90)),
-						model = import:WaitForChild("Iron"),
-					},
-					{
-						name = "gold",
-						offset = CFrame.Angles(math.rad(0), math.rad(-90), math.rad(90)),
-						model = import:WaitForChild("Gold"),
-					},
-					{
-						name = "emerald",
-						offset = CFrame.Angles(math.rad(0), math.rad(-90), math.rad(-90)),
-						model = import:WaitForChild("Emerald"),
-					},
-					{
-						name = "wood_bow",
-						offset = CFrame.Angles(math.rad(0), math.rad(0), math.rad(90)),
-						model = import:WaitForChild("Bow"),
-					},
-					{
-						name = "wood_crossbow",
-						offset = CFrame.Angles(math.rad(0), math.rad(0), math.rad(90)),
-						model = import:WaitForChild("Bow"),
-					},
-					{
-						name = "tactical_crossbow",
-						offset = CFrame.Angles(math.rad(0), math.rad(180), math.rad(-90)),
-						model = import:WaitForChild("Bow"),
-					},
-					{
-						name = "wood_dao",
-						offset = CFrame.Angles(math.rad(0), math.rad(89), math.rad(-90)),
-						model = import:WaitForChild("Wood_Sword"),
-					},
-					{
-						name = "stone_dao",
-						offset = CFrame.Angles(math.rad(0), math.rad(89), math.rad(-90)),
-						model = import:WaitForChild("Stone_Sword"),
-					},
-					{
-						name = "iron_dao",
-						offset = CFrame.Angles(math.rad(0), math.rad(89), math.rad(-90)),
-						model = import:WaitForChild("Iron_Sword"),
-					},
-					{
-						name = "diamond_dao",
-						offset = CFrame.Angles(math.rad(0), math.rad(89), math.rad(-90)),
-						model = import:WaitForChild("Diamond_Sword"),
-					},
-				}
-				local func = Workspace.Camera.Viewmodel.ChildAdded:Connect(function(tool)	
-					if not tool:IsA("Accessory") then return end	
-					for _, v in ipairs(index) do	
-						if v.name == tool.Name then		
-							for _, part in ipairs(tool:GetDescendants()) do
-								if part:IsA("BasePart") or part:IsA("MeshPart") or part:IsA("UnionOperation") then				
-									part.Transparency = 1
-								end			
-							end		
-							local model = v.model:Clone()
-							model.CFrame = tool:WaitForChild("Handle").CFrame * v.offset
-							model.CFrame *= CFrame.Angles(math.rad(0), math.rad(-50), math.rad(0))
-							model.Parent = tool			
-							local weld = Instance.new("WeldConstraint", model)
-							weld.Part0 = model
-							weld.Part1 = tool:WaitForChild("Handle")			
-							local tool2 = Players.LocalPlayer.Character:WaitForChild(tool.Name)			
-							for _, part in ipairs(tool2:GetDescendants()) do
-								if part:IsA("BasePart") or part:IsA("MeshPart") or part:IsA("UnionOperation") then				
-									part.Transparency = 1				
-								end			
-							end			
-							local model2 = v.model:Clone()
-							model2.Anchored = false
-							model2.CFrame = tool2:WaitForChild("Handle").CFrame * v.offset
-							model2.CFrame *= CFrame.Angles(math.rad(0), math.rad(-50), math.rad(0))
-							if v.name:match("rageblade") then
-								model2.CFrame *= CFrame.new(0.7, 0, -.7)                           
-							elseif v.name:match("sword") or v.name:match("blade") then
-								model2.CFrame *= CFrame.new(.2, 0, -.8)
-							elseif v.name:match("dao") then
-								model2.CFrame *= CFrame.new(.7, 0, -1.3)
-							elseif v.name:match("axe") and not v.name:match("pickaxe") and v.name:match("diamond") then
-								model2.CFrame *= CFrame.new(.08, 0, -1.1) - Vector3.new(0, 0, -1.1)
-							elseif v.name:match("axe") and not v.name:match("pickaxe") and not v.name:match("diamond") then
-								model2.CFrame *= CFrame.new(-.2, 0, -2.4) + Vector3.new(0, 0, 2.12)
-							elseif v.name:match("diamond_pickaxe") then
-								model2.CFrame *= CFrame.new(.2, 0, -.26)
-							elseif v.name:match("iron") and not v.name:match("iron_pickaxe") then
-								model2.CFrame *= CFrame.new(0, -.24, 0)
-							elseif v.name:match("gold") then
-								model2.CFrame *= CFrame.new(0, .03, 0)
-							elseif v.name:match("diamond") or v.name:match("emerald") then
-								model2.CFrame *= CFrame.new(0, -.03, 0)
-							elseif v.name:match("telepearl") then
-								model2.CFrame *= CFrame.new(.1, 0, .1)
-							elseif v.name:match("fireball") then
-								model2.CFrame *= CFrame.new(.28, .1, 0)
-							elseif v.name:match("bow") and not v.name:match("crossbow") then
-								model2.CFrame *= CFrame.new(-.2, .1, -.05)
-							elseif v.name:match("wood_crossbow") and not v.name:match("tactical_crossbow") then
-								model2.CFrame *= CFrame.new(-.5, 0, .05)
-							elseif v.name:match("tactical_crossbow") and not v.name:match("wood_crossbow") then
-								model2.CFrame *= CFrame.new(-.35, 0, -1.2)
-							else
-								model2.CFrame *= CFrame.new(.0, 0, -.06)
-							end
-							model2.Parent = tool2
-							local weld2 = Instance.new("WeldConstraint", model)
-							weld2.Part0 = model2
-							weld2.Part1 = tool2:WaitForChild("Handle")
-						end
-					end
-				end)
-			end)
-		end,
-        FirstHighResPack = function() 
-            task.spawn(function()
-                loadstring(game:HttpGet("https://raw.githubusercontent.com/SnoopyOwner/TexturePacks/main/512xPack"))()   
-           end)
-		end,
-        RandomPack = function() 
-            task.spawn(function()  
-				local Players = game:GetService("Players")
-				local ReplicatedStorage = game:GetService("ReplicatedStorage")
-				local Workspace = game:GetService("Workspace")
-				local objs = game:GetObjects("rbxassetid://14282106674")
-				local import = objs[1]
-				import.Parent = game:GetService("ReplicatedStorage")
-				index = {
-					{
-						name = "wood_sword",
-						offset = CFrame.Angles(math.rad(0),math.rad(-89),math.rad(-90)),
-						model = import:WaitForChild("Wood_Sword"),
-					},
-					{
-						name = "stone_sword",
-						offset = CFrame.Angles(math.rad(0),math.rad(-89),math.rad(-90)),
-						model = import:WaitForChild("Stone_Sword"),
-					},
-					{
-						name = "iron_sword",
-						offset = CFrame.Angles(math.rad(0),math.rad(-89),math.rad(-90)),
-						model = import:WaitForChild("Iron_Sword"),
-					},
-					{
-						name = "diamond_sword",
-						offset = CFrame.Angles(math.rad(0),math.rad(-89),math.rad(-90)),
-						model = import:WaitForChild("Diamond_Sword"),
-					},
-					{
-						name = "emerald_sword",
-						offset = CFrame.Angles(math.rad(0),math.rad(-89),math.rad(-90)),
-						model = import:WaitForChild("Emerald_Sword"),
-					},
-				}
-				local func = Workspace:WaitForChild("Camera").Viewmodel.ChildAdded:Connect(function(tool)
-					if(not tool:IsA("Accessory")) then return end
-					for i,v in pairs(index) do
-						if(v.name == tool.Name) then
-							for i,v in pairs(tool:GetDescendants()) do
-								if(v:IsA("Part") or v:IsA("MeshPart") or v:IsA("UnionOperation")) then
-									v.Transparency = 1
-								end
-							end
-							local model = v.model:Clone()
-							model.CFrame = tool:WaitForChild("Handle").CFrame * v.offset
-							model.CFrame *= CFrame.Angles(math.rad(0),math.rad(-50),math.rad(0))
-							model.Parent = tool
-							local weld = Instance.new("WeldConstraint",model)
-							weld.Part0 = model
-							weld.Part1 = tool:WaitForChild("Handle")
-							local tool2 = Players.LocalPlayer.Character:WaitForChild(tool.Name)
-							for i,v in pairs(tool2:GetDescendants()) do
-								if(v:IsA("Part") or v:IsA("MeshPart") or v:IsA("UnionOperation")) then
-									v.Transparency = 1
-								end            
-							end            
-							local model2 = v.model:Clone()
-							model2.Anchored = false
-							model2.CFrame = tool2:WaitForChild("Handle").CFrame * v.offset
-							model2.CFrame *= CFrame.Angles(math.rad(0),math.rad(-50),math.rad(0))
-							model2.CFrame *= CFrame.new(0.6,0,-.9)
-							model2.Parent = tool2
-							local weld2 = Instance.new("WeldConstraint",model)
-							weld2.Part0 = model2
-							weld2.Part1 = tool2:WaitForChild("Handle")
-						end
-					end
-				end)   
-           end)
-		end,
-		SecondHighResPack = function() 
-            task.spawn(function()
-                loadstring(game:HttpGet("https://raw.githubusercontent.com/SnoopyOwner/TexturePacks/main/1024xPack"))()   
-           end)
-		end
-	}
-
-	TexturePacks = GuiLibrary.ObjectsThatCanBeSaved.RenderWindow.Api.CreateOptionsButton({
-		["Name"] = "TexturePacks",
-		["Function"] = function(callback) 
-			if callback then 
-				if not transformed then
-					transformed = true
-					packfunctions[packselected["Value"]]()
-				end
-            else 
-                if TexturePacks.Enabled == false then
-                    task.wait()
-                    func:disconnect()
-                end
-			end
-		end,
-		["ExtraText"] = function()
-			return packselected["Value"]
-		end
-	})
-	packselected = TexturePacks.CreateDropdown({
-		["Name"] = "Pack",
-		["Function"] = function() end,
-		["List"] = {"GlizzyPack", "FirstPack", "SecondPack", "ThirdPack", "FourthPack", "FifthPack", "SixthPack", "SeventhPack","EighthPack", "EgirlPack", "CottonCandy", "Pack512x", "Pack1056x", "PrivatePack", "DemonSlayerPack","RandomPack"}
-	})
+        ["List"] = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22",
+    })
 end)
+
 
 local SkyTp = {Enabled = false}
 
