@@ -750,6 +750,7 @@ InfFlyD = Detection.CreateToggle({
 	Function = function() end,
 })
 
+--[[
 runFunction(function()
     local Cframehj = false
     Cframehj = GuiLibrary.ObjectsThatCanBeSaved.MovementWindow.Api.CreateOptionsButton({
@@ -823,7 +824,7 @@ runFunction(function()
     end
 end)
 
---[[
+
 runFunction(function()
     local SkyTp = {Enabled = false}
     SkyTp = GuiLibrary.ObjectsThatCanBeSaved.MovementWindow.Api.CreateOptionsButton{
