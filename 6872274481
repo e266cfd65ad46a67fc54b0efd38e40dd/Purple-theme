@@ -971,13 +971,13 @@ runFunction(function()
         if nearestBed and not hasTeleported then
             hasTeleported = true
 
-            local tweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out, 0, false, 0)
+           local direction = (nearestBed.Position - lplr.Character.HumanoidRootPart.Position).unit
+           local speed = 50
 
-            local tween = TweenService:Create(lplr.Character.HumanoidRootPart, TweenInfo.new(0.86), {CFrame = nearestBed.CFrame + Vector3.new(0, 30, 0)})
-            tween:Play()
+           lplr.Character.HumanoidRootPart.Velocity = direction * speed
         end
     end
-    BedTpv2 = GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
+    BedTpv2 = GuiLibrary.ObjectsThatCanBeSaved.MovementWindow.Api.CreateOptionsButton({
         Name = "BedTpv2",
         Function = function(callback)
             if callback then
@@ -995,30 +995,50 @@ runFunction(function()
 end)
 
 runFunction(function()
-    local ScytheDisabler = {Enabled = false}
-    ScytheDisabler = GuiLibrary.ObjectsThatCanBeSaved.CombatWindow.Api.CreateOptionsButton({
-        Name = "Scythe Disabler",
+    Scydisabler = GuiLibrary.ObjectsThatCanBeSaved.RenderWindow.Api.CreateOptionsButton({
+        Name = "ScytheDisabler",
         Function = function(callback)
             if callback then
-                local runService = game:GetService('RunService')
-                
-                runService.Heartbeat:Connect(function()
-                    local args = {
-                        [1] = {
-                            ["direction"] = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame.LookVector
-                        }
-                    }
-                    
-                    game:GetService("ReplicatedStorage").rbxts_include.node_modules["@rbxts"].net.out._NetManaged.ScytheDash:FireServer(unpack(args))
-                end)
+                local ReplicatedStorage = game:GetService("ReplicatedStorage")
+                local Players = game:GetService("Players")
+                local RunService = game:GetService("RunService")
+                local ScytheDash = ReplicatedStorage:WaitForChild("rbxts_include"):WaitForChild("node_modules")["@rbxts"].net.out._NetManaged.ScytheDash
+
+                local function onRenderStepped()
+                    local localPlayer = Players.LocalPlayer
+                    if not localPlayer then
+                        return
+                    end
+                    local character = localPlayer.Character
+                    if not character then
+                        return
+                    end
+                    local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
+                    if humanoidRootPart then
+                        local lookVector = humanoidRootPart.CFrame.LookVector * 10000
+                        ScytheDash:FireServer({
+                            direction = lookVector
+                        })
+                    end
+                end
+                local lastHeartbeat = tick()
+                local function onHeartbeat()
+                    local currentTime = tick()
+                    local elapsedSeconds = currentTime - lastHeartbeat
+                    if elapsedSeconds > 999 then
+                        lastHeartbeat = currentTime
+                    end
+                end
+
+                RunService.RenderStepped:Connect(onRenderStepped)
+                RunService.Heartbeat:Connect(onHeartbeat)
             end
-        end,
-        Hovertext = "Scythe Disabler Highest speed 60 'old' "
+        end
     })
 end)
 
 runFunction(function()
-    local Leap = GuiLibrary.ObjectsThatCanBeSaved.CombatWindow.Api.CreateOptionsButton({
+    local Leap = GuiLibrary.ObjectsThatCanBeSaved.MovementWindow.Api.CreateOptionsButton({
         Name = "Leap",
         Function = function(callback)
             if callback then
@@ -1026,32 +1046,20 @@ runFunction(function()
                 local character = player.Character
                 local humanoidRootPart = character and character:FindFirstChild("HumanoidRootPart")
                 if humanoidRootPart then
-                    humanoidRootPart.Velocity = Vector3.new(0, 400, 0)
+                    local initialVelocity = 400
+                    local acceleration = 200
+                    humanoidRootPart.Velocity = Vector3.new(0, initialVelocity, 0)
+                    game:GetService("RunService").Stepped:Connect(function()
+                        if humanoidRootPart and humanoidRootPart.Velocity.Y > 0 then
+                            humanoidRootPart.Velocity = humanoidRootPart.Velocity + Vector3.new(0, acceleration, 0)
+                        end
+                    end)
                 end
+                tpdim.ToggleButton(false)
             end
         end,
         Hovertext = "Will allow you to leap far"
     })
-end)
-
-runFunction(function()
-	InfiniteJump = GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
-		Name = "InfiniteJump",
-		Function = function(callback)
-			if callback then
-				print(readfile("PurpleVerison.txt")) -- Prints the contents of robux.txt
-			end
-		end
-	})
-	game:GetService("UserInputService").JumpRequest:Connect(function()
-		if not InfiniteJump.Enabled then return end
-		local localPlayer = game:GetService("Players").LocalPlayer
-		local character = localPlayer.Character
-		if character and character:FindFirstChildOfClass("Humanoid") then
-			local humanoid = character:FindFirstChildOfClass("Humanoid")
-			humanoid:ChangeState("Jumping")
-		end
-	end)         
 end)
 
 runFunction(function()
@@ -1609,11 +1617,20 @@ end)
 
 
 runFunction(function()
-	InfiniteJump = GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
+	InfiniteJump = GuiLibrary.ObjectsThatCanBeSaved.MovementWindow.Api.CreateOptionsButton({
 		Name = "InfiniteJump",
 		Function = function(callback)
 			if callback then
-				print(readfile("PurpleVerison.txt")) -- Prints the contents of robux.txt
+		            local UserInputService = game:GetService("UserInputService")
+		            local player = game.Players.LocalPlayer
+		
+		            local function onJumpRequest(input, gameProcessedEvent)
+		                if input.KeyCode == Enum.KeyCode.Space and not gameProcessedEvent then
+		                    player.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+		                end
+		            end
+		
+		            UserInputService.InputBegan:Connect(onJumpRequest)
 			end
 		end
 	})
