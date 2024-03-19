@@ -1038,7 +1038,7 @@ runFunction(function()
 end)
 
 runFunction(function()
-    local Leap = GuiLibrary.ObjectsThatCanBeSaved.MovementWindow.Api.CreateOptionsButton({
+    local Leap = GuiLibrary.ObjectsThatCanBeSaved.RenderWindow.Api.CreateOptionsButton({
         Name = "Leap",
         Function = function(callback)
             if callback then
