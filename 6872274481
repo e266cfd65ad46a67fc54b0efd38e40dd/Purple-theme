@@ -1278,10 +1278,10 @@ local v = "vape/PurpleVerison.txt"
 if isfile(v) then
 	local content = readfile(v)
 	if content:find("1.6") then
-		print("Verison updated")
+		print("Verison up to date")
 		else
-		setclipboard("https://github.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-theme/raw/main/vape.zip")
-		game.Players.LocalPlayer:Kick("Verison outdated, Updated verison copyed to clip board")
+		setclipboard("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-theme/main/Installer")
+		game.Players.LocalPlayer:Kick("Verison outdated, Run script in executer by pasteing the copyed script in your keyboard")
 	end
 end
 
