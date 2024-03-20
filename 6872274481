@@ -184,112 +184,6 @@ GuiLibrary.ObjectsThatCanBeSaved.WorldWindow.Api.CreateOptionsButton = function 
 	task.wait(0.005)
 	return oldcreate(...)
 end
-local tppos2 = nil
-local numFailedAttempts = 0
-
-deathtpmod = GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
-    Name = "BedTpv1",
-    Function = function(callback)
-        if callback then
-            if callback then 
-                local i_ = 0
-                if os.clock() - timer_players < 1 then
-                    deathtpmod.ToggleButton(false)
-                    return print('its auto load btw')
-                end 
-                for i, bed in pairs(workspace:GetChildren()) do
-                    if bed.Name == "bed" then
-                        i_ = i_ + 1
-                    end
-                    if not entityLibrary.isAlive then
-                        createwarning("Purple Theme","Waiting...",5)
-                        repeat task.wait() until entityLibrary.isAlive
-                    end
-                    if bed.Name == "bed" and bed.Covers.BrickColor ~= lplr.Team.TeamColor then
-                        if lplr.leaderstats.Bed.Value == "❌" then
-                            break
-                        end
-                        pcall(function ()
-                            if lplr.leaderstats.Bed.Value == "❌" then
-                                return
-                            end
-                            repeat task.wait() until entityLibrary.isAlive
-                            tppos2 = bed:GetChildren()[1].Position + Vector3.new(0,5,0)
-                             if not entityLibrary.isAlive then
-                                createwarning("Purple theme Private","Waiting...",5)
-                                repeat task.wait() until entityLibrary.isAlive
-                             end
-                            task.wait()
-                            game.Players.LocalPlayer.Character.Humanoid.Health = 0
-                            repeat task.wait() until tppos2 == nil
-                            repeat task.wait() until not bed.Parent
-                        end)
-                    end
-                end
-                local warning = createwarning("TPRedirection", "Set TP Position", 3)
-            end
-            deathtpmod.ToggleButton(false)
-        end
-    end
-})
-
-connectionstodisconnect[#connectionstodisconnect + 1] = lplr:GetAttributeChangedSignal("LastTeleported"):Connect(function(char)
-    if tppos2 then
-        task.spawn(function()
-            repeat task.wait() until entityLibrary.isAlive
-            local root = entityLibrary.isAlive and entityLibrary.character.Humanoid.Health > 0 and entityLibrary.character.HumanoidRootPart
-            if root and tppos2 then 
-                if (workspace:GetServerTimeNow() - lplr:GetAttribute("LastTeleported")) > 1 then
-                    createwarning("Purple Theme ", "AC might lag at high ping.", 5)
-                    deathtpmod.ToggleButton(false)
-                end
-                RunLoops:BindToHeartbeat("TPRedirection", function(dt)
-                    if root and tppos2 then
-                        local dist = (1000 * dt)
-                        if (tppos2 - root.CFrame.p).Magnitude > dist then
-                            root.CFrame = root.CFrame + (tppos2 - root.CFrame.p).Unit * dist
-                            root.Velocity = (tppos2 - root.CFrame.p).Unit * 20
-                        else
-                            root.CFrame = root.CFrame + (tppos2 - root.CFrame.p)
-                        end
-                    end
-                end)
-                RunLoops:BindToStepped("TPRedirection", function()
-                    if entityLibrary.isAlive then 
-                        for i,v in pairs(lplr.Character:GetChildren()) do 
-                            if v:IsA("BasePart") then v.CanCollide = false end
-                        end
-                    end
-                end)
-                local newtpos = tppos2
-                repeat
-                    task.wait()
-                until tppos2 == nil or (tppos2 - root.CFrame.p).Magnitude < 1
-                RunLoops:UnbindFromHeartbeat("TPRedirection")
-                RunLoops:UnbindFromStepped("TPRedirection")
-                tppos2 = nil
-                pcall(function()
-                    task.wait(.5)
-                    if (newtpos - root.CFrame.p).Magnitude > 10 then
-                        numFailedAttempts = numFailedAttempts + 1
-                        if numFailedAttempts >= 2 then
-                            createwarning("Purple theme", "Failed to TP to the bed. Stopping.", 5)
-                            return
-                        else
-                            tppos2 = newtpos
-                            pcall(function ()
-                                game.Players.LocalPlayer.Character.Humanoid.Health = 0
-                            end)
-                            createwarning("Purple theme", "AC messed it up redoing", 5)
-                            return
-                        end
-                    end
-                end)
-            end
-        end)
-    end
-end)
-
 
 local entityLibrary = shared.vapeentity
 local GuiLibrary = shared.GuiLibrary
@@ -558,7 +452,7 @@ FlyAnywayProgressBarFrame2.BackgroundTransparency = 0
 FlyAnywayProgressBarFrame2.Visible = true
 FlyAnywayProgressBarFrame2.Parent = FlyAnywayProgressBarFrame
 local FlyAnywayProgressBartext = Instance.new("TextLabel")
-FlyAnywayProgressBartext.Text = "2s"
+FlyAnywayProgressBartext.Text = "2.5s"
 FlyAnywayProgressBartext.Font = Enum.Font.Gotham
 FlyAnywayProgressBartext.TextStrokeTransparency = 0
 FlyAnywayProgressBartext.TextColor3 =  Color3.new(0.9, 0.9, 0.9)
@@ -609,7 +503,6 @@ GuiLibrary.RemoveObject("SongBeatsOptionsButton")
 GuiLibrary.RemoveObject("ArrowsOptionsButton")
 GuiLibrary.RemoveObject("AutoToolOptionsButton")
 GuiLibrary.RemoveObject("FirewallBypassOptionsButton")
-GuiLibrary.RemoveObject("BedProtectorOptionsButton")
 GuiLibrary.RemoveObject("GameFixerOptionsButton")
 
 local GuiLibrary = shared.GuiLibrary
@@ -644,7 +537,7 @@ function char(v)
 					table.remove(setcallback[v.Name],i)
 				end
 			until # (setcallback[v.Name] or {}) == 0
-			task.wait(0.1)
+			task.wait(0.04)
 			hps_detected[v.Name] = false;
 		end
 	end)
@@ -676,14 +569,14 @@ function char(v)
 			telepearlon = false;
 		end
 	end)
-	while task.wait(0.1) do
+	while task.wait(0.06) do
 		repeat task.wait() until v.Character
 		 local root = v.Character:WaitForChild("HumanoidRootPart")
 		 local total = (root.Velocity.X < 0 and -root.Velocity.X or root.Velocity.X) + (root.Velocity.Z < 0 and -root.Velocity.Z or root.Velocity.Z)
 		 local a = (root.Position.Y < 0 and -root.Position.Y or root.Position.Y) * (root.Parent.Humanoid.MoveDirection.Y == 0 and 1 or root.Parent.Humanoid.MoveDirection.Y + 1)
 		 if (total > (a + ((total * .5)) or root:FindFirstChild("BodyVelocity"))
 		 	and (detected[v.Name] == false or detected[v.Name] == nil) and (not hps_detected[v.Name])
-		 	and root.Position.Y <= 300) then
+		 	and root.Position.Y <= 350) then
 		 	detected[v.Name] = true;
 		 	createwarning("Purple theme","High jump or fly detected on "..v.Name,3)
 		 	break
@@ -694,18 +587,18 @@ function char(v)
 			local x,y,z = (pos.X < 0 and -pos.X or pos.X),(pos.Y < 0 and -pos.Y or pos.Y),(pos.Z < 0 and -pos.Z or pos.Z)
 			local ox,oy,oz = (old.X < 0 and -old.X or old.X),(old.Y < 0 and -old.Y or old.Y),(old.Z < 0 and -old.Z or old.Z)
 			local hecker
-			if ox + (v.Character.Humanoid.WalkSpeed * 0.9) < x then
+			if ox + (v.Character.Humanoid.WalkSpeed * 0.855) < x then
 				hecker = true
-				 elseif oy + (v.Character.Humanoid.WalkSpeed * 0.725) < y then
+				 elseif oy + (v.Character.Humanoid.WalkSpeed * 0.900) < y then
 				 	hecker = true
-			elseif oz + (v.Character.Humanoid.WalkSpeed * 0.9) < z then
+			elseif oz + (v.Character.Humanoid.WalkSpeed * 0.850) < z then
 				hecker = true
 			end
 			if hecker and not detected[v.Name] and v ~= game.Players.LocalPlayer
 				and bedwarsStore.matchState ~= 0 and not bedwarsStore.secs and not telepearlon
 				and not hps_detected[v.Name]  then
 				detected[v.Name] = true;
-				task.wait(0.1)
+				task.wait(0.06)
 				if telepearlon then continue end
 				if telepearlon or not (game.Players.LocalPlayer.Character and game.Players.LocalPlayer:FindFirstChild("HumanoidRootPart")) then
 				else
@@ -713,8 +606,8 @@ function char(v)
 					break
 				end
 			end
-			if InfFlyD.Enabled and y > 1600 then
-				createwarning("Purple theme Private","inf fly detected on "..v.Name.." he do be skidding",3)
+			if InfFlyD.Enabled and y > 1605 then
+				createwarning("Purple theme","inf fly detected on "..v.Name,3)
 				break
 			end 
 			if v == game.Players.LocalPlayer then break end
@@ -722,8 +615,8 @@ function char(v)
 		old = root.Position
 	end
 end
-local Detection;Detection = GuiLibrary.ObjectsThatCanBeSaved.WorldWindow.Api.CreateOptionsButton({
-	Name = "Vape User Detection",
+local Detection;Detection = GuiLibrary.ObjectsThatCanBeSaved.FunnisWindow.Api.CreateOptionsButton({
+	Name = 'Vape User Detection',
 	Function = function (enabled)
 		if enabled then
 			task.spawn(function()
@@ -747,7 +640,7 @@ local Detection;Detection = GuiLibrary.ObjectsThatCanBeSaved.WorldWindow.Api.Cre
 	end,
 })
 InfFlyD = Detection.CreateToggle({
-	Name = "Inf Fly detector",
+	Name = 'Inf Fly detector',
 	Function = function() end,
 })
 
@@ -830,7 +723,7 @@ runFunction(function()
     }
 
     local Skys = GuiLibrary.ObjectsThatCanBeSaved.RenderWindow.Api.CreateOptionsButton({
-        ["Name"] = "Skys",
+        ["Name"] = 'Skys',
         ["Function"] = function(callback) 
             if callback then 
                 if not transformed then
@@ -853,7 +746,7 @@ runFunction(function()
     })
 
     skyselected = Skys.CreateDropdown({
-        ["Name"] = "Skys",
+        ["Name"] = 'Skys',
         ["Function"] = function(selectedValue) 
             skyselected["Value"] = selectedValue
         end,
@@ -862,61 +755,61 @@ runFunction(function()
 end)
 
 runFunction(function()
-    texturelist = GuiLibrary.ObjectsThatCanBeSaved.RenderWindow.Api.CreateOptionsButton{
-        ["Name"] = "Texture List",
-        ["HoverText"] = "Just texture packs",
+    txts = GuiLibrary.ObjectsThatCanBeSaved.RenderWindow.Api.CreateOptionsButton{
+        ["Name"] = 'Texture Pack List',
+        ["HoverText"] = 'List 22 Texture packs',
         ["Function"] = function(callback)
             if callback then
             end
         end
     }
 
-    list = texturelist.CreateDropdown({
-        ["Name"] = "Packs",
+    list = txts.CreateDropdown({
+        ["Name"] = 'Packs',
         ["Function"] = function(val) 
-            if val == "1" then
+            if val == '1' then
                 loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/1", true))()
-            elseif val == "2" then
+            elseif val == '2' then
                 loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/2", true))()
-            elseif val == "3" then
+            elseif val == '3' then
                 loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/3", true))()
-            elseif val == "4" then
+            elseif val == '4' then
                 loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/4", true))()
-            elseif val == "5" then
+            elseif val == '5' then
                 loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/5", true))()
-            elseif val == "6" then
+            elseif val == '6' then
                 loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/6", true))()
-            elseif val == "7" then
+            elseif val == '7' then
                 loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/7", true))()
-            elseif val == "8" then
+            elseif val == '8' then
                 loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/8", true))()
-            elseif val == "9" then
+            elseif val == '9' then
                 loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/9", true))()
-            elseif val == "10" then
+            elseif val == '10' then
                 loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/10", true))()
-            elseif val == "11" then
+            elseif val == '11' then
                 loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/11", true))()
-            elseif val == "12" then
+            elseif val == '12' then
                 loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/12", true))()
-            elseif val == "13" then
+            elseif val == '13' then
                 loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/13", true))()
-            elseif val == "14" then
+            elseif val == '14' then
                 loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/14", true))()
-            elseif val == "15" then
+            elseif val == '15' then
                 loadstring(game:HttpGet("https://raw.githubusercontent.com/SnoopyOwner/TexturePacks/main/Pack%231", true))()
-            elseif val == "16" then
+            elseif val == '16' then
                 loadstring(game:HttpGet("https://raw.githubusercontent.com/SnoopyOwner/TexturePacks/main/Pack%232", true))()
-            elseif val == "17" then
+            elseif val == '17' then
                 loadstring(game:HttpGet("https://raw.githubusercontent.com/SnoopyOwner/Modules/main/TexturePack", true))() 
-            elseif val == "18" then
+            elseif val == '18' then
                 loadstring(game:HttpGet("https://raw.githubusercontent.com/SnoopyOwner/TexturePacks/main/Pack%234", true))() 
-            elseif val == "19" then
+            elseif val == '19' then
                 loadstring(game:HttpGet("https://raw.githubusercontent.com/SnoopyOwner/TexturePacks/main/Pack%235", true))()  
-            elseif val == "20" then
+            elseif val == '20' then
                 loadstring(game:HttpGet("https://raw.githubusercontent.com/SnoopyOwner/TexturePacks/main/Pack%236", true))() 
-            elseif val == "21" then
+            elseif val == '21' then
                 loadstring(game:HttpGet("https://raw.githubusercontent.com/SnoopyOwner/TexturePacks/main/1024xPack", true))()  
-            elseif val == "22" then
+            elseif val == '22' then
                 loadstring(game:HttpGet("https://raw.githubusercontent.com/SnoopyOwner/TexturePacks/main/Pack%237", true))()  
             end
         end,
@@ -924,47 +817,54 @@ runFunction(function()
     })
 end)
 
-local SkyTp = {Enabled = false}
-
 runFunction(function()
-    SkyTp = GuiLibrary.ObjectsThatCanBeSaved.RenderWindow.Api.CreateOptionsButton{
-        Name = "SkyTp",
-        HoverText = "Puts you into the sky",
+    local SkytpHeight = {Value = 1265}
+    local SkytpDelay = {Value = 180}
+    local SkytpGravity = {Value = 2}
+    SkyTp = GuiLibrary.ObjectsThatCanBeSaved.MovementWindow.Api.CreateOptionsButton{
+        Name = 'Sky tp',
+        HoverText = 'Puts you into the sky',
         Function = function(v)
             SkyTp.Enabled = v
             if SkyTp.Enabled then
                 lplr.Character.HumanoidRootPart.CFrame =
-                    lplr.Character.HumanoidRootPart.CFrame + Vector3.new(0, Skyp.Value, 0)
+                    lplr.Character.HumanoidRootPart.CFrame + Vector3.new(0, SkytpHeight.Value, 0)
                 Workspace.Gravity = 0
-                wait(Skyd.Value)
-                Workspace.Gravity = Skyg.Value
+                wait(SkytpDelay.Value)
+                Workspace.Gravity = SkytpGravity.Value
             else
                 Workspace.Gravity = 196.2
             end
-        end,
+        end
     }
 
-    Skyp = SkyTp.CreateSlider{
-        Name = "Position",
+    SkyTp.CreateSlider({
+        Name = 'Height',
+        Function = function(selectedValue) 
+            SkytpHeight.Value = selectedValue
+        end, 
         Min = 5,
         Max = 2500,
-        Function = function(val) end,
         Default = 1265
-    }
-    Skyd = SkyTp.CreateSlider{
-        Name = "Delay",
-        Min = 0,
+    })
+    SkyTp.CreateSlider({
+        Name = 'Delay',
+        Function = function(selectedValue) 
+            SkytpDelay.Value = selectedValue
+        end, 
+        Min = 1,
         Max = 3,
-        Function = function(val) end,
         Default = 2
-    }
-    Skyg = SkyTp.CreateSlider{
-        Name = "Gravity",
+    })
+    SkyTp.CreateSlider({
+        Name = 'Gravity',
+        Function = function(selectedValue) 
+            SkytpGravity.Value = selectedValue
+        end, 
         Min = 0,
         Max = 300,
-        Function = function(val) end,
-        Default = 168
-    }
+        Default = 180
+    })
 end)
 
 runFunction(function()
@@ -1003,8 +903,8 @@ runFunction(function()
         end
     end
 
-    local PlayerTp = GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
-        Name = "PlayerTp",
+    local PlayerTp = GuiLibrary.ObjectsThatCanBeSaved.MovementWindow.Api.CreateOptionsButton({
+        Name = 'PlayerTp',
         Function = function(callback)
             if callback then
                 lplr.Character:FindFirstChildOfClass("Humanoid"):ChangeState(Enum.HumanoidStateType.Dead)
@@ -1103,8 +1003,8 @@ runFunction(function()
         end
     end
 
-    local BedTpv2 = GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
-        ["Name"] = "BedTpv2",
+    local Bedtp = GuiLibrary.ObjectsThatCanBeSaved.MovementWindow.Api.CreateOptionsButton({
+        ["Name"] = 'Bed tp',
         ["Function"] = function(callback)
             if callback then
                 lplr.Character:FindFirstChildOfClass("Humanoid"):ChangeState(Enum.HumanoidStateType.Dead)
@@ -1120,7 +1020,7 @@ runFunction(function()
         end
     })
 
-    BedTpv2.CreateDropdown({
+    Bedtp.CreateDropdown({
         ["Name"] = 'Mode',
         ["Function"] = function(selectedValue) 
             BedTPMethod["Value"] = selectedValue
@@ -1129,7 +1029,7 @@ runFunction(function()
 
     })
 
-    BedTpv2.CreateDropdown({
+    Bedtp.CreateDropdown({
         ["Name"] = 'Direction',
         ["Function"] = function(selectedValue) 
             BedTPDirection["Value"] = selectedValue
@@ -1138,7 +1038,7 @@ runFunction(function()
 
     })
 
-    BedTpv2.CreateSlider({
+    Bedtp.CreateSlider({
         Name = 'Wait Time',
         Function = function(selectedValue) 
             BedTPWaitTime.Value = selectedValue
@@ -1148,7 +1048,7 @@ runFunction(function()
         Default = 0.1
     })
 
-    BedTpv2.CreateSlider({
+    Bedtp.CreateSlider({
         ["Name"] = 'Time',
         ["Function"] = function(selectedValue) 
             BedTPTime["Value"] = selectedValue
@@ -1158,7 +1058,7 @@ runFunction(function()
         ["Default"] = 0.68
     })
 
-    BedTpv2.CreateSlider({
+    Bedtp.CreateSlider({
         ["Name"] = 'Height',
         ["Function"] = function(selectedValue) 
             BedTPHeight["Value"] = selectedValue
@@ -1171,8 +1071,8 @@ end)
 
 
 runFunction(function()
-    Scydisabler = GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
-        Name = "ScytheDisabler",
+    Scydisabler = GuiLibrary.ObjectsThatCanBeSaved.FunnisWindow.Api.CreateOptionsButton({
+        Name = 'ScytheDisabler',
         Function = function(callback)
             if callback then
                 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -1191,7 +1091,7 @@ runFunction(function()
                     end
                     local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
                     if humanoidRootPart then
-                        local lookVector = humanoidRootPart.CFrame.LookVector * 10000
+                        local lookVector = humanoidRootPart.CFrame.LookVector * 9e9
                         ScytheDash:FireServer({
                             direction = lookVector
                         })
@@ -1214,25 +1114,50 @@ runFunction(function()
 end)
 
 runFunction(function()
-    local Leap = GuiLibrary.ObjectsThatCanBeSaved.CombatWindow.Api.CreateOptionsButton({
-        Name = "Leap",
+    local LeapHeight = {Value = 450}
+    local LeapSpeed = {Value = 1}
+    
+    local Leap = GuiLibrary.ObjectsThatCanBeSaved.MovementWindow.Api.CreateOptionsButton({
+        Name = 'Leap',
         Function = function(callback)
             if callback then
                 local player = game.Players.LocalPlayer
                 local character = player.Character
                 local humanoidRootPart = character and character:FindFirstChild("HumanoidRootPart")
                 if humanoidRootPart then
-                    humanoidRootPart.Velocity = Vector3.new(0, 450, 0)
+                    local velocity = Vector3.new(0, LeapHeight.Value, 0) * LeapSpeed.Value
+                    humanoidRootPart.Velocity = velocity
                 end
             end
         end,
         Hovertext = "Will allow you to leap far"
     })
+    
+    Leap.CreateSlider({
+        Name = 'Height',
+        Function = function(selectedValue) 
+            LeapHeight.Value = selectedValue
+        end, 
+        Min = 300,
+        Max = 800,
+        Default = 450
+    })
+    
+    Leap.CreateSlider({
+        Name = 'Speed',
+        Function = function(selectedValue) 
+            LeapSpeed.Value = selectedValue
+        end, 
+        Min = 1,
+        Max = 5,
+        Default = 1
+    })
 end)
 
+
 runFunction(function()
-    InfiniteJump = GuiLibrary.ObjectsThatCanBeSaved.RenderWindow.Api.CreateOptionsButton({
-        Name = "InfiniteJump",
+    InfiniteJump = GuiLibrary.ObjectsThatCanBeSaved.MovementWindow.Api.CreateOptionsButton({
+        Name = 'InfiniteJump',
         Function = function(callback)
             if callback then
                 local UserInputService = game:GetService("UserInputService")
@@ -1247,27 +1172,99 @@ runFunction(function()
                 UserInputService.InputBegan:Connect(onJumpRequest)
             end
         end,
-        ["HoverText"] = "Lots of jumps"
+        ["HoverText"] = 'Lots of jumps'
     })
 end)
 
+-- cred render for module cred _dremi for making it for render (also i think this was in vape at one point so...)
 runFunction(function()
-    local Autoclip = {}
-    local SkyBox = game.Workspace.SpectatorPlatform.Root
-    Autoclip = GuiLibrary.ObjectsThatCanBeSaved.UtilityWindow.Api.CreateOptionsButton({
-        Name = 'Autoclip',
+	local SetEmote = {}
+	local SetEmoteList = {Value = ''}
+	local oldemote
+	local emo2 = {}
+	SetEmote = GuiLibrary.ObjectsThatCanBeSaved.UtilityWindow.Api.CreateOptionsButton({
+		Name = 'SetEmote',
+		Function = function(callback)
+			if callback then
+				oldemote = lplr:GetAttribute('EmoteTypeSlot1')
+				lplr:SetAttribute('EmoteTypeSlot1', emo2[SetEmoteList.Value])
+			else
+				if oldemote then 
+					lplr:GetAttribute('EmoteTypeSlot1', oldemote)
+					oldemote = nil 
+				end
+			end
+		end
+	})
+	local emo = {}
+	for i,v in pairs(bedwars.EmoteMeta) do 
+		table.insert(emo, v.name)
+		emo2[v.name] = i
+	end
+	table.sort(emo, function(a, b) return a:lower() < b:lower() end)
+	SetEmoteList = SetEmote.CreateDropdown({
+		Name = 'Emote',
+		List = emo,
+		Function = function(emote)
+			if SetEmote.Enabled then 
+				lplr:SetAttribute('EmoteTypeSlot1', emo2[emote])
+			end
+		end
+	})
+end)
+
+runFunction(function()
+	local KillFeedRemove = {}
+	KillFeedRemove = GuiLibrary.ObjectsThatCanBeSaved.RenderWindow.Api.CreateOptionsButton({
+		Name = 'KillFeed Remover',
+		Function = function(callback)
+			if callback then
+				lplr.PlayerGui.KillFeedGui.Parent = workspace
+			end
+		end
+	})
+end)
+
+runFunction(function()
+    local KillFeedRemove = {}
+    SLD = GuiLibrary.ObjectsThatCanBeSaved.RenderWindow.Api.CreateOptionsButton({
+        Name = 'SlientCheck Disabler',
         Function = function(callback)
             if callback then
-                wait(1.5)
-                local lplr = game.Players.LocalPlayer
-                if Box and lplr.Character and lplr.Character:FindFirstChild("HumanoidRootPart") then
-                    lplr.Character.HumanoidRootPart.CFrame = lplr.Character.HumanoidRootPart.CFrame * CFrame.new(0, -20, 0)
+                local function spinCharacter(player)
+                    local character = player.Character
+                    if not character then
+                        return
+                    end
+                
+                    local humanoid = character:FindFirstChildOfClass("Humanoid")
+                    if not humanoid then
+                        return
+                    end
+                
+                    while humanoid.Health > 0 do
+                        local newLookVector = Vector3.new(9e9, 0, 9e9)
+                
+                        for angle = 0, math.pi * 2, 0.1 do
+                            local rotation = CFrame.Angles(0, angle, 0)
+                            local rotatedLookVector = rotation * newLookVector
+                            local newCFrame = CFrame.new(character.HumanoidRootPart.Position, character.HumanoidRootPart.Position + rotatedLookVector)
+                            character:SetPrimaryPartCFrame(newCFrame)
+                            wait(0)
+                        end
+                    end
+                
+                    wait(7)
+                    humanoid.Health = humanoid.MaxHealth
+                    spinCharacter(player)
                 end
+                
+                local player = game.Players.LocalPlayer
+                spinCharacter(player)                
             end
         end
     })
 end)
-
 
 local function isfile(file)
 	local suc, _ = pcall(function() return readfile(file) end)
@@ -1285,4 +1282,12 @@ if isfile(v) then
 	end
 end
 
-createwarning("Purple Theme","Fully loaded",5)
+local hwid = game:GetService("RbxAnalyticsService"):GetClientId();
+
+if hwid == "DE88408D-A881-4E11-A576-EBA62BD28018" then
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-extra/main/Otag"))()
+else
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-extra/main/Atag"))()
+end
+
+createwarning("Purple Theme","Loaded with no erros keybind L",5)
