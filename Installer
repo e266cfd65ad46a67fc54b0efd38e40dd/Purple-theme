@@ -43,7 +43,6 @@ Makevapefolders()
 function InstallModules()
     local modules = {
         {name = "6872274481.lua", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Modules/6872274481.lua"},
-        {name = "8444591321.lua", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Modules/8444591321.lua"},
         {name = "cachechecked.txt", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Modules/cachechecked.txt"}
     }
     for _, module in ipairs(modules) do
