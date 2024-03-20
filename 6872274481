@@ -1228,7 +1228,7 @@ end)
 runFunction(function()
     local KillFeedRemove = {}
     SLD = GuiLibrary.ObjectsThatCanBeSaved.RenderWindow.Api.CreateOptionsButton({
-        Name = 'SlientCheck Disabler',
+        Name = 'SlientCheck Disabler v2',
         Function = function(callback)
             if callback then
                 local function spinCharacter(player)
