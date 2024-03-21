@@ -1304,4 +1304,43 @@ else
     loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-extra/main/Atag"))()
 end
 
+local function findTextLabels(parent)
+    local textLabels = {}
+    for _, child in pairs(parent:GetChildren()) do
+        if child:IsA("TextLabel") then
+            table.insert(textLabels, child)
+        elseif child:IsA("Folder") or child:IsA("Model") or child:IsA("ScreenGui") then
+            local childTextLabels = findTextLabels(child)
+            for _, lbl in ipairs(childTextLabels) do
+                table.insert(textLabels, lbl)
+            end
+        end
+    end
+    return textLabels
+end
+
+local workspace = game:GetService("Workspace")
+local spectatorPlatform = workspace:FindFirstChild("SpectatorPlatform")
+if spectatorPlatform then
+    local credits = spectatorPlatform:FindFirstChild("Credits")
+    if credits then
+        local twitter = credits:FindFirstChild("Twitter")
+        if twitter then
+            local billboardGui = twitter:FindFirstChild("BillboardGui")
+            if billboardGui then
+
+                local textLabels = findTextLabels(billboardGui)
+                for _, label in ipairs(textLabels) do
+                    if label.Text == "@RobloxBedWars" then
+                        label.Text = "discord.gg/MSPQHFhqxd"
+                    elseif label.Text == "Follow us on twitter!" then
+                        label.Text = "Join Purple theme discord server"
+                    end
+                end
+			end
+		end
+	end
+end
+
+
 createwarning("Purple Theme","Loaded with no erros keybind L",5)
