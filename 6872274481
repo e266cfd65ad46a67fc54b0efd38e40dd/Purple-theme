@@ -1264,7 +1264,7 @@ runFunction(function()
                         end
 
                         repeat
-                            wait(0)
+                            wait(0.24)
                         until character.HumanoidRootPart.Position.Y < 100
                     end
 
