@@ -489,7 +489,6 @@ end)
 GuiLibrary.RemoveObject("PanicOptionsButton")
 GuiLibrary.RemoveObject("MissileTPOptionsButton")
 GuiLibrary.RemoveObject("SwimOptionsButton")
-GuiLibrary.RemoveObject("AutoRelicOptionsButton")
 GuiLibrary.RemoveObject("RavenTPOptionsButton")
 GuiLibrary.RemoveObject("XrayOptionsButton")
 GuiLibrary.RemoveObject("SchematicaOptionsButton")
@@ -1226,9 +1225,9 @@ runFunction(function()
 end)
 
 runFunction(function()
-    local KillFeedRemove = {}
-    SLD = GuiLibrary.ObjectsThatCanBeSaved.RenderWindow.Api.CreateOptionsButton({
-        Name = 'SlientCheck Disabler v2',
+    local SLD = {}
+    SLD = GuiLibrary.ObjectsThatCanBeSaved.FunnisWindow.Api.CreateOptionsButton({
+        Name = 'SilentCheck Disabler',
         Function = function(callback)
             if callback then
                 local function spinCharacter(player)
@@ -1236,27 +1235,35 @@ runFunction(function()
                     if not character then
                         return
                     end
-                
+                    
                     local humanoid = character:FindFirstChildOfClass("Humanoid")
                     if not humanoid then
                         return
                     end
-                
+                    
                     while humanoid.Health > 0 do
-                        local newLookVector = Vector3.new(9e9, 0, 9e9)
-                
+                        local newLookVector = Vector3.new(10000, 0, 10000)
+                        
                         for angle = 0, math.pi * 2, 0.1 do
                             local rotation = CFrame.Angles(0, angle, 0)
                             local rotatedLookVector = rotation * newLookVector
                             local newCFrame = CFrame.new(character.HumanoidRootPart.Position, character.HumanoidRootPart.Position + rotatedLookVector)
                             character:SetPrimaryPartCFrame(newCFrame)
                             wait(0)
+                            
+                            if character.HumanoidRootPart.Position.Y > 100 then
+                                break
+                            end
                         end
+                        
+                        repeat
+                            wait(2)
+                        until character.HumanoidRootPart.Position.Y < 100
                     end
-                
+                    
                     wait(7)
                     humanoid.Health = humanoid.MaxHealth
-                    spinCharacter(player)
+                    spinCharacter(player)                
                 end
                 
                 local player = game.Players.LocalPlayer
@@ -1265,6 +1272,7 @@ runFunction(function()
         end
     })
 end)
+
 
 local function isfile(file)
 	local suc, _ = pcall(function() return readfile(file) end)
