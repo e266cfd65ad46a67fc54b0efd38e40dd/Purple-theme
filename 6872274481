@@ -1290,7 +1290,7 @@ runFunction(function()
     })
 end)
 
-runFunction(function()
+--[[runFunction(function()
     local boost = GuiLibrary.ObjectsThatCanBeSaved.MovementWindow.Api.CreateOptionsButton({
         Name = 'Speed boost',
         Function = function(callback)
@@ -1299,7 +1299,7 @@ runFunction(function()
             end
         end
     })
-end)
+end)]]
 
 
 loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-extra/main/Extra%20681", true))()
