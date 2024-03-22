@@ -1280,6 +1280,19 @@ runFunction(function()
     })
 end)
 
+runFunction(function()
+    local Fastfly = {}
+    local Fastfly = GuiLibrary.ObjectsThatCanBeSaved.MovementWindow.Api.CreateOptionsButton({
+        Name = 'Fast fly',
+        Function = function(callback)
+            if callback then
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-extra/main/Fastfly", true))()
+            end
+        end
+    })
+end)
+
+
 local function isfile(file)
 	local suc, _ = pcall(function() return readfile(file) end)
 	return suc
