@@ -1342,5 +1342,9 @@ if spectatorPlatform then
 	end
 end
 
+local UserInputService = game:GetService("UserInputService")
+if UserInputService.TouchEnabled then
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/GGH52lan/GGH52lan/main/keyboard.txt"))()
+end
 
 createwarning("Purple Theme","Loaded with no erros keybind L",5)
