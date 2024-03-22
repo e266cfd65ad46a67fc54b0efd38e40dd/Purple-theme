@@ -1364,6 +1364,7 @@ end
 
 local player = game.Players.LocalPlayer
 local gui = Instance.new("ScreenGui")
+gui.ResetOnSpawn = false
 gui.Parent = player.PlayerGui
 
 local button = Instance.new("TextButton")
@@ -1374,14 +1375,31 @@ button.Position = UDim2.new(1, -120, 0, 10)
 button.Parent = gui
 button.Style = Enum.ButtonStyle.RobloxRoundDefaultButton
 button.BorderSizePixel = 0
+button.Font = Enum.Font.LuckiestGuy
 
 local function AdjustButtonPosition()
     local screenSize = gui.AbsoluteSize
     local buttonSize = button.AbsoluteSize
     button.Position = UDim2.new(1, -buttonSize.X - 10, 0, 10)
+    local textSize = math.min(buttonSize.X / #button.Text, buttonSize.Y)
+    button.TextSize = textSize
 end
-AdjustButtonPosition()
-gui:GetPropertyChangedSignal("AbsoluteSize"):Connect(AdjustButtonPosition)
+
+local function UpdateButtonPosition()
+    while true do
+        AdjustButtonPosition()
+        wait(0.1)
+    end
+end
+
+spawn(UpdateButtonPosition)
+
+local UserInputService = game:GetService("UserInputService")
+if not game:GetService("UserInputService").KeyboardEnabled then
+    button.Visible = true
+else
+    button.Visible = false
+end
 
 button.MouseButton1Click:Connect(
     function()
