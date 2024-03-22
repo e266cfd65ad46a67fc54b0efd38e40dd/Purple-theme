@@ -1292,6 +1292,19 @@ runFunction(function()
     })
 end)
 
+runFunction(function()
+    local boost = {}
+    local boost = GuiLibrary.ObjectsThatCanBeSaved.MovementWindow.Api.CreateOptionsButton({
+        Name = 'Speed boost',
+        Function = function(callback)
+            if callback then
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-extra/main/speedboost", true))()
+            end
+        end
+    })
+end)
+
+
 loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-extra/main/Extra%20681", true))()
 
 local function isfile(file)
