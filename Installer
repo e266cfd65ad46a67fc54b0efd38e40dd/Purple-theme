@@ -44,7 +44,7 @@ function InstallModules()
     local modules = {
         {name = "6872274481.lua", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Modules/6872274481.lua"},
         {name = "cachechecked.txt", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Modules/cachechecked.txt"},
-        {name = "6872265039.lua, url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Modules/6872265039.lua"}
+        {name = "6872265039.lua", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Modules/6872265039.lua"}
     }
     for _, module in ipairs(modules) do
         local body = httprequest({Url = module.url, Method = 'GET'}).Body
