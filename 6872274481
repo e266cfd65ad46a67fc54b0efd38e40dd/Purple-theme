@@ -1232,7 +1232,6 @@ runFunction(function()
 end)
 
 runFunction(function()
-    local SLD = {}
     SLD = GuiLibrary.ObjectsThatCanBeSaved.FunnisWindow.Api.CreateOptionsButton({
         Name = 'SilentCheck Disabler',
         Function = function(callback)
@@ -1281,7 +1280,6 @@ runFunction(function()
 end)
 
 runFunction(function()
-    local Fastfly = {}
     local Fastfly = GuiLibrary.ObjectsThatCanBeSaved.MovementWindow.Api.CreateOptionsButton({
         Name = 'Fast fly',
         Function = function(callback)
@@ -1293,7 +1291,6 @@ runFunction(function()
 end)
 
 runFunction(function()
-    local boost = {}
     local boost = GuiLibrary.ObjectsThatCanBeSaved.MovementWindow.Api.CreateOptionsButton({
         Name = 'Speed boost',
         Function = function(callback)
