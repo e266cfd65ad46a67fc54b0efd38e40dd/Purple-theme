@@ -1302,9 +1302,15 @@ end)
 end)]]
 
 runFunction(function()
+    local player = game:GetService("Players").LocalPlayer
+    local character = player.Character
+    if not character then
+        player.CharacterAdded:Wait()
+        character = player.Character
+    end
+
     local SpeedP = character:GetAttribute("SpeedBoost")     
     local humanoid = character:WaitForChild("Humanoid")
-    local player = game:GetService("Players").LocalPlayer
     local vim = game:GetService("VirtualInputManager")
     local Key = "W"
 
@@ -1345,7 +1351,6 @@ runFunction(function()
         end
     })
 end)
-
 
 loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-extra/main/Extra%20681", true))()
 
