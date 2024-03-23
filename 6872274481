@@ -689,7 +689,7 @@ runFunction(function()
                 game.Lighting.Sky.SkyboxRt = "http://www.roblox.com/Asset/?ID=5103948784"
                 game.Lighting.Sky.SkyboxUp = "http://www.roblox.com/Asset/?ID=5084576400"
             end)
-        end
+        end,
         Aesthetic = function()
             task.spawn(function()
                 game.Lighting.Sky.SkyboxBk = "http://www.roblox.com/Asset/?ID=1417494030"
