@@ -1302,32 +1302,50 @@ end)
 end)]]
 
 runFunction(function()
+    local SpeedP = character:GetAttribute("SpeedBoost")     
+    local humanoid = character:WaitForChild("Humanoid")
+    local player = game:GetService("Players").LocalPlayer
     local vim = game:GetService("VirtualInputManager")
-    local keyToClick = "W"
+    local Key = "W"
+
+    local pressingW = false
+
+    local function PressW()
+        vim:SendKeyEvent(true, Key, false, game)
+        wait(0.7)
+        vim:SendKeyEvent(false, Key, false, game)
+    end
+
+    local function PressKeyWithDelay(delay)
+        while pressingW do
+            PressW()
+            wait(delay)
+        end
+    end
+
+    local function StartPressW()
+        pressingW = true
+        PressKeyWithDelay(0.3)
+    end
+
+    local function StopPressW()
+        pressingW = false
+    end
+
     local HS = GuiLibrary.ObjectsThatCanBeSaved.MovementWindow.Api.CreateOptionsButton({
         Name = 'Dev HeatSeeker',
         Function = function(callback)
             if callback then
-                local function PressW()
-                    vim:SendKeyEvent(true, keyToClick, false, game)
-                    wait(0.7)
-                    vim:SendKeyEvent(false, keyToClick, false, game)
+                if not SpeedP then
+                    StartPressW()
+                else
+                    StopPressW()
                 end
-
-                local function PressKeyWithDelay(delay)
-                    while true do
-                        PressW()
-                        wait(delay)
-                    end
-                end
-
-                spawn(function()
-                    PressKeyWithDelay(0.5)
-                end)
             end
         end
     })
 end)
+
 
 loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-extra/main/Extra%20681", true))()
 
