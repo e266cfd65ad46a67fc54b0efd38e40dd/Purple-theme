@@ -1301,6 +1301,33 @@ end)
     })
 end)]]
 
+runFunction(function()
+    local vim = game:GetService("VirtualInputManager")
+    local keyToClick = "W"
+    local HS = GuiLibrary.ObjectsThatCanBeSaved.MovementWindow.Api.CreateOptionsButton({
+        Name = 'Dev HeatSeeker',
+        Function = function(callback)
+            if callback then
+                local function PressW()
+                    vim:SendKeyEvent(true, keyToClick, false, game)
+                    wait(0.7)
+                    vim:SendKeyEvent(false, keyToClick, false, game)
+                end
+
+                local function PressKeyWithDelay(delay)
+                    while true do
+                        PressW()
+                        wait(delay)
+                    end
+                end
+
+                spawn(function()
+                    PressKeyWithDelay(0.5)
+                end)
+            end
+        end
+    })
+end)
 
 loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-extra/main/Extra%20681", true))()
 
