@@ -5,19 +5,11 @@ local isfile = isfile or function(file)
     return success and type(filecontents) == 'string'
 end 
 
-function apiRequest(endpoint)
-    return httprequest({Url = "https://sammz.pythonanywhere.com/"..endpoint, Method = "POST"}).Body
-end
-
 function Reset()
     if isfolder('vape') then
         delfolder('vape')
-    else
-        makefolder('vape')
     end
 end
-
-Reset()
 
 function Makevapefolders()
     if not isfolder('vape/assets') then 
@@ -35,10 +27,15 @@ function Makevapefolders()
     if not isfile('vape/PurpleVerison.txt') then 
         writefile('vape/PurpleVerison.txt', "1.7")
     end
-    task.wait(0.2)
 end
 
-Makevapefolders()
+function BatchedWriteFiles(folder, files)
+    for _, file in ipairs(files) do
+        local body = httprequest({Url = file.url, Method = 'GET'}).Body
+        local filePath = folder .. "/" .. file.name
+        writefile(filePath, body)
+    end
+end
 
 function InstallModules()
     local modules = {
@@ -46,26 +43,18 @@ function InstallModules()
         {name = "cachechecked.txt", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Modules/cachechecked.txt"},
         {name = "6872265039.lua", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Modules/6872265039.lua"}
     }
-    for _, module in ipairs(modules) do
-        local body = httprequest({Url = module.url, Method = 'GET'}).Body
-        writefile('vape/CustomModules/' .. module.name, body)
-    end
+    
+    BatchedWriteFiles("vape/CustomModules", modules)
 end
-
-InstallModules()
 
 function InstallLibraries()
     local libraries = {
         {name = "entityHandler.lua", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Libraries/entityHandler.lua"},
         {name = "sha.lua", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Libraries/sha.lua"}
     }
-    for _, module in ipairs(libraries) do
-        local body = httprequest({Url = module.url, Method = 'GET'}).Body
-        writefile('vape/Libraries/' .. module.name, body)
-    end
+    
+    BatchedWriteFiles("vape/Libraries", libraries)
 end
-
-InstallLibraries()
 
 function InstallProfiles()
     local profiles = {
@@ -79,13 +68,9 @@ function InstallProfiles()
         {name = "6872274481.vapeprofiles.txt", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Profiles/6872274481.vapeprofiles.txt"},
         {name = "bedwarsdata.txt", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Profiles/bedwarsdata.txt"}
     }
-    for _, module in ipairs(profiles) do
-        local body = httprequest({Url = module.url, Method = 'GET'}).Body
-        writefile('vape/Profiles/' .. module.name, body)
-    end
+    
+    BatchedWriteFiles("vape/Profiles", profiles)
 end
-
-InstallProfiles()
 
 function InstallOther()
     local other = {
@@ -95,12 +80,15 @@ function InstallOther()
           {name = "Universal.lua", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Universal.lua"},
           {name = "assetsversion.txt", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/assetsversion.txt"}
     }
-    for _, module in ipairs(other) do
-        local body = httprequest({Url = module.url, Method = 'GET'}).Body
-        writefile('vape/' .. module.name, body)
-    end
+    
+    BatchedWriteFiles("vape", other)
 end
 
+Makevapefolders()
+Reset()
+InstallModules()
+InstallLibraries()
+InstallProfiles()
 InstallOther()
-wait(5)
+wait(0.5)
 loadfile('vape/NewMainScript.lua')()
