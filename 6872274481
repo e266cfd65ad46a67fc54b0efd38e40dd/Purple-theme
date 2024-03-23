@@ -1304,12 +1304,14 @@ end)]]
 runFunction(function()
     local player = game:GetService("Players").LocalPlayer
     local character = player.Character
+    local playersService = game:GetService("Players")
+
     if not character then
         player.CharacterAdded:Wait()
         character = player.Character
     end
-
-    local SpeedP = character:GetAttribute("SpeedBoost")     
+    
+    local SpeedP = character:WaitForChild("SpeedBoost").Value
     local humanoid = character:WaitForChild("Humanoid")
     local vim = game:GetService("VirtualInputManager")
     local Key = "W"
@@ -1342,10 +1344,22 @@ runFunction(function()
         Name = 'Dev HeatSeeker',
         Function = function(callback)
             if callback then
-                if not SpeedP then
-                    StartPressW()
-                else
-                    StopPressW()
+                if player then
+                    local character = player.Character
+                    if character then
+                        local humanoid = character:FindFirstChildOfClass("Humanoid")
+                        if humanoid then
+                            while true do
+                                local speedBoost = character:WaitForChild("SpeedBoost").Value
+                                if not speedBoost then
+                                    StartPressW()
+                                else
+                                    StopPressW()
+                                end
+                                wait(1)
+                            end
+                        end
+                    end
                 end
             end
         end
