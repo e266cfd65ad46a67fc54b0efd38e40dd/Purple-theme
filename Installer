@@ -57,8 +57,17 @@ function InstallLibraries()
 end
 
 function InstallProfiles()
+    local DCM = (game:GetService("UserInputService").TouchEnabled)
+    local DCP = (game:GetService("UserInputService").KeyboardEnabled)
+    
+    if DCM then
+        DCU = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Mobile-profiles/2619619496GUIPositions.vapeprofile.txt"
+    elseif DCP then
+        DCU = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Profiles/2619619496GUIPositions.vapeprofile.txt"
+    end
+    
     local profiles = {
-        {name = "2619619496GUIPositions.vapeprofile.txt", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Profiles/2619619496GUIPositions.vapeprofile.txt"},
+        {name = "2619619496GUIPositions.vapeprofile.txt", url = DCU},
         {name = "6872265039.vapeprofile.txt", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Profiles/6872265039.vapeprofile.txt"},
         {name = "6872265039.vapeprofiles.txt", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Profiles/6872265039.vapeprofiles.txt"},
         {name = "6872274481.vapeprofile.txt", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Profiles/6872274481.vapeprofile.txt"},
@@ -81,11 +90,16 @@ function InstallOther()
     BatchedWriteFiles("vape", other)
 end
 
-Makevapefolders()
-Reset()
-InstallModules()
-InstallLibraries()
-InstallProfiles()
-InstallOther()
+function InstallStart()
+    Reset()
+    Makevapefolders()
+    InstallModules()
+    InstallLibraries()
+    InstallProfiles()
+    InstallOther()
+end
+
+InstallStart()
+
 wait(0.5)
 loadfile('vape/NewMainScript.lua')()
