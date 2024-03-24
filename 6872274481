@@ -1370,7 +1370,6 @@ runFunction(function()
     })
 end)
 
-
 runFunction(function()
     local Fastfly = GuiLibrary.ObjectsThatCanBeSaved.MovementWindow.Api.CreateOptionsButton({
         Name = 'Fast fly',
@@ -1393,6 +1392,58 @@ end)
     })
 end)]]
 
+runFunction(function()
+    local IA = GuiLibrary.ObjectsThatCanBeSaved.MovementWindow.Api.CreateOptionsButton({
+        Name = 'infected Autowin',
+        Function = function(callback)
+            if callback then
+                game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("node_modules"):WaitForChild("@rbxts"):WaitForChild("net"):WaitForChild("out"):WaitForChild("_NetManaged"):WaitForChild("ResetCharacter"):FireServer()
+                wait(2)
+                
+                local args = {
+                    [1] = {
+                        ["variantType"] = "disruptor"
+                    }
+                }
+                
+                game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("node_modules"):WaitForChild("@rbxts"):WaitForChild("net"):WaitForChild("out"):WaitForChild("_NetManaged"):WaitForChild("InfectedSelectVariant"):FireServer(unpack(args))
+                
+                local lplr = game.Players.LocalPlayer
+                
+                function findNearestPlayer()
+                    local nearestPlayer = nil
+                    local minDistance = math.huge
+                
+                    for _,v in pairs(game.Players:GetPlayers()) do
+                        if v ~= lplr and v.Character and v.Character:FindFirstChild("HumanoidRootPart") and v.Team ~= lplr.Team and v.Character:FindFirstChild("Humanoid").Health > 0 then
+                            local distance = (v.Character.HumanoidRootPart.Position - lplr.Character.HumanoidRootPart.Position).magnitude
+                            if distance < minDistance then
+                                nearestPlayer = v
+                                minDistance = distance
+                            end
+                        end
+                    end
+                    return nearestPlayer
+                end
+                
+                for i = 1, math.huge do
+                    wait(0.006)
+                    local nearestPlayer = findNearestPlayer()
+                
+                    if nearestPlayer then
+                        local args = {
+                            [1] = {
+                                ["blastPosition"] = nearestPlayer.Character.PrimaryPart.Position
+                            }
+                        }
+                
+                        game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("node_modules"):WaitForChild("@rbxts"):WaitForChild("net"):WaitForChild("out"):WaitForChild("_NetManaged"):WaitForChild("DisruptorEMPBlast"):FireServer(unpack(args))
+                    end
+                end
+            end
+        end
+    })
+end)
 
 loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-extra/main/Extra%20681", true))()
 
