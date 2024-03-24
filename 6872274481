@@ -1398,20 +1398,24 @@ end)]]
 
 loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-extra/main/Extra%20681", true))()
 
+local Players = game:GetService("Players")
+local TeleportService = game:GetService("TeleportService")
+local Placeid = 16824033256
+
 local function isfile(file)
-	local suc, _ = pcall(function() return readfile(file) end)
-	return suc
+    local suc, _ = pcall(function() return readfile(file) end)
+    return suc
 end
 
 local v = "vape/PurpleVerison.txt"
 if isfile(v) then
-	local content = readfile(v)
-	if content:find("2.0") then
-		print("Verison up to date")
-		else
-		loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-theme/main/Installer", true))()
-		GuiLibrary.SelfDestruct()
-	end
+    local content = readfile(v)
+    if content:find("2.0") then
+        print("Version up to date")
+    else
+        setclipboard("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-theme/main/Installer")
+        wait(0.5)
+        TeleportService:Teleport(Placeid, Players.LocalPlayer)
+    end
 end
-
 createwarning("Purple Theme","Loaded with no errors keybind L",5)
