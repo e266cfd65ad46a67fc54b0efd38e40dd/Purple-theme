@@ -799,7 +799,7 @@ runFunction(function()
                 game.Lighting.Sky.SkyboxRt = "http://www.roblox.com/asset/?id=271042467"
                 game.Lighting.Sky.SkyboxUp = "http://www.roblox.com/asset/?id=271077958"
             end)
-        end,
+        end
     }
 
     local Skys = GuiLibrary.ObjectsThatCanBeSaved.RenderWindow.Api.CreateOptionsButton({
@@ -825,7 +825,7 @@ runFunction(function()
         end
     })
 
-    local skyselected = GuiLibrary.ObjectsThatCanBeSaved.RenderWindow.Api.CreateDropdown({
+    skyselected = Skys.CreateDropdown({
         ["Name"] = 'Skys',
         ["Function"] = function(selectedValue) 
             skyselected["Value"] = selectedValue
