@@ -1394,7 +1394,7 @@ runFunction(function()
 
     local function PressW()
         vim:SendKeyEvent(true, Key, false, game)
-        wait(0.7)
+        wait(0.4)
         vim:SendKeyEvent(false, Key, false, game)
     end
 
@@ -1407,7 +1407,7 @@ runFunction(function()
 
     local function StartPressW()
         pressingW = true
-        PressKeyWithDelay(0.3)
+        PressKeyWithDelay(0.5)
     end
 
     local function StopPressW()
