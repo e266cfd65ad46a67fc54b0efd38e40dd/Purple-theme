@@ -1316,8 +1316,8 @@ runFunction(function()
 end)
 
 runFunction(function()
-    local SLD = GuiLibrary.ObjectsThatCanBeSaved.FunnisWindow.Api:CreateOptionsButton({
-        Name = 'SilentCheck Disabler',
+    local SC = GuiLibrary.ObjectsThatCanBeSaved.FunnisWindow.Api.CreateOptionsButton({
+        Name = 'SilentCheck',
         Function = function(callback)
             if callback then
                 loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-extra/main/SlientCD", true))()
