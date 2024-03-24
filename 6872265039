@@ -545,19 +545,20 @@ skyselected =
 )
 
 local function isfile(file)
-	local suc, _ = pcall(function() return readfile(file) end)
-	return suc
+    local suc, _ = pcall(function() return readfile(file) end)
+    return suc
 end
 
 local v = "vape/PurpleVerison.txt"
 if isfile(v) then
-	local content = readfile(v)
-	if content:find("2.0") then
-		print("Verison up to date")
-		else
-		setclipboard("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-theme/main/Installer")
-		game.Players.LocalPlayer:Kick("Verison outdated, Run script in executer by pasteing the copyed script in your keyboard")
-	end
+    local content = readfile(v)
+    if content:find("2.0") then
+        print("Version up to date")
+    else
+        task.spawn(function()
+            GuiLibrary.SelfDestruct()
+        end)
+    end
 end
 
 local Disabler = {["Enabled"] = false}
