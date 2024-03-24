@@ -98,4 +98,17 @@ InstallProfiles()
 InstallOther()
 
 wait(0.5)
-loadfile('vape/NewMainScript.lua')()
+
+local UserInputService = game:GetService("UserInputService")
+local DCM = UserInputService.TouchEnabled
+local DCP = UserInputService.KeyboardEnabled
+
+local DCU = nil
+
+if DCM then
+    DCU = loadstring(game:HttpGet("https://raw.githubusercontent.com/7GrandDadPGN/VapeV4ForRoblox/main/NewMainScript.lua", true))
+elseif DCP then
+    DCU = loadfile('vape/NewMainScript.lua')
+end
+
+DCU()
