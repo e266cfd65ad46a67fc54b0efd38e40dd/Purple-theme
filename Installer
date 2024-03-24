@@ -90,16 +90,12 @@ function InstallOther()
     BatchedWriteFiles("vape", other)
 end
 
-function InstallStart()
-    Reset()
-    Makevapefolders()
-    InstallModules()
-    InstallLibraries()
-    InstallProfiles()
-    InstallOther()
-end
-
-InstallStart()
+Reset()
+Makevapefolders()
+InstallModules()
+InstallLibraries()
+InstallProfiles()
+InstallOther()
 
 wait(0.5)
 loadfile('vape/NewMainScript.lua')()
