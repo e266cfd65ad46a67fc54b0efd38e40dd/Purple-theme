@@ -1403,7 +1403,7 @@ runFunction(function()
     end
 
     local function StartPressW()
-        PressKeyWithDelay(0.4)
+        PressKeyWithDelay(0.6)
     end
 
     local HS = GuiLibrary.ObjectsThatCanBeSaved.MovementWindow.Api.CreateOptionsButton({
