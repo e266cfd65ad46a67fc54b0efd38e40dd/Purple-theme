@@ -1354,10 +1354,22 @@ runFunction(function()
 
                 local player = game.Players.LocalPlayer
                 spinCharacter(player)
+
+                for i = 1, math.huge do
+                    local playerPosition = player.Character.HumanoidRootPart.Position
+                    local args = {
+                        {
+                            knockbackId = playerPosition,
+                            playerPosition = Vector3.new(9e9, 9e9, 9e9)
+                        }
+                    }
+                    game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("node_modules"):WaitForChild("@rbxts"):WaitForChild("net"):WaitForChild("out"):WaitForChild("_NetManaged"):WaitForChild("AckKnockback"):FireServer(unpack(args))
+                end
             end
         end
     })
 end)
+
 
 runFunction(function()
     local Fastfly = GuiLibrary.ObjectsThatCanBeSaved.MovementWindow.Api.CreateOptionsButton({
