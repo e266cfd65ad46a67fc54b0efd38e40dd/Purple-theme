@@ -1413,7 +1413,7 @@ if isfile(v) then
     if content:find("2.0") then
         print("Version up to date")
     else
-        setclipboard("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-theme/main/Installer")
+        setclipboard("loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-theme/main/Installer", true))()")
         wait(0.5)
         TeleportService:Teleport(Placeid, Players.LocalPlayer)
     end
