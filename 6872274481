@@ -1385,16 +1385,13 @@ runFunction(function()
     local player = game:GetService("Players").LocalPlayer
     local character = player.Character or player.CharacterAdded:Wait()
 
-    local SpeedP = character:GetAttribute("SpeedBoost")
     local humanoid = character:WaitForChild("Humanoid")
     local vim = game:GetService("VirtualInputManager")
     local Key = "W"
 
-    local pressingW = false
-
     local function PressW()
         vim:SendKeyEvent(true, Key, false, game)
-        wait(0.6)
+        wait(0.4)
         vim:SendKeyEvent(false, Key, false, game)
     end
 
@@ -1406,12 +1403,7 @@ runFunction(function()
     end
 
     local function StartPressW()
-        pressingW = true
-        PressKeyWithDelay(1)
-    end
-
-    local function StopPressW()
-        pressingW = false
+        PressKeyWithDelay(0.8)
     end
 
     local HS = GuiLibrary.ObjectsThatCanBeSaved.MovementWindow.Api.CreateOptionsButton({
@@ -1420,8 +1412,6 @@ runFunction(function()
             if callback then
                 if not SpeedP then
                     StartPressW()
-                else
-                    StopPressW()
                 end
             end
         end
