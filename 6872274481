@@ -1427,7 +1427,7 @@ runFunction(function()
                 end
                 
                 for i = 1, math.huge do
-                    wait(0.006)
+                    wait(0.06)
                     local nearestPlayer = findNearestPlayer()
                 
                     if nearestPlayer then
