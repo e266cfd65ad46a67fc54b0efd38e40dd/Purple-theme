@@ -544,23 +544,6 @@ skyselected =
     }
 )
 
-local function isfile(file)
-    local suc, _ = pcall(function() return readfile(file) end)
-    return suc
-end
-
-local v = "vape/PurpleVerison.txt"
-if isfile(v) then
-    local content = readfile(v)
-    if content:find("2.0") then
-        print("Version up to date")
-    else
-        task.spawn(function()
-            GuiLibrary.SelfDestruct()
-        end)
-    end
-end
-
 local Disabler = {["Enabled"] = false}
 Disabler = GuiLibrary["ObjectsThatCanBeSaved"]["FunnisWindow"]["Api"].CreateOptionsButton({
 	["Name"] = "Disabler",
