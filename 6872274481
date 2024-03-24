@@ -575,7 +575,7 @@ function char(v)
 		 local a = (root.Position.Y < 0 and -root.Position.Y or root.Position.Y) * (root.Parent.Humanoid.MoveDirection.Y == 0 and 1 or root.Parent.Humanoid.MoveDirection.Y + 1)
 		 if (total > (a + ((total * .5)) or root:FindFirstChild("BodyVelocity"))
 		 	and (detected[v.Name] == false or detected[v.Name] == nil) and (not hps_detected[v.Name])
-		 	and root.Position.Y <= 350) then
+		 	and root.Position.Y <= 400) then
 		 	detected[v.Name] = true;
 		 	createwarning("Purple theme","High jump or fly detected on "..v.Name,3)
 		 	break
