@@ -1391,7 +1391,7 @@ runFunction(function()
 
     local function PressW()
         vim:SendKeyEvent(true, Key, false, game)
-        wait(0.4)
+        wait(0.2)
         vim:SendKeyEvent(false, Key, false, game)
     end
 
@@ -1403,7 +1403,7 @@ runFunction(function()
     end
 
     local function StartPressW()
-        PressKeyWithDelay(0.8)
+        PressKeyWithDelay(0.4)
     end
 
     local HS = GuiLibrary.ObjectsThatCanBeSaved.MovementWindow.Api.CreateOptionsButton({
