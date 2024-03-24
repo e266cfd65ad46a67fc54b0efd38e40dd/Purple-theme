@@ -1,9 +1,3 @@
---This watermark is used to delete the file if its cached, remove it to make the file persist after commits.
---[[ 
-	Credits
-	Infinite Yield - Blink
-	Please notify me if you need credits
-]]
 local GuiLibrary = shared.GuiLibrary
 local players = game:GetService("Players")
 local textservice = game:GetService("TextService")
@@ -26,17 +20,6 @@ local function GetURL(scripturl)
 	else
 		return game:HttpGet("https://raw.githubusercontent.com/7GrandDadPGN/VapeV4ForRoblox/main/"..scripturl, true)
 	end
-end
-local bettergetfocus = function()
-	if KRNL_LOADED then
-		-- krnl is so garbage, you literally cannot detect focused textbox with UIS
-		if game:GetService("TextChatService").ChatVersion == "TextChatService" then
-			return (game:GetService("CoreGui").ExperienceChat.appLayout.chatInputBar.Background.Container.TextContainer.TextBoxContainer.TextBox:IsFocused())
-		elseif game:GetService("TextChatService").ChatVersion == "LegacyChatService" then
-			return ((game:GetService("Players").LocalPlayer.PlayerGui.Chat.Frame.ChatBarParentFrame.Frame.BoxFrame.Frame.ChatBar:IsFocused() or searchbar:IsFocused()) and true or nil) 
-		end
-	end
-	return game:GetService("UserInputService"):GetFocusedTextBox()
 end
 local entity = shared.vapeentity
 local WhitelistFunctions = shared.vapewhitelist
