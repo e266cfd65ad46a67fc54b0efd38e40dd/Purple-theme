@@ -1300,11 +1300,15 @@ runFunction(function()
 end)
 
 runFunction(function()
+	local lplr = game.Players.LocalPlayer
+	local playersService = game:GetService("Players")
 	local KillFeedRemove = {}
 	KillFeedRemove = GuiLibrary.ObjectsThatCanBeSaved.RenderWindow.Api.CreateOptionsButton({
 		Name = 'KillFeed Remover',
 		Function = function(callback)
 			if callback then
+				lplr.PlayerGui.KillFeedGui.Parent = workspace
+				wait(10)
 				lplr.PlayerGui.KillFeedGui.Parent = workspace
 			end
 		end
