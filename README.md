@@ -1,6 +1,6 @@
  # Movement
 
-Leap ~ Will allow you allow you go leap up into the air for some reason bypassing ~ settings | Height | Speed |
+Leap ~ Will allow you allow you go leap up into the air for some reason bypassing ~ settings | Height | Speed | Amountofjumps | delaybetweenjumps |
 Bedtp ~ Tps to the closest bed to your player ~ settings | Tpmethod | TpDirecation | Wait time | Speed | Height |
 Playertp ~ Tps to the closest player to your player ~ settings | Tpmethod | TpDirecation | Wait time | Speed | Height |
 infinitejump ~ You will have no delay between jumps
