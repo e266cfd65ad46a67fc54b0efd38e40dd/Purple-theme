@@ -29,14 +29,6 @@ function Makevapefolders()
     end
 end
 
-function BatchedWriteFiles(folder, files)
-    for _, file in ipairs(files) do
-        local body = httprequest({Url = file.url, Method = 'GET'}).Body
-        local filePath = folder .. "/" .. file.name
-        writefile(filePath, body)
-    end
-end
-
 function InstallModules()
     local modules = {
         {name = "6872274481.lua", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Modules/6872274481.lua"},
@@ -44,7 +36,10 @@ function InstallModules()
         {name = "6872265039.lua", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Modules/6872265039.lua"}
     }
     
-    BatchedWriteFiles("vape/CustomModules", modules)
+    for _, module in ipairs(modules) do
+        local body = httprequest({Url = module.url, Method = 'GET'}).Body
+        writefile('vape/CustomModules/' .. module.name, body)
+    end
 end
 
 function InstallLibraries()
@@ -53,12 +48,20 @@ function InstallLibraries()
         {name = "sha.lua", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Libraries/sha.lua"}
     }
     
-    BatchedWriteFiles("vape/Libraries", libraries)
+    for _, module in ipairs(libraries) do
+        local body = httprequest({Url = module.url, Method = 'GET'}).Body
+        writefile('vape/Libraries/' .. module.name, body)
+    end
 end
 
 function InstallProfiles()
-    local DCM = (game:GetService("UserInputService").TouchEnabled)
-    local DCP = (game:GetService("UserInputService").KeyboardEnabled)
+    local UserInputService = game:GetService("UserInputService")
+    local platform = UserInputService:GetPlatform()
+    
+    local DCM = (platform == Enum.Platform.IOS) or (platform == Enum.Platform.Android) or (platform == Enum.Platform.Ouya) or (platform == Enum.Platform.WebOS)
+    local DCP = (platform == Enum.Platform.Windows) or (platform == Enum.Platform.Linux) or (platform == Enum.Platform.UWP)
+    
+    local DCU = nil
     
     if DCM then
         DCU = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Mobile-profiles/2619619496GUIPositions.vapeprofile.txt"
@@ -75,7 +78,10 @@ function InstallProfiles()
         {name = "bedwarsdata.txt", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Profiles/bedwarsdata.txt"}
     }
     
-    BatchedWriteFiles("vape/Profiles", profiles)
+    for _, module in ipairs(profiles) do
+        local body = httprequest({Url = module.url, Method = 'GET'}).Body
+        writefile('vape/Profiles/' .. module.name, body)
+    end
 end
 
 function InstallOther()
@@ -87,7 +93,10 @@ function InstallOther()
           {name = "assetsversion.txt", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/assetsversion.txt"}
     }
     
-    BatchedWriteFiles("vape", other)
+    for _, module in ipairs(other) do
+        local body = httprequest({Url = module.url, Method = 'GET'}).Body
+        writefile('vape/' .. module.name, body)
+    end
 end
 
 Reset()
@@ -100,15 +109,19 @@ InstallOther()
 wait(0.5)
 
 local UserInputService = game:GetService("UserInputService")
-local DCM = UserInputService.TouchEnabled
-local DCP = UserInputService.KeyboardEnabled
+local platform = UserInputService:GetPlatform()
+
+local DCM = (platform == Enum.Platform.IOS) or (platform == Enum.Platform.Android) or (platform == Enum.Platform.Ouya) or (platform == Enum.Platform.WebOS)
+local DCP = (platform == Enum.Platform.Windows) or (platform == Enum.Platform.Linux) or (platform == Enum.Platform.UWP)
 
 local DCU = nil
 
 if DCM then
-    DCU = loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-theme/main/test", true))()
+    DCU = loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-theme/main/Loader", true))()
 elseif DCP then
     DCU = loadfile('vape/NewMainScript.lua')
 end
 
-DCU()
+if DCU then
+    DCU()
+end
