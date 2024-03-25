@@ -1265,8 +1265,7 @@ runFunction(function()
 end)
 
 runFunction(function()
-    local InfiniteJump = {}
-    InfiniteJump = GuiLibrary.ObjectsThatCanBeSaved.MovementWindow.Api.CreateOptionsButton({
+    local InfiniteJump = GuiLibrary.ObjectsThatCanBeSaved.MovementWindow.Api.CreateOptionsButton({
         Name = 'InfiniteJump',
         Function = function(callback)
             if callback then
@@ -1279,10 +1278,12 @@ runFunction(function()
                     end
                 end
 
-                UserInputService.InputBegan:Connect(onJumpRequest)
+                UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
+                    onJumpRequest(input, gameProcessedEvent)
+                end)
             end
         end,
-        ["HoverText"] = 'Lots of jumps'
+        HoverText = 'Lots of jumps'
     })
 end)
 
