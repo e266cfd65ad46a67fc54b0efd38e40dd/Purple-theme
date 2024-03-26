@@ -1317,6 +1317,48 @@ runFunction(function()
 	})
 end)
 
+runFunction(function()
+    local Players = game:GetService("Players")
+    local Workspace = game:GetService("Workspace")
+    
+    local function Fastfly()
+        local character = Players.LocalPlayer.Character
+        if not character or not character.PrimaryPart then
+            print("Fast fly failed, retry")
+            return
+        end
+        
+        local PP = character.PrimaryPart
+        local CP = primaryPart.Position
+        local DP = currentPos - Vector3.new(0, 4, 0)
+        local UP = currentPos + Vector3.new(0, 8, 0)
+        local OG = 196
+        local WPG = Workspace.Gravity
+        
+        WPG = 0
+        wait(0.2)
+        local FP = CP + PP.CFrame.LookVector * 25
+        PP.CFrame = CFrame.new(DP)
+        wait(0.5)
+        PP.CFrame = CFrame.new(UP)
+        wait(0.2)
+        PP.CFrame = CFrame.new(FP)
+        wait(1.5)
+        WPG = workspaceGravity
+    end
+    
+    local Fastflyv2 = {}
+    Fastflyv2 = GuiLibrary.ObjectsThatCanBeSaved.FunnisWindow.Api.CreateOptionsButton({
+        Name = 'Fastflyv2',
+        Function = function(callback)
+            if callback then
+                Fastfly()
+            end
+        end
+    })
+end)
+
+
 loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-extra/main/Extra%20681", true))()
 
 local Players = game:GetService("Players")
