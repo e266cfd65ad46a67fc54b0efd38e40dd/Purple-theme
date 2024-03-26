@@ -1317,56 +1317,6 @@ runFunction(function()
 	})
 end)
 
-runFunction(function()
-    local function spinCharacter(player)
-      local character = player.Character
-      local humanoid = character:FindFirstChildOfClass("Humanoid")
-      
-      if not character then
-        return
-      end
-      
-      if not humanoid then
-        return
-      end
-  
-      while humanoid.Health > 0 do
-        local newLookVector = Vector3.new(10000, 0, 10000)
-        
-        for angle = 0, math.pi * 2, 0.1 do
-          local rotation = CFrame.Angles(0, angle, 0)
-          local rotatedLookVector = rotation * newLookVector
-          
-          local newCFrame = CFrame.new(character.HumanoidRootPart.Position, character.HumanoidRootPart.Position + rotatedLookVector)
-          character:SetPrimaryPartCFrame(newCFrame)
-          
-          wait()
-              
-          if character.HumanoidRootPart.Position.Y > 100 then
-            break
-          end
-        end
-  
-        repeat 
-          wait(0.24)
-        until character.HumanoidRootPart.Position.Y < 100
-      end
-  
-      wait(7)
-      humanoid.Health = humanoid.MaxHealth
-      spinCharacter(player)
-    end
-  
-    local checkdef = GuiLibrary.ObjectsThatCanBeSaved.FunnisWindow.Api.CreateOptionsButton({
-      Name = "Check deferrer", 
-      Function = function(callback)
-        if callback then
-          spinCharacter(game.Players.LocalPlayer)
-        end
-      end
-    })
-end)
-
 loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-extra/main/Extra%20681", true))()
 
 local Players = game:GetService("Players")
