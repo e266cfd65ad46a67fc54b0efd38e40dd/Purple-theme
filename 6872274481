@@ -1264,29 +1264,6 @@ runFunction(function()
     })
 end)
 
-runFunction(function()
-    local InfiniteJump = GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
-        Name = 'InfiniteJump',
-        Function = function(callback)
-            if callback then
-                local UserInputService = game:GetService("UserInputService")
-                local player = game.Players.LocalPlayer
-
-                local function onJumpRequest(input, gameProcessedEvent)
-                    if input.KeyCode == Enum.KeyCode.Space and not gameProcessedEvent then
-                        player.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
-                    end
-                end
-
-                UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
-                    onJumpRequest(input, gameProcessedEvent)
-                end)
-            end
-        end,
-        HoverText = 'Lots of jumps'
-    })
-end)
-
 -- cred render for module cred _dremi for making it for render (also i think this was in vape at one point so...)
 runFunction(function()
 	local SetEmote = {}
