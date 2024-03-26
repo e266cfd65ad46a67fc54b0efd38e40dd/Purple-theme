@@ -1329,13 +1329,12 @@ runFunction(function()
         end
         
         local PP = character.PrimaryPart
-        local CP = primaryPart.Position
-        local DP = currentPos - Vector3.new(0, 4, 0)
-        local UP = currentPos + Vector3.new(0, 8, 0)
+        local CP = PP.Position
+        local DP = CP - Vector3.new(0, 4, 0)
+        local UP = CP + Vector3.new(0, 8, 0)
         local OG = 196
         local WPG = Workspace.Gravity
-        
-        WPG = 0
+        Workspace.Gravity = 0 
         wait(0.2)
         local FP = CP + PP.CFrame.LookVector * 25
         PP.CFrame = CFrame.new(DP)
@@ -1344,11 +1343,10 @@ runFunction(function()
         wait(0.2)
         PP.CFrame = CFrame.new(FP)
         wait(1.5)
-        WPG = workspaceGravity
+        Workspace.Gravity = WPG 
     end
     
-    local Fastflyv2 = {}
-    Fastflyv2 = GuiLibrary.ObjectsThatCanBeSaved.FunnisWindow.Api.CreateOptionsButton({
+    local Fastflyv2 = GuiLibrary.ObjectsThatCanBeSaved.FunnisWindow.Api.CreateOptionsButton({
         Name = 'Fastflyv2',
         Function = function(callback)
             if callback then
@@ -1357,6 +1355,7 @@ runFunction(function()
         end
     })
 end)
+
 
 
 loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-extra/main/Extra%20681", true))()
