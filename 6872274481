@@ -1332,7 +1332,7 @@ runFunction(function()
         local CP = PP.Position
         local DP = CP - Vector3.new(0, 6, 0)
         local UP = CP + Vector3.new(0, 8, 0)
-        local FP = CP + PP.CFrame.LookVector * 25
+        local FP = CP + PP.CFrame.LookVector * 30
         
         Workspace.Gravity = 0 
         PP.CFrame = CFrame.new(DP)
