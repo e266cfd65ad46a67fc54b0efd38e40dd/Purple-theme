@@ -3071,6 +3071,10 @@ runFunction(function()
             {CFrame = CFrame.new(0.50, -1.20, 1.80) * CFrame.Angles(math.rad(295), math.rad(60), math.rad(290)), Time = 0.40},
             {CFrame = CFrame.new(0.75, -0.85, 1) * CFrame.Angles(math.rad(235), math.rad(60), math.rad(1)), Time = 0.24}
         },          
+	New = {
+		{CFrame = CFrame.new(0.60, -0.80, 1.50) * CFrame.Angles(math.rad(-33), math.rad(57), math.rad(-81)), Time = 0.30},
+		{CFrame = CFrame.new(0.75, -0.95, 0.90) * CFrame.Angles(math.rad(147), math.rad(71), math.rad(53)), Time = 0.26}
+	},
         Smoothside = {
             {CFrame = CFrame.new(0, 0, -1) * CFrame.Angles(math.rad(0), math.rad(90), math.rad(0)), Time = 0.3},
             {CFrame = CFrame.new(0, 0.5, 0) * CFrame.Angles(math.rad(0), math.rad(90), math.rad(0)), Time = 0.3},
