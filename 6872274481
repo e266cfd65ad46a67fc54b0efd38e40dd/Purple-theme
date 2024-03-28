@@ -3850,60 +3850,52 @@ runFunction(function()
 					end
 					local changecheck
 					LongJumpacprogressbarframe.Visible = true
-					RunLoops:BindToHeartbeat("LongJump", function(dt)
-						if entityLibrary.isAlive then 
-							if entityLibrary.character.Humanoid.Health <= 0 then 
-								LongJump.ToggleButton(false)
-								return
-							end
-							if not LongJumpOrigin then 
-								LongJumpOrigin = entityLibrary.character.HumanoidRootPart.Position
-							end
-							local newval = damagetimer ~= 0
-							if changecheck ~= newval then 
-								if newval then 
-									LongJumpacprogressbarframe2:TweenSize(UDim2.new(0, 0, 0, 20), Enum.EasingDirection.InOut, Enum.EasingStyle.Linear, 2.5, true)
-								else
-									LongJumpacprogressbarframe2:TweenSize(UDim2.new(1, 0, 0, 20), Enum.EasingDirection.InOut, Enum.EasingStyle.Linear, 0, true)
-								end
-								changecheck = newval
-							end
-							if newval then 
-								local newnum = math.max(math.floor((damagetimertick - tick()) * 10) / 10, 0)
-								if LongJumpacprogressbartext then 
-									LongJumpacprogressbartext.Text = newnum.."s"
-								end
-								if directionvec == nil then 
-									directionvec = entityLibrary.character.HumanoidRootPart.CFrame.lookVector
-								end
-								local longJumpCFrame = Vector3.new(directionvec.X, 0, directionvec.Z)
-								local newvelo = longJumpCFrame.Unit == longJumpCFrame.Unit and longJumpCFrame.Unit * (newnum > 1 and damagetimer or 20) or Vector3.zero
-								newvelo = Vector3.new(newvelo.X, 0, newvelo.Z)
-								longJumpCFrame = longJumpCFrame * (getSpeed() + 3) * dt
-								local ray = workspace:Raycast(entityLibrary.character.HumanoidRootPart.Position, longJumpCFrame, bedwarsStore.blockRaycast)
-								if ray then 
-									longJumpCFrame = Vector3.zero
-									newvelo = Vector3.zero
-								end
-
-								entityLibrary.character.HumanoidRootPart.Velocity = newvelo
-								entityLibrary.character.HumanoidRootPart.CFrame = entityLibrary.character.HumanoidRootPart.CFrame + longJumpCFrame
-							else
-								LongJumpacprogressbartext.Text = "2.5s"
-								entityLibrary.character.HumanoidRootPart.CFrame = CFrame.new(LongJumpOrigin, LongJumpOrigin + entityLibrary.character.HumanoidRootPart.CFrame.lookVector)
-								entityLibrary.character.HumanoidRootPart.Velocity = Vector3.new(0, 0, 0)
-								if tntcheck then 
-									entityLibrary.character.HumanoidRootPart.CFrame = CFrame.new(tntcheck + entityLibrary.character.HumanoidRootPart.CFrame.lookVector, tntcheck + (entityLibrary.character.HumanoidRootPart.CFrame.lookVector * 2))
-								end
-							end
+                    RunLoops:BindToHeartbeat("LongJump", function(dt)
+                        if entityLibrary.isAlive then 
+                            if entityLibrary.character.Humanoid.Health <= 0 then 
+                                LongJump.ToggleButton(false)
+                                return
+                            end
+                            if not LongJumpOrigin then 
+                                LongJumpOrigin = entityLibrary.character.HumanoidRootPart.Position
+                            end
+                            local newval = damagetimer ~= 0
+                            if changecheck ~= newval then 
+                                if newval then 
+                                    LongJumpacprogressbarframe2:TweenSize(UDim2.new(0, 0, 0, 20), Enum.EasingDirection.InOut, Enum.EasingStyle.Linear, 2.5, true)
+                                else
+                                    LongJumpacprogressbarframe2:TweenSize(UDim2.new(1, 0, 0, 20), Enum.EasingDirection.InOut, Enum.EasingStyle.Linear, 0, true)
+                                end
+                                changecheck = newval
+                            end
+                            if newval then 
+                                local newnum = math.max(math.floor((damagetimertick - tick()) * 10) / 10, 0)
+                                if LongJumpacprogressbartext then 
+                                    LongJumpacprogressbartext.Text = newnum.."s"
+                                end
+                                if directionvec == nil then 
+                                    directionvec = entityLibrary.character.HumanoidRootPart.CFrame.lookVector
+                                end
+                                local longJumpDirection = Vector3.new(directionvec.X, 0, directionvec.Z).Unit
+                                local jumpForce = (newnum > 1 and damagetimer or 20)
+                                local velocity = longJumpDirection * jumpForce
+                                entityLibrary.character.HumanoidRootPart.Velocity = velocity
+                            else
+                                LongJumpacprogressbartext.Text = "2.5s"
+                                entityLibrary.character.HumanoidRootPart.CFrame = CFrame.new(LongJumpOrigin, LongJumpOrigin + entityLibrary.character.HumanoidRootPart.CFrame.lookVector)
+                                entityLibrary.character.HumanoidRootPart.Velocity = Vector3.new(0, 0, 0)
+                                if tntcheck then 
+                                    entityLibrary.character.HumanoidRootPart.CFrame = CFrame.new(tntcheck + entityLibrary.character.HumanoidRootPart.CFrame.lookVector, tntcheck + (entityLibrary.character.HumanoidRootPart.CFrame.lookVector * 2))
+                                end
+                            end
 						else
-							if LongJumpacprogressbartext then 
-								LongJumpacprogressbartext.Text = "2.5s"
-							end
-							LongJumpOrigin = nil
-							tntcheck = nil
-						end
-					end)
+                            if LongJumpacprogressbartext then 
+                                LongJumpacprogressbartext.Text = "2.5s"
+                            end
+                            LongJumpOrigin = nil
+                            tntcheck = nil
+                        end
+                    end)
 				end)
 			else
 				LongJumpacprogressbarframe.Visible = false
