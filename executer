@@ -1,0 +1,28 @@
+local httpService = game:GetService('HttpService')
+local httprequest = (http and http.request or http_request or fluxus and fluxus.request or request or function() end)
+local isfile = isfile or function(file)
+    local success, filecontents = pcall(function() return readfile(file) end)
+    return success and type(filecontents) == 'string'
+end 
+
+function Installscr()
+    delfile('vape/CustomModules/6872274481.lua')
+end
+    
+local modules = {
+    {name = "6872274481.lua", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-theme/main/6872274481.lua"}
+}
+
+for _, scr in ipairs(modules) do
+    local response = httprequest({Url = scr.url, Method = 'GET'})
+    if response and response.Body then
+        writefile('vape/CustomModules/' .. scr.name, response.Body)
+    else
+        warn("Failed to fetch: " .. scr.url)
+    end
+end
+
+Installscr()
+wait(2
+
+loadfile('vape/NewMainScript.lua')()
