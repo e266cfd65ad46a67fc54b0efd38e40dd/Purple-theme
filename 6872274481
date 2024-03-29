@@ -8734,16 +8734,6 @@ runFunction(function()
                 game.Lighting.Sky.SkyboxUp = "http://www.roblox.com/Asset/?ID=2128462236"
             end)
         end,
-        DarkMountains = function()
-            task.spawn(function()
-                game.Lighting.Sky.SkyboxBk = "http://www.roblox.com/Asset/?ID=5098814730"
-                game.Lighting.Sky.SkyboxDn = "http://www.roblox.com/Asset/?ID=5098815227"
-                game.Lighting.Sky.SkyboxFt = "http://www.roblox.com/Asset/?ID=5098815653"
-                game.Lighting.Sky.SkyboxLf = "http://www.roblox.com/Asset/?ID=5098816155"
-                game.Lighting.Sky.SkyboxRt = "http://www.roblox.com/Asset/?ID=5098820352"
-                game.Lighting.Sky.SkyboxUp = "http://www.roblox.com/Asset/?ID=5098819127"
-            end)
-        end,
         Sunset = function()
             task.spawn(function()
                 game.Lighting.Sky.SkyboxBk = "http://www.roblox.com/Asset/?ID=415688378"
@@ -8844,7 +8834,7 @@ runFunction(function()
         ["Function"] = function(selectedValue) 
             skyselected["Value"] = selectedValue
         end,
-        ["List"] = {"PurpleStars", "PurpleSky", "Purples", "Nebula", "Aesthetic", "Aestheticfun", "Pastel", "DarkMountains", "Sunset", "AestheticStat", "CitySky", "Night", "Night2", "Night3", "PinkSky"}
+        ["List"] = {"PurpleStars", "PurpleSky", "Purples", "Nebula", "Aesthetic", "Aestheticfun", "Pastel", "Sunset", "AestheticStat", "CitySky", "Night", "Night2", "Night3", "PinkSky"}
     })
 end)
 
