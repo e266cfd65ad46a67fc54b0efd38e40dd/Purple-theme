@@ -8933,9 +8933,9 @@ runFunction(function()
     local SkytpGravity = {Value = 2}
     local SkyTp = {}
     SkyTp = GuiLibrary.ObjectsThatCanBeSaved.MovementWindow.Api.CreateOptionsButton{
-		[" Name"] = 'Sky tp',
-        ["HoverText"] = 'Puts you into the sky',
-        ["Function"] = function(v)
+        Name = 'Sky tp',
+        HoverText = 'Puts you into the sky',
+        Function = function(v)
             SkyTp.Enabled = v
             if SkyTp.Enabled then
                 lplr.Character.HumanoidRootPart.CFrame =
@@ -8950,31 +8950,31 @@ runFunction(function()
     }
 
     SkyTp.CreateSlider({
-		["Name"] = 'Height',
-		["Function"] = function(selectedValue) 
+        Name = 'Height',
+        Function = function(selectedValue) 
             SkytpHeight.Value = selectedValue
         end, 
-		["Min"] = 5,
-		["Max"] = 2500,
-		["Default"] = 1265
+        Min = 5,
+        Max = 2500,
+        Default = 1265
     })
     SkyTp.CreateSlider({
-		["Name"] = 'Delay',
-		["Function"] = function(selectedValue) 
+        Name = 'Delay',
+        Function = function(selectedValue) 
             SkytpDelay.Value = selectedValue
         end, 
-		["Min"] = 1,
-		["Max"] = 3,
-		["Default"] = 2
+        Min = 1,
+        Max = 3,
+        Default = 2
     })
     SkyTp.CreateSlider({
-		["Name"] = 'Gravity',
-		["Function"] = function(selectedValue) 
+        Name = 'Gravity',
+        Function = function(selectedValue) 
             SkytpGravity.Value = selectedValue
         end, 
-		["Min"] = 0,
-		["Max"] = 300,
-		["Default"] = 180
+        Min = 0,
+        Max = 300,
+        Default = 180
     })
 end)
 
@@ -9016,8 +9016,8 @@ runFunction(function()
     end
 
     local PlayerTp = GuiLibrary.ObjectsThatCanBeSaved.MovementWindow.Api.CreateOptionsButton({
-		["Name"] = 'PlayerTp',
-		["Function"] = function(callback)
+        Name = 'PlayerTp',
+        Function = function(callback)
             if callback then
                 lplr.Character:FindFirstChildOfClass("Humanoid"):ChangeState(Enum.HumanoidStateType.Dead)
                 lplr.CharacterAdded:Connect(function()
@@ -9033,63 +9033,64 @@ runFunction(function()
     })
 
     PlayerTp.CreateDropdown({
-		["Name"] = 'Mode',
-		["Function"] = function(selectedValue) 
+        Name = 'Mode',
+        Function = function(selectedValue) 
             PlayerTpMethod.Value = selectedValue
         end,
-		["List"] = {"Linear", "Sine", "Back", "Quad", "Quart", "Quint", "Bounce", "Elastic", "Exponential", "Circular", "Cubic"}
+        List = {"Linear", "Sine", "Back", "Quad", "Quart", "Quint", "Bounce", "Elastic", "Exponential", "Circular", "Cubic"}
     })
 
     PlayerTp.CreateDropdown({
-		["Name"] = 'Direction',
-		["Function"] = function(selectedValue) 
+        Name = 'Direction',
+        Function = function(selectedValue) 
             PlayerTpDirection.Value = selectedValue
         end,
-		["List"] = {"In", "Out", "InOut"}
+        List = {"In", "Out", "InOut"}
     })
 
     PlayerTp.CreateSlider({
-		["Name"] = 'Wait Time',
-		["Function"] = function(selectedValue) 
+        Name = 'Wait Time',
+        Function = function(selectedValue) 
             PlayerTpWaitTime.Value = selectedValue
         end, 
-		["Min"] = 0.1,
-		["Max"] = 3,
-		["Default"] = 0.1
+        Min = 0.1,
+        Max = 3,
+        Default = 0.1
     })
 
     PlayerTp.CreateSlider({
-		["Name"] = 'Time',
-		["Function"] = function(selectedValue) 
+        Name = 'Time',
+        Function = function(selectedValue) 
             PlayerTpTime.Value = selectedValue
         end, 
-		["Min"] = 0.10,
-		["Max"] = 1,
-		["Default"] = 0.58
+        Min = 0.10,
+        Max = 1,
+        Default = 0.68
     })
 
     PlayerTp.CreateSlider({
-		["Name"] = 'Height',
-		["Function"] = function(selectedValue) 
+        Name = 'Height',
+        Function = function(selectedValue) 
             PlayerTpHeight.Value = selectedValue
         end, 
-		["Min"] = 1,
-		["Max"] = 50,
-		["Default"] = 7
+        Min = 1,
+        Max = 50,
+        Default = 20
     })
 end)
 
 runFunction(function()
     local BedTPMethod = {Value = 'Linear'}
     local BedTPDirection = {Value = 'InOut'}
-    local BedTPWaitTime = {Value = 0.2}
-    local BedTPTime = {Value = 0.55}
-    local BedTPHeight = {Value = 10}
+    local BedTPWaitTime = {Value = 0.1}
+    local BedTPTime = {Value = 0.68}
+    local BedTPHeight = {Value = 20}
+    local Bedtp = {}
     local lplr = game.Players.LocalPlayer
     local hasTeleported = false
     local TweenService = game:GetService("TweenService")
 
-    local function findNearestBed()
+    function findNearestBed()
         local nearestBed = nil
         local minDistance = math.huge
 
@@ -9105,7 +9106,7 @@ runFunction(function()
         return nearestBed
     end
 
-    local function tweenToNearestBed()
+    function tweenToNearestBed()
         local nearestBed = findNearestBed()
         if nearestBed and not hasTeleported then
             hasTeleported = true
@@ -9138,6 +9139,7 @@ runFunction(function()
             BedTPMethod["Value"] = selectedValue
         end,
         ["List"] = {"Linear", "Sine", "Back", "Quad", "Quart", "Quint", "Bounce", "Elastic", "Exponential", "Circular", "Cubic"}
+
     })
 
     Bedtp.CreateDropdown({
@@ -9146,6 +9148,7 @@ runFunction(function()
             BedTPDirection["Value"] = selectedValue
         end,
         ["List"] = {"In", "Out", "InOut"}
+
     })
 
     Bedtp.CreateSlider({
@@ -9153,9 +9156,9 @@ runFunction(function()
         Function = function(selectedValue) 
             BedTPWaitTime.Value = selectedValue
         end, 
-        ["Min"] = 0.2,
-        ["Max"] = 3,
-        ["Default"] = 0.2
+        Min = 0.1,
+        Max = 3,
+        Default = 0.1
     })
 
     Bedtp.CreateSlider({
@@ -9164,8 +9167,8 @@ runFunction(function()
             BedTPTime["Value"] = selectedValue
         end, 
         ["Min"] = 0.10,
-	    ["Max"] = 1,
-        ["Default"] = 0.55
+	["Max"] = 1,
+        ["Default"] = 0.68
     })
 
     Bedtp.CreateSlider({
@@ -9174,8 +9177,8 @@ runFunction(function()
             BedTPHeight["Value"] = selectedValue
         end, 
         ["Min"] = 1,
-	    ["Max"] = 50,
-        ["Default"] = 10
+	["Max"] = 50,
+        ["Default"] = 20
     })
 end)
 
@@ -9208,7 +9211,6 @@ runFunction(function()
                         })
                     end
                 end
-
                 local lastHeartbeat = tick()
                 local function onHeartbeat()
                     local currentTime = tick()
@@ -9231,7 +9233,7 @@ runFunction(function()
     local Amountjumps = {Value = 2}
     local Delay = {Value = 1}
     local Leap = {}
-
+    
     Leap = GuiLibrary.ObjectsThatCanBeSaved.MovementWindow.Api.CreateOptionsButton({
         Name = 'Leap',
         Function = function(callback)
@@ -9251,7 +9253,7 @@ runFunction(function()
         end,
         Hovertext = "Will allow you to leap far"
     })
-
+    
     Leap.CreateSlider({
         Name = 'Height',
         Function = function(selectedValue) 
@@ -9261,7 +9263,7 @@ runFunction(function()
         Max = 800,
         Default = 450
     })
-
+    
     Leap.CreateSlider({
         Name = 'Speed',
         Function = function(selectedValue) 
@@ -9271,7 +9273,7 @@ runFunction(function()
         Max = 5,
         Default = 1
     })
-
+    
     Leap.CreateSlider({
         Name = 'amount of jump',
         Function = function(selectedValue) 
@@ -9281,7 +9283,7 @@ runFunction(function()
         Max = 3,
         Default = 2
     })
-
+    
     Leap.CreateSlider({
         Name = 'delay between jumps',
         Function = function(selectedValue) 
@@ -9295,59 +9297,55 @@ end)
 
 -- cred render for module cred _dremi for making it for render (also i think this was in vape at one point so...)
 runFunction(function()
-    local SetEmote = {}
-    local SetEmoteList = {Value = ''}
-    local oldemote
-    local emo2 = {}
-    
-    SetEmote = GuiLibrary.ObjectsThatCanBeSaved.UtilityWindow.Api.CreateOptionsButton({
-        Name = 'SetEmote',
-        Function = function(callback)
-            if callback then
-                oldemote = lplr:GetAttribute('EmoteTypeSlot1')
-                lplr:SetAttribute('EmoteTypeSlot1', emo2[SetEmoteList.Value])
-            else
-                if oldemote then 
-                    lplr:SetAttribute('EmoteTypeSlot1', oldemote)
-                    oldemote = nil 
-                end
-            end
-        end
-    })
-    
-    local emo = {}
-    for i,v in pairs(bedwars.EmoteMeta) do 
-        table.insert(emo, v.name)
-        emo2[v.name] = i
-    end
-    table.sort(emo, function(a, b) return a:lower() < b:lower() end)
-    
-    SetEmoteList = SetEmote.CreateDropdown({
-        Name = 'Emote',
-        List = emo,
-        Function = function(emote)
-            if SetEmote.Enabled then 
-                lplr:SetAttribute('EmoteTypeSlot1', emo2[emote])
-            end
-        end
-    })
+	local SetEmote = {}
+	local SetEmoteList = {Value = ''}
+	local oldemote
+	local emo2 = {}
+	SetEmote = GuiLibrary.ObjectsThatCanBeSaved.UtilityWindow.Api.CreateOptionsButton({
+		Name = 'SetEmote',
+		Function = function(callback)
+			if callback then
+				oldemote = lplr:GetAttribute('EmoteTypeSlot1')
+				lplr:SetAttribute('EmoteTypeSlot1', emo2[SetEmoteList.Value])
+			else
+				if oldemote then 
+					lplr:GetAttribute('EmoteTypeSlot1', oldemote)
+					oldemote = nil 
+				end
+			end
+		end
+	})
+	local emo = {}
+	for i,v in pairs(bedwars.EmoteMeta) do 
+		table.insert(emo, v.name)
+		emo2[v.name] = i
+	end
+	table.sort(emo, function(a, b) return a:lower() < b:lower() end)
+	SetEmoteList = SetEmote.CreateDropdown({
+		Name = 'Emote',
+		List = emo,
+		Function = function(emote)
+			if SetEmote.Enabled then 
+				lplr:SetAttribute('EmoteTypeSlot1', emo2[emote])
+			end
+		end
+	})
 end)
 
 runFunction(function()
-    local lplr = game.Players.LocalPlayer
-    local playersService = game:GetService("Players")
-    local KillFeedRemove = {}
-
-    KillFeedRemove = GuiLibrary.ObjectsThatCanBeSaved.RenderWindow.Api.CreateOptionsButton({
-        Name = 'KillFeed Remover',
-        Function = function(callback)
-            if callback then
-                lplr.PlayerGui.KillFeedGui.Parent = nil
-                wait(10)
-                lplr.PlayerGui.KillFeedGui.Parent = game:GetService("CoreGui")
-            end
-        end
-    })
+	local lplr = game.Players.LocalPlayer
+	local playersService = game:GetService("Players")
+	local KillFeedRemove = {}
+	KillFeedRemove = GuiLibrary.ObjectsThatCanBeSaved.RenderWindow.Api.CreateOptionsButton({
+		Name = 'KillFeed Remover',
+		Function = function(callback)
+			if callback then
+				lplr.PlayerGui.KillFeedGui.Parent = workspace
+				wait(10)
+				lplr.PlayerGui.KillFeedGui.Parent = workspace
+			end
+		end
+	})
 end)
 
 runFunction(function()
