@@ -6,15 +6,15 @@
 
  # Movement
 
-Leap ~ Will allow you allow you go leap up into the air for some reason bypassing ~ settings | Height | Speed | Amountofjumps | delaybetweenjumps |
+Leap ~ Will allow you allow you go leap up into the air for some reason bypassing 
 
-Bedtp ~ Tps to the closest bed to your player ~ settings | Tpmethod | TpDirecation | Wait time | Speed | Height |
+Bedtp ~ Tps to the closest bed to your player
 
-Playertp ~ Tps to the closest player to your player ~ settings | Tpmethod | TpDirecation | Wait time | Speed | Height |
+Playertp ~ Tps to the closest player to your player
 
 infinitejump ~ You will have no delay between jumps
 
-Skytp ~ Kinda same thing as leap but a little differnt | Height | Delay | Gravity |
+Skytp ~ Kinda same thing as leap but a little differnt
 
 Longjump ~ uses velcoity no longer cframe aka less flags
 
@@ -22,19 +22,19 @@ Longjump ~ uses velcoity no longer cframe aka less flags
 
 Killfeed Remove ~ removes the killfeed from your sceen
 
-Texturepacks ~ 22 texture packs to pick from | list |
+Texturepacks ~ 22 texture packs to pick from a list
 
-Skys ~ did not count and i am not going to a lot of sks to use | list |
+Skys ~ a bit list of a lot of sks to use
 
-Setemote ~ Lets you pick any any bedwars emote to use | emoite |
+Setemote ~ Lets you pick any any bedwars emote to use
 
  # Exploits  / Funnis
 
 Scythe Disabler ~ Disable anticheat with scythe max speed around 60
 
-Vape user detection ~ uses flags to detect vape users | inf fly detection | 
+Vape user detection ~ uses flags to detect vape users
 
-Fastfly v2 | will damage you then tp forward
+Fastfly v2 ~ will damage you then tp forward
 
  # Single Devs info
  
