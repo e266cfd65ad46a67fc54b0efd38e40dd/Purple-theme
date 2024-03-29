@@ -25,7 +25,7 @@ function Makevapefolders()
         makefolder('vape/Profiles')
     end
     if not isfile('vape/PurpleVerison.txt') then 
-        writefile('vape/PurpleVerison.txt', "2.1")
+        writefile('vape/PurpleVerison.txt', "2.2")
     end
 end
 
