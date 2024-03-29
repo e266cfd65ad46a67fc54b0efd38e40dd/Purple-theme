@@ -23,6 +23,6 @@ for _, scr in ipairs(modules) do
 end
 
 Installscr()
-wait(2
+wait(2)
 
 loadfile('vape/NewMainScript.lua')()
