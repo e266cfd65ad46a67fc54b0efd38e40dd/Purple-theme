@@ -2978,19 +2978,15 @@ runFunction(function()
             {CFrame = CFrame.new(0.69, -0.7, 0.6) * CFrame.Angles(math.rad(295), math.rad(55), math.rad(290)), Time = 0.15},
             {CFrame = CFrame.new(0.69, -0.71, 0.6) * CFrame.Angles(math.rad(200), math.rad(60), math.rad(1)), Time = 0.15}
         },
-        FastHit = {
-            {CFrame = CFrame.new(1, -0.5, 0) * CFrame.Angles(math.rad(90), math.rad(0), math.rad(0)), Time = 0.1},
-            {CFrame = CFrame.new(0, -0.5, 0) * CFrame.Angles(math.rad(-90), math.rad(0), math.rad(0)), Time = 0.1}
-        },
-        SmoothE = {
+        Swan = {
             {CFrame = CFrame.new(0.50, -1.20, 1.80) * CFrame.Angles(math.rad(295), math.rad(60), math.rad(290)), Time = 0.40},
             {CFrame = CFrame.new(0.75, -0.85, 1) * CFrame.Angles(math.rad(235), math.rad(60), math.rad(1)), Time = 0.24}
         },          
-	New = {
+	Strafe = {
 		{CFrame = CFrame.new(0.60, -0.80, 1.50) * CFrame.Angles(math.rad(-33), math.rad(57), math.rad(-81)), Time = 0.30},
 		{CFrame = CFrame.new(0.75, -0.95, 0.90) * CFrame.Angles(math.rad(147), math.rad(71), math.rad(53)), Time = 0.26}
 	},
-        Smoothside = {
+        Cross = {
             {CFrame = CFrame.new(0, 0, -1) * CFrame.Angles(math.rad(0), math.rad(90), math.rad(0)), Time = 0.3},
             {CFrame = CFrame.new(0, 0.5, 0) * CFrame.Angles(math.rad(0), math.rad(90), math.rad(0)), Time = 0.3},
             {CFrame = CFrame.new(0, 1, -1) * CFrame.Angles(math.rad(0), math.rad(90), math.rad(0)), Time = 0.3},
@@ -3002,58 +2998,46 @@ runFunction(function()
             {CFrame = CFrame.new(0, 0, -1) * CFrame.Angles(math.rad(0), math.rad(90), math.rad(0)), Time = 0.3},
             {CFrame = CFrame.new(0, -0.5, 0) * CFrame.Angles(math.rad(0), math.rad(90), math.rad(0)), Time = 0.3},
         },      
-        SlowHit = {
-            {CFrame = CFrame.new(1.5, -0.5, 0) * CFrame.Angles(math.rad(90), math.rad(0), math.rad(0)), Time = 0.2},
-            {CFrame = CFrame.new(0, -0.5, 0) * CFrame.Angles(math.rad(-90), math.rad(0), math.rad(0)), Time = 0.2}
-        },
-        Quickpush = {
+        Spas = {
             {CFrame = CFrame.new(0, -0.5, 0) * CFrame.Angles(math.rad(-90), math.rad(0), math.rad(0)), Time = 0.1},
             {CFrame = CFrame.new(0.69, -0.7, 0.6) * CFrame.Angles(math.rad(295), math.rad(55), math.rad(290)), Time = 0.1}
         },
-        Fastdrag = {
+        Wam = {
             {CFrame = CFrame.new(0, -0.5, 0) * CFrame.Angles(math.rad(0), math.rad(0), math.rad(0)), Time = 0.1},
             {CFrame = CFrame.new(0.69, -0.7, 0.6) * CFrame.Angles(math.rad(200), math.rad(60), math.rad(1)), Time = 0.1}
         },
-        Quickbf = {
-            {CFrame = CFrame.new(0.69, -0.7, 0.6) * CFrame.Angles(math.rad(295), math.rad(55), math.rad(290)), Time = 0.1},
-            {CFrame = CFrame.new(1, -0.5, 0) * CFrame.Angles(math.rad(90), math.rad(0), math.rad(0)), Time = 0.1}
-        },
-        Down = {
-            {CFrame = CFrame.new(0.69, -0.7, 0.6) * CFrame.Angles(math.rad(200), math.rad(60), math.rad(1)), Time = 0.2},
-            {CFrame = CFrame.new(1.5, -0.5, 0) * CFrame.Angles(math.rad(90), math.rad(0), math.rad(0)), Time = 0.2}
-        },
-		Pop = {
+		Hit = {
 			{CFrame = CFrame.new(0.69, -0.7, 0.6) * CFrame.Angles(math.rad(-30), math.rad(50), math.rad(-90)), Time = 0.15},
 			{CFrame = CFrame.new(0, 0, 0) * CFrame.Angles(math.rad(0), math.rad(0), math.rad(0)),Time = 0.25},
 			{CFrame = CFrame.new(0, 0, 0) * CFrame.Angles(math.rad(-30), math.rad(80), math.rad(-90)), Time = 0.35},
 			{CFrame = CFrame.new(0, 1, 0) * CFrame.Angles(math.rad(0), math.rad(0), math.rad(0)), Time = 0.35}
 		},
-		Longpush = {
+		Far = {
 			{CFrame = CFrame.new(-0.7, -0.71, 0.59) * CFrame.Angles(math.rad(-84), math.rad(50), math.rad(-38)), Time = 0.2},
 			{CFrame = CFrame.new(-0.7, -2.5, 0.59) * CFrame.Angles(math.rad(-84), math.rad(50), math.rad(-38)), Time = 0.2}
 		},
-		Niceside = {
+		frame = {
 			{CFrame = CFrame.new(-0.7, -0.71, 0.59) * CFrame.Angles(math.rad(-84), math.rad(50), math.rad(-38)), Time = 0.2},
 			{CFrame = CFrame.new(1, -0.71, 0.59) * CFrame.Angles(math.rad(-84), math.rad(50), math.rad(-38)), Time = 0.2},
 			{CFrame = CFrame.new(4, -0.71, 0.59) * CFrame.Angles(math.rad(-84), math.rad(50), math.rad(-38)), Time = 0.2},
 		},
-		Hardhit = {
+		UpPush = {
 			{CFrame = CFrame.new(-1.5, -0.50, 0.20) * CFrame.Angles(math.rad(-84), math.rad(50), math.rad(-38)), Time = 0.10},
 			{CFrame = CFrame.new(-0.55, -0.20, 1.5) * CFrame.Angles(math.rad(-84), math.rad(50), math.rad(-38)), Time = 0.2},
 		},
-		Finger = {
+		speed = {
 			{CFrame = CFrame.new(0.69, -0.8, 0.6) * CFrame.Angles(math.rad(-60), math.rad(30), math.rad(-35)), Time = 0.05},
 			{CFrame = CFrame.new(0.8, -0.71, 0.30) * CFrame.Angles(math.rad(-60), math.rad(39), math.rad(-55)), Time = 0.02},
 			{CFrame = CFrame.new(0.8, -2, 0.45) * CFrame.Angles(math.rad(-60), math.rad(30), math.rad(-55)), Time = 0.03}
 		},
-		Pushpull = {
+		spin = {
 			{CFrame = CFrame.new(0, -0.1, -0.30) * CFrame.Angles(math.rad(-20), math.rad(20), math.rad(0)), Time = 0.30},
 			{CFrame = CFrame.new(0, -0.50, -0.30) * CFrame.Angles(math.rad(-40), math.rad(41), math.rad(0)), Time = 0.32},
 			{CFrame = CFrame.new(0, -0.1, -0.30) * CFrame.Angles(math.rad(-60), math.rad(0), math.rad(0)), Time = 0.32}
 		},
-		Slowsmooth= {
+		slowdown = {
 			{CFrame = CFrame.new(-0.01, -0.3, -1.01) * CFrame.Angles(math.rad(-35), math.rad(90), math.rad(-90)), Time = 0.45},
-    		{CFrame = CFrame.new(-0.01, -0.3, -1.01) * CFrame.Angles(math.rad(-35), math.rad(70), math.rad(-90)), Time = 0.45},
+    			{CFrame = CFrame.new(-0.01, -0.3, -1.01) * CFrame.Angles(math.rad(-35), math.rad(70), math.rad(-90)), Time = 0.45},
 			{CFrame = CFrame.new(-0.01, -0.3, 0.4) * CFrame.Angles(math.rad(-35), math.rad(70), math.rad(-90)), Time = 0.32}
 		},
 		Sidehit = {
@@ -9401,7 +9385,7 @@ end
 local v = "vape/PurpleVerison.txt"
 if isfile(v) then
     local content = readfile(v)
-    if content:find("2.1") then
+    if content:find("2.2") then
         print("Version up to date")
     else
         setclipboard("loadstring(game:HttpGet('https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-theme/main/Installer', true))()")
