@@ -6,12 +6,6 @@ local isfile = isfile or function(file)
 end 
 
 function Installscr()
-    local function delfile(file)
-        if isfile(file) then
-            delfile(file)
-        end
-    end
-
     delfile('vape/CustomModules/6872274481.lua')
 end
     
