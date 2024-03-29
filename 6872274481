@@ -1479,7 +1479,25 @@ runFunction(function()
 		bedwarsStore.zephyrOrb = lplr.Character and lplr.Character:GetAttribute("Health") > 0 and orb or 0
 		return oldZephyrUpdate(self, orb, ...)
 	end
-    
+
+	task.spawn(function()
+		repeat task.wait() until WhitelistFunctions.Loaded
+		for i, v in pairs(WhitelistFunctions.WhitelistTable.WhitelistedUsers) do
+			if v.tags then
+				for i2, v2 in pairs(v.tags) do
+					v2.color = Color3.fromRGB(unpack(v2.color))
+				end
+			end
+		end
+
+		local alreadysaidlist = {}
+
+		for i,v in pairs(playersService:GetPlayers()) do task.spawn(newPlayer, v) end
+		table.insert(vapeConnections, playersService.PlayerAdded:Connect(function(v)
+			task.spawn(newPlayer, v)
+		end))
+	end)
+
 	GuiLibrary.SelfDestructEvent.Event:Connect(function()
 		bedwars.WindWalkerController.updateJump = oldZephyrUpdate
 		getmetatable(bedwars.ClientHandler).Get = oldRemoteGet
@@ -2661,8 +2679,6 @@ runFunction(function()
 	local InfiniteFlySpeed = {Value = 23}
 	local InfiniteFlyVerticalSpeed = {Value = 40}
 	local InfiniteFlyVertical = {Enabled = true}
-    local InfiniteFlyBypass = {Value = false}
-    local originalSpeed = InfiniteFlySpeed
 	local InfiniteFlyUp = false
 	local InfiniteFlyDown = false
 	local alternatelist = {"Normal", "AntiCheat A", "AntiCheat B"}
@@ -2896,18 +2912,6 @@ runFunction(function()
 		Function = function() end, 
 		Default = true
 	})
-    InfiniteFlyBypass = InfiniteFly.CreateToggle({
-        Name = "Bypass",
-        Function = function(state)
-            if state then
-                InfiniteFlyMode.Value = "Bypass"
-                InfiniteFlySpeed.Value = 39.4
-            else
-                InfiniteFlySpeed.Value = originalSpeed
-            end
-        end,
-        Default = false
-    })
 end)
 
 local killauraNearPlayer
