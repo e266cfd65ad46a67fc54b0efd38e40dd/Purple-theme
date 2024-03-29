@@ -2924,8 +2924,6 @@ runFunction(function()
     local killauratargets = {Value = 10}
     local killauracframe = {Enabled = false}
     local killauratarget = {Enabled = false}
-    local killaurasound = {Enabled = false}
-    local killauraswing = {Enabled = false}
 	local killaurasync = {Enabled = false}
     local killaurahandcheck = {Enabled = false}
     local killauraanimation = {Enabled = false}
@@ -3062,7 +3060,6 @@ runFunction(function()
 		},
 	}     
 
-
 	local function closestpos(block, pos)
 		local blockpos = block:GetRenderCFrame()
 		local startpos = (blockpos * CFrame.new(-(block.Size / 2))).p
@@ -3085,7 +3082,7 @@ runFunction(function()
 		if not sword or not sword.tool then return false end
 		local swordmeta = bedwars.ItemTable[sword.tool.Name]
 		if killaurahandcheck.Enabled then
-			if bedwarsStore.localHand.Type ~= "sword" or bedwars.DaoController.chargingMaid then return false end
+			if bedwarsStore.localHand.Type ~= "sword" or bedwars.KatanaController.chargingMaid then return false end
 		end
 		return sword, swordmeta
 	end
@@ -3225,6 +3222,9 @@ runFunction(function()
 									if not ({WhitelistFunctions:GetWhitelist(plr.Player)})[2] then
 										continue
 									end
+									if killauranovape.Enabled and bedwarsStore.whitelist.clientUsers[plr.Player.Name] then
+										continue
+									end
 									if not firstPlayerNear then 
 										firstPlayerNear = true 
 										killauraNearPlayer = true
@@ -3255,7 +3255,7 @@ runFunction(function()
 									bedwarsStore.attackReachUpdate = tick() + 1
 									killaurarealremote:FireServer({
 										weapon = sword.tool,
-										chargedAttack = {chargeRatio = swordmeta.sword.chargedAttack and not swordmeta.sword.chargedAttack.disableOnGrounded and 0.143 or 0.334},
+										chargedAttack = {chargeRatio = swordmeta.sword.chargedAttack and not swordmeta.sword.chargedAttack.disableOnGrounded and 0.999 or 0},
 										entityInstance = plr.Character,
 										validate = {
 											raycast = {
@@ -3350,11 +3350,11 @@ runFunction(function()
         Min = 1,
         Max = 20,
         Function = function(val) 
-			if killaurarangecirclepart then 
+            if killaurarangecirclepart then 
 				killaurarangecirclepart.Size = Vector3.new(val * 0.7, 0.01, val * 0.7)
 			end
 		end, 
-        Default = 19
+        Default = 19.5
     })
     killauraangle = Killaura.CreateSlider({
         Name = "Max angle",
@@ -3443,53 +3443,6 @@ runFunction(function()
         Function = function() end,
 		HoverText = "Makes your character face the opponent."
     })
-	killaurarangecircle = Killaura.CreateToggle({
-		Name = "Range Visualizer",
-		Function = function(callback)
-			if callback then 
-				--context issues moment
-			--[[	killaurarangecirclepart = Instance.new("MeshPart")
-				killaurarangecirclepart.MeshId = "rbxassetid://3726303797"
-				killaurarangecirclepart.Color = Color3.fromHSV(killauracolor["Hue"], killauracolor["Sat"], killauracolor.Value)
-				killaurarangecirclepart.CanCollide = false
-				killaurarangecirclepart.Anchored = true
-				killaurarangecirclepart.Material = Enum.Material.Neon
-				killaurarangecirclepart.Size = Vector3.new(killaurarange.Value * 0.7, 0.01, killaurarange.Value * 0.7)
-				if Killaura.Enabled then 
-					killaurarangecirclepart.Parent = gameCamera
-				end
-				bedwars.QueryUtil:setQueryIgnored(killaurarangecirclepart, true)]]
-			else
-				if killaurarangecirclepart then 
-					killaurarangecirclepart:Destroy()
-					killaurarangecirclepart = nil
-				end
-			end
-		end
-	})
-	killauraaimcircle = Killaura.CreateToggle({
-		Name = "Aim Visualizer",
-		Function = function(callback)
-			if callback then 
-				killauraaimcirclepart = Instance.new("Part")
-				killauraaimcirclepart.Shape = Enum.PartType.Ball
-				killauraaimcirclepart.Color = Color3.fromHSV(killauracolor["Hue"], killauracolor["Sat"], killauracolor.Value)
-				killauraaimcirclepart.CanCollide = false
-				killauraaimcirclepart.Anchored = true
-				killauraaimcirclepart.Material = Enum.Material.Neon
-				killauraaimcirclepart.Size = Vector3.new(0.5, 0.5, 0.5)
-				if Killaura.Enabled then 
-					killauraaimcirclepart.Parent = gameCamera
-				end
-				bedwars.QueryUtil:setQueryIgnored(killauraaimcirclepart, true)
-			else
-				if killauraaimcirclepart then 
-					killauraaimcirclepart:Destroy()
-					killauraaimcirclepart = nil
-				end
-			end
-		end
-	})
 	killauraparticle = Killaura.CreateToggle({
 		Name = "Crit Particle",
 		Function = function(callback)
@@ -3518,16 +3471,6 @@ runFunction(function()
 			end
 		end
 	})
-    killaurasound = Killaura.CreateToggle({
-        Name = "No Swing Sound",
-        Function = function() end,
-		HoverText = "Removes the swinging sound."
-    })
-    killauraswing = Killaura.CreateToggle({
-        Name = "No Swing",
-        Function = function() end,
-		HoverText = "Removes the swinging animation."
-    })
     killauraanimation = Killaura.CreateToggle({
         Name = "Custom Animation",
         Function = function(callback)
@@ -3535,18 +3478,8 @@ runFunction(function()
 		end,
 		HoverText = "Uses a custom animation for swinging"
     })
-	killauraanimationtween = Killaura.CreateToggle({
-		Name = "No Tween",
-		Function = function() end,
-		HoverText = "Disable's the in and out ease"
-	})
-	killauraanimationtween.Object.Visible = false
-	killaurasync = Killaura.CreateToggle({
-        Name = "Synced Animation",
-        Function = function() end,
-		HoverText = "Times animation with hit attempt"
-    })
 end)
+
 
 local LongJump = {Enabled = false}
 runFunction(function()
