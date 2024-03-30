@@ -2922,13 +2922,19 @@ runFunction(function()
     local killaurarange = {Value = 14}
     local killauraangle = {Value = 360}
     local killauratargets = {Value = 10}
+	local killauraautoblock = {Enabled = false}
+    local killauramouse = {Enabled = false}
     local killauracframe = {Enabled = false}
+    local killauragui = {Enabled = false}
     local killauratarget = {Enabled = false}
+    local killaurasound = {Enabled = false}
+    local killauraswing = {Enabled = false}
 	local killaurasync = {Enabled = false}
     local killaurahandcheck = {Enabled = false}
     local killauraanimation = {Enabled = false}
 	local killauraanimationtween = {Enabled = false}
 	local killauracolor = {Value = 0.44}
+	local killauranovape = {Enabled = false}
 	local killauratargethighlight = {Enabled = false}
 	local killaurarangecircle = {Enabled = false}
 	local killaurarangecirclepart
@@ -2967,6 +2973,14 @@ runFunction(function()
 		return strength
 	end
 
+	local kitpriolist = {
+		hannah = 5,
+		spirit_assassin = 4,
+		dasher = 3,
+		jade = 2,
+		regent = 1
+	}
+
 	local killaurasortmethods = {
 		Distance = function(a, b)
 			return (a.RootPart.Position - entityLibrary.character.HumanoidRootPart.Position).Magnitude < (b.RootPart.Position - entityLibrary.character.HumanoidRootPart.Position).Magnitude
@@ -2976,6 +2990,9 @@ runFunction(function()
 		end,
 		Threat = function(a, b) 
 			return getStrength(a) > getStrength(b)
+		end,
+		Kit = function(a, b)
+			return (kitpriolist[a.Player:GetAttribute("PlayingAsKit")] or 0) > (kitpriolist[b.Player:GetAttribute("PlayingAsKit")] or 0)
 		end
 	}
 
@@ -2994,10 +3011,10 @@ runFunction(function()
             {CFrame = CFrame.new(0.50, -1.20, 1.80) * CFrame.Angles(math.rad(295), math.rad(60), math.rad(290)), Time = 0.40},
             {CFrame = CFrame.new(0.75, -0.85, 1) * CFrame.Angles(math.rad(235), math.rad(60), math.rad(1)), Time = 0.24}
         },          
-	Strafe = {
-		{CFrame = CFrame.new(0.60, -0.80, 1.50) * CFrame.Angles(math.rad(-33), math.rad(57), math.rad(-81)), Time = 0.30},
-		{CFrame = CFrame.new(0.75, -0.95, 0.90) * CFrame.Angles(math.rad(147), math.rad(71), math.rad(53)), Time = 0.26}
-	},
+		Strafe = {
+			{CFrame = CFrame.new(0.60, -0.80, 1.50) * CFrame.Angles(math.rad(-33), math.rad(57), math.rad(-81)), Time = 0.30},
+			{CFrame = CFrame.new(0.75, -0.95, 0.90) * CFrame.Angles(math.rad(147), math.rad(71), math.rad(53)), Time = 0.26}
+    	},
         Cross = {
             {CFrame = CFrame.new(0, 0, -1) * CFrame.Angles(math.rad(0), math.rad(90), math.rad(0)), Time = 0.3},
             {CFrame = CFrame.new(0, 0.5, 0) * CFrame.Angles(math.rad(0), math.rad(90), math.rad(0)), Time = 0.3},
@@ -3078,11 +3095,17 @@ runFunction(function()
 		if GuiLibrary.ObjectsThatCanBeSaved["Lobby CheckToggle"].Api.Enabled then 
 			if bedwarsStore.matchState == 0 then return false end
 		end
+		if killauramouse.Enabled then
+			if not inputService:IsMouseButtonPressed(0) then return false end
+		end
+		if killauragui.Enabled then
+			if bedwars.AppController:isLayerOpen(bedwars.UILayers.MAIN) then return false end
+		end
 		local sword = killaurahandcheck.Enabled and bedwarsStore.localHand or getSword()
 		if not sword or not sword.tool then return false end
 		local swordmeta = bedwars.ItemTable[sword.tool.Name]
 		if killaurahandcheck.Enabled then
-			if bedwarsStore.localHand.Type ~= "sword" or bedwars.KatanaController.chargingMaid then return false end
+			if bedwarsStore.localHand.Type ~= "sword" or bedwars.DaoController.chargingMaid then return false end
 		end
 		return sword, swordmeta
 	end
@@ -3219,12 +3242,6 @@ runFunction(function()
 									if killauratargetframe.Walls.Enabled then
 										if not bedwars.SwordController:canSee({player = plr.Player, getInstance = function() return plr.Character end}) then continue end
 									end
-									if not ({WhitelistFunctions:GetWhitelist(plr.Player)})[2] then
-										continue
-									end
-									if killauranovape.Enabled and bedwarsStore.whitelist.clientUsers[plr.Player.Name] then
-										continue
-									end
 									if not firstPlayerNear then 
 										firstPlayerNear = true 
 										killauraNearPlayer = true
@@ -3246,7 +3263,7 @@ runFunction(function()
 											end
 										end
 									end
-									if (workspace:GetServerTimeNow() - bedwars.SwordController.lastAttack) < 0.02 then 
+									if (workspace:GetServerTimeNow() - bedwars.SwordController.lastAttack) < 0.0001 then 
 										break
 									end
 									local selfpos = selfrootpos + (killaurarange.Value > 14 and (selfrootpos - root.Position).magnitude > 14.4 and (CFrame.lookAt(selfrootpos, root.Position).lookVector * ((selfrootpos - root.Position).magnitude - 14)) or Vector3.zero)
@@ -3255,7 +3272,7 @@ runFunction(function()
 									bedwarsStore.attackReachUpdate = tick() + 1
 									killaurarealremote:FireServer({
 										weapon = sword.tool,
-										chargedAttack = {chargeRatio = swordmeta.sword.chargedAttack and not swordmeta.sword.chargedAttack.disableOnGrounded and 0.999 or 0},
+										chargedAttack = {chargeRatio = swordmeta.sword.chargedAttack and not swordmeta.sword.chargedAttack.disableOnGrounded and 0.999 or 0.999},
 										entityInstance = plr.Character,
 										validate = {
 											raycast = {
@@ -3350,7 +3367,7 @@ runFunction(function()
         Min = 1,
         Max = 20,
         Function = function(val) 
-            if killaurarangecirclepart then 
+			if killaurarangecirclepart then 
 				killaurarangecirclepart.Size = Vector3.new(val * 0.7, 0.01, val * 0.7)
 			end
 		end, 
@@ -3443,6 +3460,53 @@ runFunction(function()
         Function = function() end,
 		HoverText = "Makes your character face the opponent."
     })
+	killaurarangecircle = Killaura.CreateToggle({
+		Name = "Range Visualizer",
+		Function = function(callback)
+			if callback then 
+				--context issues moment
+			--[[	killaurarangecirclepart = Instance.new("MeshPart")
+				killaurarangecirclepart.MeshId = "rbxassetid://3726303797"
+				killaurarangecirclepart.Color = Color3.fromHSV(killauracolor["Hue"], killauracolor["Sat"], killauracolor.Value)
+				killaurarangecirclepart.CanCollide = false
+				killaurarangecirclepart.Anchored = true
+				killaurarangecirclepart.Material = Enum.Material.Neon
+				killaurarangecirclepart.Size = Vector3.new(killaurarange.Value * 0.7, 0.01, killaurarange.Value * 0.7)
+				if Killaura.Enabled then 
+					killaurarangecirclepart.Parent = gameCamera
+				end
+				bedwars.QueryUtil:setQueryIgnored(killaurarangecirclepart, true)]]
+			else
+				if killaurarangecirclepart then 
+					killaurarangecirclepart:Destroy()
+					killaurarangecirclepart = nil
+				end
+			end
+		end
+	})
+	killauraaimcircle = Killaura.CreateToggle({
+		Name = "Aim Visualizer",
+		Function = function(callback)
+			if callback then 
+				killauraaimcirclepart = Instance.new("Part")
+				killauraaimcirclepart.Shape = Enum.PartType.Ball
+				killauraaimcirclepart.Color = Color3.fromHSV(killauracolor["Hue"], killauracolor["Sat"], killauracolor.Value)
+				killauraaimcirclepart.CanCollide = false
+				killauraaimcirclepart.Anchored = true
+				killauraaimcirclepart.Material = Enum.Material.Neon
+				killauraaimcirclepart.Size = Vector3.new(0.5, 0.5, 0.5)
+				if Killaura.Enabled then 
+					killauraaimcirclepart.Parent = gameCamera
+				end
+				bedwars.QueryUtil:setQueryIgnored(killauraaimcirclepart, true)
+			else
+				if killauraaimcirclepart then 
+					killauraaimcirclepart:Destroy()
+					killauraaimcirclepart = nil
+				end
+			end
+		end
+	})
 	killauraparticle = Killaura.CreateToggle({
 		Name = "Crit Particle",
 		Function = function(callback)
@@ -3478,8 +3542,18 @@ runFunction(function()
 		end,
 		HoverText = "Uses a custom animation for swinging"
     })
+	killauraanimationtween = Killaura.CreateToggle({
+		Name = "No Tween",
+		Function = function() end,
+		HoverText = "Disable's the in and out ease"
+	})
+	killauraanimationtween.Object.Visible = false
+	killaurasync = Killaura.CreateToggle({
+        Name = "Synced Animation",
+        Function = function() end,
+		HoverText = "Times animation with hit attempt"
+    })
 end)
-
 
 local LongJump = {Enabled = false}
 runFunction(function()
@@ -9268,45 +9342,84 @@ runFunction(function()
 		end
 	})
 end)
-
 runFunction(function()
     local Players = game:GetService("Players")
     local Workspace = game:GetService("Workspace")
-    
+    local Up = 6
+    local Down = 6
+    local Distance = 37
     local function Fastfly()
         local character = Players.LocalPlayer.Character
         if not character or not character.PrimaryPart then
             print("Fast fly failed, retry")
             return
         end
-        
         local PP = character.PrimaryPart
         local CP = PP.Position
-        local DP = CP - Vector3.new(0, 6, 0)
-        local UP = CP + Vector3.new(0, 8, 0)
-        local FP = CP + PP.CFrame.LookVector * 30
+        local DP = CP - Vector3.new(0, Down, 0)
+        local UP = CP + Vector3.new(0, Up, 0)
+        local FP = CP + PP.CFrame.LookVector * Distance
         
         Workspace.Gravity = 0 
         PP.CFrame = CFrame.new(DP)
-        wait(0.1)
+        wait(Downtime)
         PP.CFrame = CFrame.new(UP)
-        wait(0.2)
-        PP.CFrame = CFrame.new(FP)
-        wait(0.3)
+		wait(0.3)
         PP.CFrame = CFrame.new(FP)
         wait(1.5)
         Workspace.Gravity = 180
     end
     
-    local Fastflyv2 = GuiLibrary.ObjectsThatCanBeSaved.FunnisWindow.Api.CreateOptionsButton({
-        Name = 'Fastflyv2',
+    local FF = GuiLibrary.ObjectsThatCanBeSaved.FunnisWindow.Api.CreateOptionsButton({
+        Name = 'Fast fly',
         Function = function(callback)
             if callback then
                 Fastfly()
             end
         end
     })
+
+	FF.CreateSlider({
+		Name = "Distance",
+		Function = function(selectedValue) 
+			Distance = selectedValue
+		end, 
+		Min = 10,
+		Max = 50,
+		Default = 37
+	})
+
+	FF.CreateSlider({
+		Name = "Down",
+		Function = function(selectedValue) 
+			Down = selectedValue
+		end, 
+		Min = 1,
+		Max = 10,
+		Default = 6
+	})
+
+	FF.CreateSlider({
+		Name = "Up",
+		Function = function(selectedValue) 
+			Up = selectedValue
+		end, 
+		Min = 0,
+		Max = 100,
+		Default = 40
+	})
+
+	FF.CreateSlider({
+		Name = "Downtime",
+		Function = function(selectedValue) 
+			Downtime = selectedValue
+		end, 
+		Min = 0.1,
+		Max = 1,
+		Default = 0.2
+	})
 end)
+
 
 loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-extra/main/Extra%20681", true))()
 
