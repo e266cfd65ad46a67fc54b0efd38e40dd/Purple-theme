@@ -9288,7 +9288,7 @@ runFunction(function()
         
         Workspace.Gravity = 0 
         PP.CFrame = CFrame.new(DP)
-        wait(0.4)
+        wait(0.1)
         PP.CFrame = CFrame.new(UP)
         wait(0.2)
         PP.CFrame = CFrame.new(FP)
