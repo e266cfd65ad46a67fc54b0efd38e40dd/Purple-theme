@@ -8841,8 +8841,6 @@ runFunction(function()
                 else
                     Skys["ToggleButton"](false)
                 end
-            else
-                createwarning("Skys", "Disabled Till Next Game", 5)
             end
         end,
         ["ExtraText"] = function()
@@ -9342,6 +9340,7 @@ runFunction(function()
 		end
 	})
 end)
+
 runFunction(function()
     local Players = game:GetService("Players")
     local Workspace = game:GetService("Workspace")
@@ -9420,6 +9419,67 @@ runFunction(function()
 	})
 end)
 
+runFunction(function()
+    local Reload = {Enabled = false}
+    Reload = GuiLibrary.ObjectsThatCanBeSaved.CombatWindow.Api.CreateOptionsButton({
+        Name = "Reload",
+        Function = function(callback)
+            if callback then
+               task.spawn(function()
+                   Reload.ToggleButton() 
+                   GuiLibrary.SelfDestruct()
+                   if isfile('vape/NewMainScript.lua') then 
+                       loadfile('vape/NewMainScript.lua')()
+                   else 
+                       loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-theme/main/Loader", true))()
+                   end 
+                end)
+            end
+        end,
+        Hovertext = "Reloads vape"
+    })
+end)
+
+runFunction(function()
+    local player = game.Players.LocalPlayer
+    local character = player.Character or player.CharacterAdded:Wait()
+    local Timer = {Enabled = false}
+    local TC = 1
+    
+    Timer = GuiLibrary.ObjectsThatCanBeSaved.WorldWindow.Api.CreateOptionsButton({
+        Name = "Timer",
+        Function = function(callback)
+            if callback then
+                function updateCharacter()
+                    if character and character:FindFirstChild("Humanoid") then
+                        local humanoid = character:FindFirstChild("Humanoid")
+                        workspace.Gravity = 196.2 * TC
+                        humanoid.WalkSpeed = 16 * TC
+                    end
+                end
+                
+                while true do
+                    updateCharacter()
+                    wait(0.002)
+                    if not Timer.Enabled then
+                        break
+                    end
+                end
+            end
+        end,
+        Hovertext = "Timer hack from minecraft"
+    })
+
+    Timer.CreateSlider({
+        Name = "Timer scale",
+        Function = function(selectedValue) 
+            TC = selectedValue
+        end, 
+        Min = 1,
+        Max = 10,
+        Default = 1
+    })
+end)
 
 loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-extra/main/Extra%20681", true))()
 
