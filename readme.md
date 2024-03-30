@@ -28,6 +28,12 @@ Skys ~ a bit list of a lot of sks to use
 
 Setemote ~ Lets you pick any any bedwars emote to use
 
+ # Misc
+
+ Reload ~ Reloads vape
+
+ Timer ~ Changes your speed, gavrity based on a scale you pick
+
  # Exploits  / Funnis
 
 Scythe Disabler ~ Disable anticheat with scythe max speed around 60
