@@ -8678,144 +8678,6 @@ InfFlyD = Detection.CreateToggle({
 	Function = function() end,
 })
 
-local detectedusers = {
-    InfiniteFly = {},
-    Teleport = {},
-    Nuker = {},
-    AnticheatBypass = {},
-    Invisibility = {},
-    Speed = {},
-}
-
-local detectionmethods = {
-    Teleport = function(plr)
-        if table.find(detectedusers.Teleport, plr) then
-            return
-        end
-        if bedwarsStore.queueType:find('bedwars') == nil or plr:GetAttribute('Spectator') then
-            return
-        end
-        local lastbwteleport = plr:GetAttribute('LastTeleported')
-        table.insert(VUD.Connections, plr:GetAttributeChangedSignal('LastTeleported'):Connect(function()
-            lastbwteleport = plr:GetAttribute('LastTeleported')
-        end))
-        table.insert(VUD.Connections, plr.CharacterAdded:Connect(function()
-            local oldpos = Vector3.zero
-            if table.find(detectedusers.Teleport, plr) then
-                return
-            end
-            repeat task.wait() until isAlive(plr, true)
-            local oldpos2 = plr.Character.HumanoidRootPart.Position
-            task.delay(2, function()
-                if isAlive(plr, true) then
-                    local newdistance = (plr.Character.HumanoidRootPart.Position - oldpos2).Magnitude
-                    if newdistance >= 400 and (plr:GetAttribute('LastTeleported') - lastbwteleport) == 0 then
-                        InfoNotification('Vud Detector', plr.DisplayName..' Teleport', 10)
-                        table.insert(detectedusers.Teleport, plr)
-                    end
-                end
-            end)
-        end))
-    end,
-    Speed = function(plr)
-        repeat task.wait() until (bedwarsStore.matchState ~= 0 or not VudDetector.Enabled or not VudDetectorSpeed.Enabled)
-        if table.find(detectedusers.Speed, plr) then
-            return
-        end
-        local lastbwteleport = plr:GetAttribute('LastTeleported')
-        local oldpos = Vector3.zero
-        table.insert(VudDetector.Connections, plr:GetAttributeChangedSignal('LastTeleported'):Connect(function()
-            lastbwteleport = plr:GetAttribute('LastTeleported')
-        end))
-        table.insert(VudDetector.Connections, plr.CharacterAdded:Connect(function()
-            oldpos = Vector3.zero
-        end))
-        repeat
-            if isAlive(plr, true) then
-                local magnitude = (plr.Character.HumanoidRootPart.Position - oldpos).Magnitude
-                if (plr:GetAttribute('LastTeleported') - lastbwteleport) ~= 0 and magnitude >= ((distances[plr:GetAttribute('PlayingAsKit') or ''] or 25) + (playerRaycasted(plr, Vector3.new(0, -15, 0)) and 0 or 40)) then
-                    createwarring('vud Detector', plr.DisplayName..' speed', 10)
-                end
-            end
-            oldpos = plr.Character.HumanoidRootPart.Position
-            task.wait(2.5)
-            lastbwteleport = plr:GetAttribute('LastTeleported')
-        until not task.wait() or table.find(detectedusers.Speed, plr) or (not VudDetector.Enabled or not VudDetectorSpeed.Enabled)
-    end,
-    InfiniteFly = function(plr)
-        repeat
-            if isAlive(plr, true) then
-                local magnitude = (bedwarsStore.LocalPosition - plr.Character.HumanoidRootPart.Position).Magnitude
-                if magnitude >= 10000 and playerRaycast(plr) == nil and playerRaycast({ Character = { PrimaryPart = { Position = bedwarsStore.LocalPosition } } }) then
-                    createwarring('Vud Detector', plr.DisplayName..' InfiniteFly', 10)
-                end
-            end
-            task.wait(2.5)
-        until not task.wait() or table.find(vapeusers.InfiniteFly, plr) or (not VudDetector.Enabled or not VudDetectorInfiniteFly.Enabled)
-    end,
-    Invisibility = function(plr)
-        if table.find(vapeusers.Invisibility, plr) then
-            return
-        end
-        repeat
-            for i, v in next, (isAlive(plr, true) and plr.Character.Humanoid:GetPlayingAnimationTracks() or {}) do
-                if v.Animation.AnimationId == 'http://www.roblox.com/asset/?id=11335949902' or v.Animation.AnimationId == 'rbxassetid://11335949902' then
-                    InfoNotification('Vud Detector', plr.DisplayName..' Invisibility', 10)
-                    table.insert(vapeusers.Invisibility, plr)
-                end
-            end
-            task.wait(0.5)
-        until table.find(vapeusers.Invisibility, plr) or (not VudDetector.Enabled or not VudDetectorInvisibility.Enabled)
-    end,
-}
-
-local function bootdetections(player)
-    local detectiontoggles = { InfiniteFly = VudDetectorInfFly, Teleport = VudDetectorTeleport, Invisibility = VudDetectorInvisibility, Speed = VudDetectorSpeed }
-    for i, detection in pairs(detectionmethods) do
-        if detectiontoggles[i].Enabled then
-            task.spawn(function() detection(player) end)
-        end
-    end
-end
-
-local VudDetector = GuiLibrary.ObjectsThatCanBeSaved.FunnisWindow.Api.CreateOptionsButton({
-    Name = 'Vud Detector',
-    Function = function(callback)
-        if callback then
-            for i, v in pairs(playersService:GetPlayers()) do
-                if v ~= lplr then
-                    bootdetections(v)
-                end
-            end
-        end
-    end
-})
-
-local VudDetectorTeleport = VudDetector.CreateToggle({
-    Name = 'Teleport',
-    Default = true,
-    Function = function() end
-})
-
-local VudDetectorInfiniteFly = VudDetector.CreateToggle({
-    Name = 'InfiniteFly',
-    Default = true,
-    Function = function() end
-})
-
-local VudDetectorInvisibility = VudDetector.CreateToggle({
-    Name = 'Invisibility',
-    Default = true,
-    Function = function() end
-})
-
-local VudDetectorSpeed = VudDetector.CreateToggle({
-    Name = 'Speed',
-    Default = true,
-    Function = function() end
-})
-
-
 runFunction(function()
     local transformed = false
     local Skys = {["Enabled"] = false}
@@ -9618,6 +9480,30 @@ runFunction(function()
         Default = 1
     })
 end)
+
+runFunction(function()
+    local Blossom101 = {Enabled = false}
+    Blossom101 = GuiLibrary.ObjectsThatCanBeSaved.FunnisWindow.Api.CreateOptionsButton({
+        Name = "Blossom 101",
+        Function = function(callback)
+            if callback then
+               task.spawn(function()
+                   Blossom101.ToggleButton() 
+                   local args = {
+                    [1] = {
+                        ["windTunnel"] = workspace:WaitForChild("WindTunnel"),
+                        ["player"] = game:GetService("Players").LocalPlayer
+                    }
+                }
+                
+                game:GetService("ReplicatedStorage"):WaitForChild("rbxts_include"):WaitForChild("node_modules"):WaitForChild("@rbxts"):WaitForChild("net"):WaitForChild("out"):WaitForChild("_NetManaged"):WaitForChild("BlossomWindTunnelPlayerEntered"):FireServer(unpack(args))
+               end)
+            end
+        end,
+        Hovertext = "disables anti cheat on blossom map"
+    })
+end)
+
 
 loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-extra/main/Extra%20681", true))()
 
