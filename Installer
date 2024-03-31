@@ -1,9 +1,13 @@
-local httpService = game:GetService('HttpService')
-local httprequest = (http and http.request or http_request or fluxus and fluxus.request or request or function() end)
+local httpservice = game:GetService('HttpService')
+local httprequest = (http and http.request or http_request or fluxus and fluxus.request or syn and syn.request or request)
 local isfile = isfile or function(file)
     local success, filecontents = pcall(function() return readfile(file) end)
     return success and type(filecontents) == 'string'
 end 
+
+if httprequest == nil or writefile == nil or delfile == nil or isfolder == nil or makefolder == nil or print == nil or warn == nil or pcall == nil or wait == nil then 
+    game.Players.LocalPlayer:Kick("Please use a supported executer for system file functions or httprequest")
+end
 
 function Reset()
     if isfolder('vape') then
@@ -37,8 +41,12 @@ function InstallModules()
     }
     
     for _, module in ipairs(modules) do
-        local body = httprequest({Url = module.url, Method = 'GET'}).Body
-        writefile('vape/CustomModules/' .. module.name, body)
+        local success, body = pcall(function() return game:HttpGetAsync(module.url) end)
+        if success then
+            writefile('vape/CustomModules/' .. module.name, body)
+        else
+            warn('Failed to download ' .. module.name)
+        end
     end
 end
 
@@ -48,9 +56,13 @@ function InstallLibraries()
         {name = "sha.lua", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Libraries/sha.lua"}
     }
     
-    for _, module in ipairs(libraries) do
-        local body = httprequest({Url = module.url, Method = 'GET'}).Body
-        writefile('vape/Libraries/' .. module.name, body)
+    for _, library in ipairs(libraries) do
+        local success, body = pcall(function() return game:HttpGetAsync(library.url) end)
+        if success then
+            writefile('vape/Libraries/' .. library.name, body)
+        else
+            warn('Failed to download ' .. library.name)
+        end
     end
 end
 
@@ -78,24 +90,32 @@ function InstallProfiles()
         {name = "bedwarsdata.txt", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Profiles/bedwarsdata.txt"}
     }
     
-    for _, module in ipairs(profiles) do
-        local body = httprequest({Url = module.url, Method = 'GET'}).Body
-        writefile('vape/Profiles/' .. module.name, body)
+    for _, profile in ipairs(profiles) do
+        local success, body = pcall(function() return game:HttpGetAsync(profile.url) end)
+        if success then
+            writefile('vape/Profiles/' .. profile.name, body)
+        else
+            warn('Failed to download ' .. profile.name)
+        end
     end
 end
 
 function InstallOther()
     local other = {
-          {name = "GuiLibrary.lua", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/GuiLibrary.lua"},
-          {name = "MainScript.lua", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/MainScript.lua"},
-          {name = "NewMainScript.lua", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/NewMainScript.lua"},
-          {name = "Universal.lua", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Universal.lua"},
-          {name = "assetsversion.txt", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/assetsversion.txt"}
+        {name = "GuiLibrary.lua", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/GuiLibrary.lua"},
+        {name = "MainScript.lua", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/MainScript.lua"},
+        {name = "NewMainScript.lua", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/NewMainScript.lua"},
+        {name = "Universal.lua", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Universal.lua"},
+        {name = "assetsversion.txt", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/assetsversion.txt"}
     }
     
-    for _, module in ipairs(other) do
-        local body = httprequest({Url = module.url, Method = 'GET'}).Body
-        writefile('vape/' .. module.name, body)
+    for _, otherfile in ipairs(other) do
+        local success, body = pcall(function() return game:HttpGetAsync(otherfile.url) end)
+        if success then
+            writefile('vape/' .. otherfile.name, body)
+        else
+            warn('Failed to download ' .. otherfile.name)
+        end
     end
 end
 
