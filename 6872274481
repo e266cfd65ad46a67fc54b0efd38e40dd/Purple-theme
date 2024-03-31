@@ -4269,7 +4269,7 @@ runFunction(function()
 						end
 
 						local speedValue = SpeedValue.Value + getSpeed()
-						if damagetick > tick() then speedValue = speedValue + 60 end
+						if damagetick > tick() then speedValue = speedValue + 40 end
 
 						local speedVelocity = entityLibrary.character.Humanoid.MoveDirection * (SpeedMode.Value == "Normal" and SpeedValue.Value or 20)
 						entityLibrary.character.HumanoidRootPart.Velocity = antivoidvelo or Vector3.new(speedVelocity.X, entityLibrary.character.HumanoidRootPart.Velocity.Y, speedVelocity.Z)
