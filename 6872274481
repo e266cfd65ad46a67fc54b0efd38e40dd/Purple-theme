@@ -1,3 +1,4 @@
+
 local GuiLibrary = shared.GuiLibrary
 local playersService = game:GetService("Players")
 local textService = game:GetService("TextService")
@@ -392,6 +393,10 @@ local function getSpeed()
 		local SpeedDamageBoost = lplr.Character:GetAttribute("SpeedBoost")
 		if SpeedDamageBoost and SpeedDamageBoost > 1 then 
 			speed = speed + (8 * (SpeedDamageBoost - 1))
+		end
+        local speedpotionboost = lplr.Character:GetAttribute("SpeedBoost")
+		if speedpotionboost and speedpotionboost > 1 then 
+			speed = speed + (8 * (speedpotionboost - 1))
 		end
 		if bedwarsStore.grapple > tick() then
 			speed = speed + 90
@@ -4233,6 +4238,7 @@ runFunction(function()
 	local SpeedJumpSound = {Enabled = false}
 	local SpeedJumpVanilla = {Enabled = false}
 	local SpeedAnimation = {Enabled = false}
+    local psb2 = {Enabled = false}
 	local raycastparameters = RaycastParams.new()
 	local damagetick = tick()
 
@@ -4243,7 +4249,7 @@ runFunction(function()
 			if callback then
 				table.insert(Speed.Connections, vapeEvents.EntityDamageEvent.Event:Connect(function(damageTable)
 					if damageTable.entityInstance == lplr.Character and (damageTable.damageType ~= 0 or damageTable.extra and damageTable.extra.chargeRatio ~= nil) and (not (damageTable.knockbackMultiplier and damageTable.knockbackMultiplier.disabled or damageTable.knockbackMultiplier and damageTable.knockbackMultiplier.horizontal == 0)) and SpeedDamageBoost.Enabled then 
-						damagetick = tick() + 0.4
+						damagetick = tick() + 0.6
 					end
 				end))
 				RunLoops:BindToHeartbeat("Speed", function(delta)
@@ -4263,7 +4269,7 @@ runFunction(function()
 						end
 
 						local speedValue = SpeedValue.Value + getSpeed()
-						if damagetick > tick() then speedValue = speedValue + 20 end
+						if damagetick > tick() then speedValue = speedValue + 60 end
 
 						local speedVelocity = entityLibrary.character.Humanoid.MoveDirection * (SpeedMode.Value == "Normal" and SpeedValue.Value or 20)
 						entityLibrary.character.HumanoidRootPart.Velocity = antivoidvelo or Vector3.new(speedVelocity.X, entityLibrary.character.HumanoidRootPart.Velocity.Y, speedVelocity.Z)
@@ -4307,6 +4313,11 @@ runFunction(function()
 	})
 	SpeedDamageBoost = Speed.CreateToggle({
 		Name = "Damage Boost",
+		Function = function() end,
+		Default = true
+	})
+    speedpotionboost = Speed.CreateToggle({
+		Name = "Potion Boost",
 		Function = function() end,
 		Default = true
 	})
