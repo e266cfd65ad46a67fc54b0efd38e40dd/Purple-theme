@@ -1,4 +1,5 @@
 
+
 local GuiLibrary = shared.GuiLibrary
 local playersService = game:GetService("Players")
 local textService = game:GetService("TextService")
@@ -1942,7 +1943,7 @@ runFunction(function()
 	autoclickercps = autoclicker.CreateTwoSlider({
 		Name = "CPS",
 		Min = 1,
-		Max = 1500,
+		Max = 20,
 		Function = function(val) end,
 		Default = 8,
 		Default2 = 12
