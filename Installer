@@ -68,7 +68,7 @@ end
 
 function InstallProfiles()
     local profiles = {
-        {name = "2619619496GUIPositions.vapeprofile.txt", url = https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Profiles/2619619496GUIPositions.vapeprofile.txt},
+        {name = "2619619496GUIPositions.vapeprofile.txt", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Profiles/2619619496GUIPositions.vapeprofile.txt"},
         {name = "6872265039.vapeprofile.txt", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Profiles/6872265039.vapeprofile.txt"},
         {name = "6872265039.vapeprofiles.txt", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Profiles/6872265039.vapeprofiles.txt"},
         {name = "6872274481.vapeprofile.txt", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Profiles/6872274481.vapeprofile.txt"},
