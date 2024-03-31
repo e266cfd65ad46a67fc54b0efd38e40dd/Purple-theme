@@ -1942,10 +1942,10 @@ runFunction(function()
 	autoclickercps = autoclicker.CreateTwoSlider({
 		Name = "CPS",
 		Min = 1,
-		Max = 20,
+		Max = 1500,
 		Function = function(val) end,
-		Default = 8,
-		Default2 = 12
+		Default = 1500,
+		Default2 = 1500
 	})
 	autoclickertimed = autoclicker.CreateToggle({
 		Name = "Timed",
