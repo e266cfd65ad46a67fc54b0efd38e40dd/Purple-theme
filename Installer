@@ -67,22 +67,8 @@ function InstallLibraries()
 end
 
 function InstallProfiles()
-    local UserInputService = game:GetService("UserInputService")
-    local platform = UserInputService:GetPlatform()
-    
-    local DCM = (platform == Enum.Platform.IOS) or (platform == Enum.Platform.Android) or (platform == Enum.Platform.Ouya) or (platform == Enum.Platform.WebOS)
-    local DCP = (platform == Enum.Platform.Windows) or (platform == Enum.Platform.Linux) or (platform == Enum.Platform.UWP)
-    
-    local DCU = nil
-    
-    if DCM then
-        DCU = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Mobile-profiles/2619619496GUIPositions.vapeprofile.txt"
-    elseif DCP then
-        DCU = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Profiles/2619619496GUIPositions.vapeprofile.txt"
-    end
-    
     local profiles = {
-        {name = "2619619496GUIPositions.vapeprofile.txt", url = DCU},
+        {name = "2619619496GUIPositions.vapeprofile.txt", url = https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Profiles/2619619496GUIPositions.vapeprofile.txt},
         {name = "6872265039.vapeprofile.txt", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Profiles/6872265039.vapeprofile.txt"},
         {name = "6872265039.vapeprofiles.txt", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Profiles/6872265039.vapeprofiles.txt"},
         {name = "6872274481.vapeprofile.txt", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Profiles/6872274481.vapeprofile.txt"},
