@@ -4309,11 +4309,6 @@ runFunction(function()
 		Function = function() end,
 		Default = true
 	})
-    speedpotionboost = Speed.CreateToggle({
-		Name = "Potion Boost",
-		Function = function() end,
-		Default = true
-	})
 	SpeedJump = Speed.CreateToggle({
 		Name = "AutoJump", 
 		Function = function(callback) 
