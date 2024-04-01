@@ -2,8 +2,6 @@
 
  Killaura ~ custom animations, cleaned up stuff
 
- Infinitefly ~ heat seeker bpyass toggle 40 speed
-
  # Movement
 
 Leap ~ Will allow you allow you go leap up into the air for some reason bypassing 
@@ -17,6 +15,10 @@ infinitejump ~ You will have no delay between jumps
 Skytp ~ Kinda same thing as leap but a little differnt
 
 Longjump ~ uses velcoity no longer cframe aka less flags
+
+Infinitefly ~ heat seeker bpyass toggle 40 speed
+
+Seped ~ rewrote some of it
 
  # Render
 
@@ -40,7 +42,7 @@ Scythe Disabler ~ Disable anticheat with scythe max speed around 60
 
 Vape user detection ~ uses flags to detect vape users
 
-Fastfly v2 ~ will damage you then tp forward
+Fastfly ~ will damage you then tp forward
 
  # Single Devs info
  
