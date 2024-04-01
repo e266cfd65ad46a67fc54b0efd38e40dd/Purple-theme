@@ -67,8 +67,8 @@ if not shared.VapeDeveloper then
 			writefile("vape/commithash.txt", commit)
 		end
 	else
-		displayErrorPopup("Failed to connect to github, please try using a VPN.")
-		error("Failed to connect to github, please try using a VPN.")
+		displayErrorPopup("Can not connect to github, to fix this issue connect to a Vpn then run the scrit again'")
+		error("Can not connect to github, to fix this issue connect to a Vpn then run the scrit again")
 	end
 end
 
