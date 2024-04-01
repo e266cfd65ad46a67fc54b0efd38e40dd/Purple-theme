@@ -394,15 +394,8 @@ local function getSpeed()
 		if SpeedDamageBoost and SpeedDamageBoost > 1 then 
 			speed = speed + (8 * (SpeedDamageBoost - 1))
 		end
-        local speedpotionboost = lplr.Character:GetAttribute("SpeedBoost")
-		if speedpotionboost and speedpotionboost > 1 then 
-			speed = speed + (8 * (speedpotionboost - 1))
-		end
 		if bedwarsStore.grapple > tick() then
 			speed = speed + 90
-		end
-		if bedwarsStore.scythe > tick() then 
-			speed = speed + 5
 		end
 		if lplr.Character:GetAttribute("GrimReaperChannel") then 
 			speed = speed + 20
@@ -413,7 +406,7 @@ local function getSpeed()
 			speed = speed + 12
 		end
 		if bedwarsStore.zephyrOrb ~= 0 then 
-			speed = speed + 12
+			speed = speed + 16
 		end
 	end
 	return speed
@@ -4249,7 +4242,7 @@ runFunction(function()
 			if callback then
 				table.insert(Speed.Connections, vapeEvents.EntityDamageEvent.Event:Connect(function(damageTable)
 					if damageTable.entityInstance == lplr.Character and (damageTable.damageType ~= 0 or damageTable.extra and damageTable.extra.chargeRatio ~= nil) and (not (damageTable.knockbackMultiplier and damageTable.knockbackMultiplier.disabled or damageTable.knockbackMultiplier and damageTable.knockbackMultiplier.horizontal == 0)) and SpeedDamageBoost.Enabled then 
-						damagetick = tick() + 0.6
+						damagetick = tick() + 1
 					end
 				end))
 				RunLoops:BindToHeartbeat("Speed", function(delta)
@@ -4263,13 +4256,13 @@ runFunction(function()
 						if SpeedAnimation.Enabled then
 							for i, v in pairs(entityLibrary.character.Humanoid:GetPlayingAnimationTracks()) do
 								if v.Name == "WalkAnim" or v.Name == "RunAnim" then
-									v:AdjustSpeed(entityLibrary.character.Humanoid.WalkSpeed / 16)
+									v:AdjustSpeed(entityLibrary.character.Humanoid.WalkSpeed / 10)
 								end
 							end
 						end
 
 						local speedValue = SpeedValue.Value + getSpeed()
-						if damagetick > tick() then speedValue = speedValue + 40 end
+						if damagetick > tick() then speedValue = speedValue + 30 end
 
 						local speedVelocity = entityLibrary.character.Humanoid.MoveDirection * (SpeedMode.Value == "Normal" and SpeedValue.Value or 20)
 						entityLibrary.character.HumanoidRootPart.Velocity = antivoidvelo or Vector3.new(speedVelocity.X, entityLibrary.character.HumanoidRootPart.Velocity.Y, speedVelocity.Z)
