@@ -927,7 +927,6 @@ runFunction(function()
 		["Name"] = "Always Jump",
 		["Function"] = function() end
 	})
-	speedspeedup["Object"].Visible = speedmode["Value"] == "CFrame"
 	speedanimation = speed.CreateToggle({
 		["Name"] = "Slowdown Anim",
 		["Function"] = function() end
