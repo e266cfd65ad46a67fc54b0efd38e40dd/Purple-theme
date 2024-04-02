@@ -1,4 +1,3 @@
-
 local GuiLibrary = shared.GuiLibrary
 local players = game:GetService("Players")
 local textservice = game:GetService("TextService")
@@ -796,8 +795,6 @@ JoinQueueDelay = JoinQueue.CreateSlider({
 	["Default"] = 1
 })
 
-
-
 local AnticheatBypass = {["Enabled"] = false}
 local Scaffold = {["Enabled"] = false}
 local longjump = {["Enabled"] = false}
@@ -809,7 +806,6 @@ runcode(function()
 	local speedjump = {["Enabled"] = false}
 	local speedjumpheight = {["Value"] = 20}
 	local speedjumpalways = {["Enabled"] = false}
-	local speedspeedup = {["Enabled"] = false}
 	local speedanimation = {["Enabled"] = false}
 	local speedtick = tick()
 	local bodyvelo
@@ -930,12 +926,6 @@ runcode(function()
 		["Name"] = "Always Jump",
 		["Function"] = function() end
 	})
-	speedspeedup = speed.CreateToggle({
-		["Name"] = "Speedup",
-		["Function"] = function() end,
-		["HoverText"] = "Speeds up when using killaura."
-	})
-	speedspeedup["Object"].Visible = speedmode["Value"] == "CFrame"
 	speedanimation = speed.CreateToggle({
 		["Name"] = "Slowdown Anim",
 		["Function"] = function() end
