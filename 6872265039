@@ -700,9 +700,9 @@ runcode(function()
 	flyspeed = fly.CreateSlider({
 		["Name"] = "Speed",
 		["Min"] = 1,
-		["Max"] = 23,
+		["Max"] = 100,
 		["Function"] = function(val) end, 
-		["Default"] = 23
+		["Default"] = 80
 	})
 	flyverticalspeed = fly.CreateSlider({
 		["Name"] = "Vertical Speed",
@@ -789,13 +789,11 @@ JoinQueueTypes = JoinQueue.CreateDropdown({
 })
 JoinQueueDelay = JoinQueue.CreateSlider({
 	["Name"] = "Delay",
-	["Min"] = 1,
+	["Min"] = 0,
 	["Max"] = 10,
 	["Function"] = function(val) end,
 	["Default"] = 1
 })
-
-
 
 local AnticheatBypass = {["Enabled"] = false}
 local Scaffold = {["Enabled"] = false}
@@ -904,9 +902,9 @@ runcode(function()
 	speedval = speed.CreateSlider({
 		["Name"] = "Speed",
 		["Min"] = 1,
-		["Max"] = 23,
+		["Max"] = 100,
 		["Function"] = function(val) end,
-		["Default"] = 23
+		["Default"] = 80
 	})
 	speedjumpheight = speed.CreateSlider({
 		["Name"] = "Jump Height",
@@ -928,11 +926,6 @@ runcode(function()
 	speedjumpalways = speed.CreateToggle({
 		["Name"] = "Always Jump",
 		["Function"] = function() end
-	})
-	speedspeedup = speed.CreateToggle({
-		["Name"] = "Speedup",
-		["Function"] = function() end,
-		["HoverText"] = "Speeds up when using killaura."
 	})
 	speedspeedup["Object"].Visible = speedmode["Value"] == "CFrame"
 	speedanimation = speed.CreateToggle({
