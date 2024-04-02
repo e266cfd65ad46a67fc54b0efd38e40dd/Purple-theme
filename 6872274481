@@ -1,4 +1,3 @@
-
 local GuiLibrary = shared.GuiLibrary
 local playersService = game:GetService("Players")
 local textService = game:GetService("TextService")
@@ -2898,10 +2897,22 @@ runFunction(function()
         Name = "Bypass",
         Function = function(state)
             if state then
+		InfiniteFlyBypassSpeed.Object.Visible = true
                 InfiniteFlyMode.Value = "Bypass"
                 InfiniteFlySpeed.Value = 39.4
             else
+		InfiniteFlyBypassSpeed.Object.Visible = false
                 InfiniteFlySpeed.Value = originalSpeed
+            end
+        end,
+        Default = false
+    })
+    InfiniteFlyBypassSpeed.Object.Visible = false
+    InfiniteFlyBypassSpeed = InfiniteFly.CreateToggle({
+        Name = "Bypass speed",
+        Function = function()
+            if InfiniteFlyBypass.Enabled then
+		
             end
         end,
         Default = false
@@ -3845,7 +3856,7 @@ runFunction(function()
 			if callback then
 				task.spawn(function()
 					repeat
-						task.wait(0.5)
+						task.wait(1)
 						bedwars.ClientHandler:Get("GroundHit"):SendToServer()
 					until (not NoFall.Enabled)
 				end)
@@ -4489,7 +4500,7 @@ runFunction(function()
 	TargetStrafeRange = TargetStrafe.CreateSlider({
 		Name = "Range",
 		Min = 0,
-		Max = 18,
+		Max = 20,
 		Function = function() end
 	})
 end)
@@ -5359,73 +5370,6 @@ runFunction(function()
 end)
 
 runFunction(function()
-	local KitESP = {Enabled = false}
-	local espobjs = {}
-	local espfold = Instance.new("Folder")
-	espfold.Parent = GuiLibrary.MainGui
-
-	local function espadd(v, icon)
-		local billboard = Instance.new("BillboardGui")
-		billboard.Parent = espfold
-		billboard.Name = "iron"
-		billboard.StudsOffsetWorldSpace = Vector3.new(0, 3, 1.5)
-		billboard.Size = UDim2.new(0, 32, 0, 32)
-		billboard.AlwaysOnTop = true
-		billboard.Adornee = v
-		local image = Instance.new("ImageLabel")
-		image.BackgroundTransparency = 0.5
-		image.BorderSizePixel = 0
-		image.Image = bedwars.getIcon({itemType = icon}, true)
-		image.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-		image.Size = UDim2.new(0, 32, 0, 32)
-		image.AnchorPoint = Vector2.new(0.5, 0.5)
-		image.Parent = billboard
-		local uicorner = Instance.new("UICorner")
-		uicorner.CornerRadius = UDim.new(0, 4)
-		uicorner.Parent = image
-		espobjs[v] = billboard
-	end
-
-	local function addKit(tag, icon)
-		table.insert(KitESP.Connections, collectionService:GetInstanceAddedSignal(tag):Connect(function(v)
-			espadd(v.PrimaryPart, icon)
-		end))
-		table.insert(KitESP.Connections, collectionService:GetInstanceRemovedSignal(tag):Connect(function(v)
-			if espobjs[v.PrimaryPart] then
-				espobjs[v.PrimaryPart]:Destroy()
-				espobjs[v.PrimaryPart] = nil
-			end
-		end))
-		for i,v in pairs(collectionService:GetTagged(tag)) do 
-			espadd(v.PrimaryPart, icon)
-		end
-	end
-
-	KitESP = GuiLibrary.ObjectsThatCanBeSaved.RenderWindow.Api.CreateOptionsButton({
-		Name = "KitESP",
-		Function = function(callback) 
-			if callback then
-				task.spawn(function()
-					repeat task.wait() until bedwarsStore.equippedKit ~= ""
-					if KitESP.Enabled then
-						if bedwarsStore.equippedKit == "metal_detector" then
-							addKit("hidden-metal", "iron")
-						elseif bedwarsStore.equippedKit == "beekeeper" then
-							addKit("bee", "bee")
-						elseif bedwarsStore.equippedKit == "bigman" then
-							addKit("treeOrb", "natures_essence_1")
-						end
-					end
-				end)
-			else
-				espfold:ClearAllChildren()
-				table.clear(espobjs)
-			end
-		end
-	})
-end)
-
-runFunction(function()
 	local function floorNameTagPosition(pos)
 		return Vector2.new(math.floor(pos.X), math.floor(pos.Y))
 	end
@@ -5887,7 +5831,7 @@ runFunction(function()
 	nobobdepth = nobob.CreateSlider({
 		Name = "Depth",
 		Min = 0,
-		Max = 24,
+		Max = 80,
 		Default = 8,
 		Function = function(val)
 			if nobob.Enabled then
@@ -5898,7 +5842,7 @@ runFunction(function()
 	nobobhorizontal = nobob.CreateSlider({
 		Name = "Horizontal",
 		Min = 0,
-		Max = 24,
+		Max = 80,
 		Default = 8,
 		Function = function(val)
 			if nobob.Enabled then
@@ -5909,7 +5853,7 @@ runFunction(function()
 	nobobvertical= nobob.CreateSlider({
 		Name = "Vertical",
 		Min = 0,
-		Max = 24,
+		Max = 80,
 		Default = -2,
 		Function = function(val)
 			if nobob.Enabled then
@@ -7427,7 +7371,7 @@ runFunction(function()
 						if v3:IsA("Accessory") and (cheststealerdelays[v3] == nil or cheststealerdelays[v3] < tick()) then
 							task.spawn(function()
 								pcall(function()
-									cheststealerdelays[v3] = tick() + 0.2
+									cheststealerdelays[v3] = tick() + 0.0002
 									bedwars.ClientHandler:GetNamespace("Inventory"):Get("ChestGetItem"):CallServer(chest.Value, v3)
 								end)
 							end)
@@ -7470,7 +7414,7 @@ runFunction(function()
 					repeat task.wait() until bedwarsStore.queueType ~= "bedwars_test"
 					if (not ChestStealerSkywars.Enabled) or bedwarsStore.queueType:find("skywars") then
 						repeat 
-							task.wait(0.1)
+							task.wait()
 							if entityLibrary.isAlive then
 								cheststealerfuncs[ChestStealerOpen.Enabled and "Open" or "Closed"]()
 							end
@@ -7490,10 +7434,10 @@ runFunction(function()
 	})
 	ChestStealerDelay = ChestStealer.CreateSlider({
 		Name = "Delay",
-		Min = 1,
+		Min = 0,
 		Max = 50,
 		Function = function() end,
-		Default = 1,
+		Default = 0,
 		Double = 100
 	})
 	ChestStealerOpen = ChestStealer.CreateToggle({
@@ -9074,7 +9018,7 @@ runFunction(function()
             SkytpDelay.Value = selectedValue
         end, 
         Min = 1,
-        Max = 3,
+        Max = 5,
         Default = 2
     })
     SkyTp.CreateSlider({
