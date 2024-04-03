@@ -131,7 +131,7 @@ do
 	end
 end
 
-local function runcode(func)
+local function runFunction(func)
 	func()
 end
 
@@ -199,7 +199,7 @@ local function createwarning(title, text, delay)
 	return (suc and res)
 end
 
-runcode(function()
+runFunction(function()
     local flaggedremotes = {"SelfReport"}
 
     getfunctions = function()
@@ -633,7 +633,7 @@ Disabler = GuiLibrary["ObjectsThatCanBeSaved"]["FunnisWindow"]["Api"].CreateOpti
 
 GuiLibrary["RemoveObject"]("FlyOptionsButton")
 local flymissile
-runcode(function()
+runFunction(function()
 	local OldNoFallFunction
 	local flyspeed = {["Value"] = 40}
 	local flyverticalspeed = {["Value"] = 40}
@@ -800,7 +800,7 @@ local Scaffold = {["Enabled"] = false}
 local longjump = {["Enabled"] = false}
 local flyvelo
 GuiLibrary["RemoveObject"]("SpeedOptionsButton")
-runcode(function()
+runFunction(function()
 	local speedmode = {["Value"] = "Normal"}
 	local speedval = {["Value"] = 1}
 	local speedjump = {["Enabled"] = false}
@@ -923,6 +923,11 @@ runcode(function()
 		end,
 		["Default"] = true
 	})
+	speedspeedup = speed.CreateToggle({
+		["Name"] = "Speedup",
+		["Function"] = function() end,
+		["HoverText"] = "Speeds up when using killaura."
+	})
 	speedjumpalways = speed.CreateToggle({
 		["Name"] = "Always Jump",
 		["Function"] = function() end
@@ -938,7 +943,7 @@ runcode(function()
 	speedjumpalways["Object"].Visible = speedjump["Enabled"]
 end)
 
-runcode(function()
+runFunction(function()
 	local tpstring = shared.vapeoverlay or nil
 	local origtpstring = tpstring
 	local Overlay = GuiLibrary.CreateCustomWindow({
