@@ -2906,6 +2906,33 @@ runFunction(function()
         end,
         Default = false
     })
+    local Workspace = game:GetService("Workspace")
+    local Players = game:GetService("Players")
+    local Plr = Players.LocalPlayer
+    
+    local function ToggleNoclip(enabled)
+        for _, b in ipairs(Workspace:GetChildren()) do
+            if b.Name == Plr.Name then
+                for _, v in ipairs(b:GetDescendants()) do
+                    if v:IsA("BasePart") then
+                        v.CanCollide = not enabled
+                    end
+                end
+            end
+        end
+    end
+    
+    InfiniteFlyPhase = InfiniteFly.CreateToggle({
+        Name = "Phase",
+        Function = function(Phase)
+            if Phase then
+                ToggleNoclip(true)
+            else
+                ToggleNoclip(false)
+            end
+        end,
+        Default = false
+    })
 end)
 
 local killauraNearPlayer
