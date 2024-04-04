@@ -1,1 +1,1 @@
-{Autoupdate{false}
+{Autoupdate{true}
