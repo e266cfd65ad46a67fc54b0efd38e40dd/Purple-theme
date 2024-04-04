@@ -9702,7 +9702,7 @@ local function isfile(file)
 end
 
 local v = "vape/PurpleVerison.txt"
-local x = "vape/config.lua"
+local x = "vape/Config.lua"
 
 if isfile(x) then
     local content = readfile(x)
