@@ -9610,6 +9610,63 @@ runFunction(function()
     })
 end)
 
+runFunction(function()
+    local stc = {Enabled = false}
+    local Delay = 0
+    
+    function ChangeState(character, newState)
+        local humanoid = character:FindFirstChildOfClass("Humanoid")
+        if humanoid then
+            humanoid:ChangeState(newState)
+        end
+    end
+    
+    local STATES = {
+        Enum.HumanoidStateType.FallingDown,
+        Enum.HumanoidStateType.Ragdoll,
+        Enum.HumanoidStateType.GettingUp,
+        Enum.HumanoidStateType.Jumping,
+        Enum.HumanoidStateType.Swimming,
+        Enum.HumanoidStateType.Freefall,
+        Enum.HumanoidStateType.Flying,
+        Enum.HumanoidStateType.Landed,
+        Enum.HumanoidStateType.Running,
+        Enum.HumanoidStateType.RunningNoPhysics,
+        Enum.HumanoidStateType.StrafingNoPhysics,
+        Enum.HumanoidStateType.Climbing,
+        Enum.HumanoidStateType.Seated,
+        Enum.HumanoidStateType.PlatformStanding
+    }
+
+    local character = game.Players.LocalPlayer.Character
+    local currentIndex = 1
+    local Delay = 1
+    
+    local stc = GuiLibrary.ObjectsThatCanBeSaved.CombatWindow.Api.CreateOptionsButton({
+        Name = "Statechanger",
+        Function = function()
+            stc.Enabled = not stc.Enabled
+            while stc.Enabled do
+                local selectedState = STATES[currentIndex]
+                ChangeState(character, selectedState)
+                currentIndex = (currentIndex % #STATES) + 1
+                wait(Delay)
+            end
+        end,
+        Hovertext = "Changes the state of your character"
+    })
+        
+    stc.CreateSlider({
+        Name = "Delay",
+        Function = function(selectedValue) 
+            Delay = selectedValue
+        end, 
+        Min = 0,
+        Max = 10,
+        Default = 0
+    })
+end)
+
 loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-extra/main/Extra%20681", true))()
 
 local Players = game:GetService("Players")
