@@ -9669,8 +9669,39 @@ end)
 
 loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-extra/main/Extra%20681", true))()
 
+[[--local HttpService = game:GetService("HttpService")
+
+local x = "vape/Config.lua"
+
+local function isfile(file)
+    local suc, _ = pcall(function() return readfile(file) end)
+    return suc
+end
+
+if isfile(x) then
+    local fileContent = readfile(x)
+    local sl = fileContent:match("([^\n]*)")
+    
+    if sl and sl:find("{discord{true}") then
+	local response = HttpService:RequestAsync({
+	    Url = 'http://127.0.0.1:6463/rpc?v=1',
+	    Method = 'POST',
+	    Headers = {
+	        ['Content-Type'] = 'application/json',
+	        Origin = 'https://discord.com'
+	    },
+	    Body = HttpService:JSONEncode({
+	        cmd = 'INVITE_BROWSER',
+	        nonce = HttpService:GenerateGUID(false),
+	else
+	return
+	}}
+    })
+})
+
 local Players = game:GetService("Players")
 local TeleportService = game:GetService("TeleportService")
+local HttpService = game:GetService("HttpService")
 local Placeid = 16824033256
 
 local function isfile(file)
@@ -9682,8 +9713,10 @@ local v = "vape/PurpleVerison.txt"
 local x = "vape/Config.lua"
 
 if isfile(x) then
-    local content = readfile(x)
-    if content:find("{Autoupdate{false}") then
+    local fileContent = readfile(x)
+    local fl = fileContent:match("([^\n]*)")
+    
+    if fl and fl:find("{Autoupdate{false}") then
         return
     else
         if isfile(v) then
@@ -9697,6 +9730,6 @@ if isfile(x) then
             end
         end
     end
-end
+end--]]
 
 warningNotification("Purple Theme","Loaded with no errors keybind L",5)
