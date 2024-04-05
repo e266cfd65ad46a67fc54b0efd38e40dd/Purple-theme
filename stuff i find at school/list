@@ -1670,4 +1670,90 @@ end)
 	end)
 
 
+runFunction(function()
+	local workspace = game:GetService("Workspace")
+	local inffly = {Enabled = false}
+	inffly = GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
+		Name = "SlowFlight",
+		Callback = function(callback)
+			if callback then
+				lplr.Character.Archivable = true
+				local clonethingy = lplr.Character:Clone()
+				clonethingy.Name = "clonethingy"
+				clonethingy:FindFirstChild("HumanoidRootPart").Transparency = 1
+				clonethingy.Parent = workspace
+				workspace.Camera.CameraSubject = clonethingy.Humanoid
+				partthingy = Instance.new("Part", workspace)
+				partthingy.Size = Vector3.new(2048, 1, 2048)
+				partthingy.CFrame = clonethingy.HumanoidRootPart.CFrame * CFrame.new(0, -4, 0)
+				partthingy.Anchored = true
+				partthingy.Transparency = 1
+				partthingy.Name = "partthingy"
+				RunLoops:BindToHeartbeat("BoostSilentFly", 1, function(delta)
+					clonethingy.HumanoidRootPart.CFrame = CFrame.new(entity.character.HumanoidRootPart.CFrame.X, clonethingy.HumanoidRootPart.CFrame.Y, entity.character.HumanoidRootPart.CFrame.Z)
+					clonethingy.HumanoidRootPart.Rotation = entity.character.HumanoidRootPart.Rotation
+				end)
+				task.spawn(function()
+					repeat
+						task.wait(0.1)
+						if inffly.Enabled == false then break end
+						entity.character.HumanoidRootPart.Velocity = entity.character.HumanoidRootPart.Velocity + Vector3.new(0, 35, 0)
+					until inffly.Enabled == false
+				end)
+				repeat
+					task.wait(0.001)
+					if inffly.Enabled == false then break end
+					clonethingy.HumanoidRootPart.CFrame = CFrame.new(entity.character.HumanoidRootPart.CFrame.X, clonethingy.HumanoidRootPart.CFrame.Y, entity.character.HumanoidRootPart.CFrame.Z)
+				until testing == true
+			else
+				if workspace:FindFirstChild("clonethingy") or workspace:FindFirstChild("partthingy") then
+					workspace:FindFirstChild("clonethingy"):Destroy()
+					workspace:FindFirstChild("partthingy"):Destroy()
+					RunLoops:UnbindFromHeartbeat("BoostSilentFly")
+					testing = true
+					workspace.Camera.CameraSubject = lplr.Character.Humanoid
+				end
+			end
+		end,
+		HoverText = "No Lagbacks, max 20 seconds"
+	})
+end)
+
+runFunction(function()
+	local bluthooth = {Enabled = false}
+bluthooth = GuiLibrary.ObjectsThatCanBeSaved.WorldWindow.Api.CreateOptionsButton({
+		Name = "Ze Bluthooth Device",
+		Function = function(callback)
+			if callback then
+				vapecapeconnection = lplr.CharacterAdded:Connect(function(char)
+					task.spawn(function()
+						pcall(function()
+							Cape(char, getcustomassetfunc("vape/assets/VapeCape.webm"))
+						end)
+					end)
+				end)
+				if lplr.Character then
+					task.spawn(function()
+						pcall(function()
+							Cape(lplr.Character, getcustomassetfunc("vape/assets/VapeCape.webm"))
+						end)
+					end)
+				end
+			else
+				if vapecapeconnection then
+					vapecapeconnection:Disconnect()
+				end
+				if lplr.Character then
+					for i, v in pairs(lplr.Character:GetDescendants()) do
+						if v.Name == "Cape" then
+							v:Remove()
+						end
+					end
+				end
+			end
+		end
+	})
+end)
+
+
 
