@@ -1,1 +1,2 @@
 {Autoupdate{true}
+{Discord{true}
