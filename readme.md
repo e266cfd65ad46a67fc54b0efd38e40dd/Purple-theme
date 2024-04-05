@@ -1,4 +1,4 @@
- # Combat
+nmm # Combat
 
  Killaura ~ custom animations, cleaned up stuff
 
@@ -13,6 +13,8 @@ Playertp ~ Tps to the closest player to your player
 infinitejump ~ You will have no delay between jumps
 
 Skytp ~ Kinda same thing as leap but a little differnt
+
+Statechanger ~ will change the state falldown ect
 
 Longjump ~ uses velcoity no longer cframe aka less flags
 
