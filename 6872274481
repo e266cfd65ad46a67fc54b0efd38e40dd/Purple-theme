@@ -4987,423 +4987,127 @@ run(function()
 end)
 
 run(function()
-	local function floorNameTagPosition(pos)
-		return Vector2.new(math.floor(pos.X), math.floor(pos.Y))
-	end
-
-	local function removeTags(str)
-        str = str:gsub("<br%s*/>", "\n")
-        return (str:gsub("<[^<>]->", ""))
-    end
-
-	local NameTagsFolder = Instance.new("Folder")
-	NameTagsFolder.Name = "NameTagsFolder"
-	NameTagsFolder.Parent = GuiLibrary.MainGui
-	local nametagsfolderdrawing = {}
-	local NameTagsColor = {Value = 0.44}
-	local NameTagsDisplayName = {Enabled = false}
-	local NameTagsHealth = {Enabled = false}
-	local NameTagsDistance = {Enabled = false}
-	local NameTagsBackground = {Enabled = true}
-	local NameTagsScale = {Value = 10}
-	local NameTagsFont = {Value = "SourceSans"}
-	local NameTagsTeammates = {Enabled = true}
-	local NameTagsShowInventory = {Enabled = false}
-	local NameTagsRangeLimit = {Value = 0}
-	local fontitems = {"SourceSans"}
-	local nametagstrs = {}
-	local nametagsizes = {}
-	local kititems = {
-		jade = "jade_hammer",
-		archer = "tactical_crossbow",
-		angel = "",
-		cowgirl = "lasso",
-		dasher = "wood_dao",
-		axolotl = "axolotl",
-		yeti = "snowball",
-		smoke = "smoke_block",
-		trapper = "snap_trap",
-		pyro = "flamethrower",
-		davey = "cannon",
-		regent = "void_axe",
-		baker = "apple",
-		builder = "builder_hammer",
-		farmer_cletus = "carrot_seeds",
-		melody = "guitar",
-		barbarian = "rageblade",
-		gingerbread_man = "gumdrop_bounce_pad",
-		spirit_catcher = "spirit",
-		fisherman = "fishing_rod",
-		oil_man = "oil_consumable",
-		santa = "tnt",
-		miner = "miner_pickaxe",
-		sheep_herder = "crook",
-		beast = "speed_potion",
-		metal_detector = "metal_detector",
-		cyber = "drone",
-		vesta = "damage_banner",
-		lumen = "light_sword",
-		ember = "infernal_saber",
-		queen_bee = "bee"
-	}
-
-	local nametagfuncs1 = {
-		Normal = function(plr)
-			if NameTagsTeammates.Enabled and (not plr.Targetable) and (not plr.Friend) then return end
-			local thing = Instance.new("TextLabel")
-			thing.BackgroundColor3 = Color3.new()
-			thing.BorderSizePixel = 0
-			thing.Visible = false
-			thing.RichText = true
-			thing.AnchorPoint = Vector2.new(0.5, 1)
-			thing.Name = plr.Player.Name
-			thing.Font = Enum.Font[NameTagsFont.Value]
-			thing.TextSize = 14 * (NameTagsScale.Value / 10)
-			thing.BackgroundTransparency = NameTagsBackground.Enabled and 0.5 or 1
-			nametagstrs[plr.Player] = whitelist:tag(plr.Player, true)..(NameTagsDisplayName.Enabled and plr.Player.DisplayName or plr.Player.Name)
-			if NameTagsHealth.Enabled then
-				local color = Color3.fromHSV(math.clamp(plr.Humanoid.Health / plr.Humanoid.MaxHealth, 0, 1) / 2.5, 0.89, 1)
-				nametagstrs[plr.Player] = nametagstrs[plr.Player]..' <font color="rgb('..tostring(math.floor(color.R * 255))..','..tostring(math.floor(color.G * 255))..','..tostring(math.floor(color.B * 255))..')">'..math.round(plr.Humanoid.Health).."</font>"
-			end
-			if NameTagsDistance.Enabled then
-				nametagstrs[plr.Player] = '<font color="rgb(85, 255, 85)">[</font><font color="rgb(255, 255, 255)">%s</font><font color="rgb(85, 255, 85)">]</font> '..nametagstrs[plr.Player]
-			end
-			local nametagSize = textService:GetTextSize(removeTags(nametagstrs[plr.Player]), thing.TextSize, thing.Font, Vector2.new(100000, 100000))
-			thing.Size = UDim2.new(0, nametagSize.X + 4, 0, nametagSize.Y)
-			thing.Text = nametagstrs[plr.Player]
-			thing.TextColor3 = getPlayerColor(plr.Player) or Color3.fromHSV(NameTagsColor.Hue, NameTagsColor.Sat, NameTagsColor.Value)
-			thing.Parent = NameTagsFolder
-			local hand = Instance.new("ImageLabel")
-			hand.Size = UDim2.new(0, 30, 0, 30)
-			hand.Name = "Hand"
-			hand.BackgroundTransparency = 1
-			hand.Position = UDim2.new(0, -30, 0, -30)
-			hand.Image = ""
-			hand.Parent = thing
-			local helmet = hand:Clone()
-			helmet.Name = "Helmet"
-			helmet.Position = UDim2.new(0, 5, 0, -30)
-			helmet.Parent = thing
-			local chest = hand:Clone()
-			chest.Name = "Chestplate"
-			chest.Position = UDim2.new(0, 35, 0, -30)
-			chest.Parent = thing
-			local boots = hand:Clone()
-			boots.Name = "Boots"
-			boots.Position = UDim2.new(0, 65, 0, -30)
-			boots.Parent = thing
-			local kit = hand:Clone()
-			kit.Name = "Kit"
-			task.spawn(function()
-				repeat task.wait() until plr.Player:GetAttribute("PlayingAsKit") ~= ""
-				if kit then
-					kit.Image = kititems[plr.Player:GetAttribute("PlayingAsKit")] and bedwars.getIcon({itemType = kititems[plr.Player:GetAttribute("PlayingAsKit")]}, NameTagsShowInventory.Enabled) or ""
-				end
-			end)
-			kit.Position = UDim2.new(0, -30, 0, -65)
-			kit.Parent = thing
-			nametagsfolderdrawing[plr.Player] = {entity = plr, Main = thing}
-		end,
-		Drawing = function(plr)
-			if NameTagsTeammates.Enabled and (not plr.Targetable) and (not plr.Friend) then return end
-			local thing = {Main = {}, entity = plr}
-			thing.Main.Text = Drawing.new("Text")
-			thing.Main.Text.Size = 17 * (NameTagsScale.Value / 10)
-			thing.Main.Text.Font = (math.clamp((table.find(fontitems, NameTagsFont.Value) or 1) - 1, 0, 3))
-			thing.Main.Text.ZIndex = 2
-			thing.Main.BG = Drawing.new("Square")
-			thing.Main.BG.Filled = true
-			thing.Main.BG.Transparency = 0.5
-			thing.Main.BG.Visible = NameTagsBackground.Enabled
-			thing.Main.BG.Color = Color3.new()
-			thing.Main.BG.ZIndex = 1
-			nametagstrs[plr.Player] = whitelist:tag(plr.Player, true)..(NameTagsDisplayName.Enabled and plr.Player.DisplayName or plr.Player.Name)
-			if NameTagsHealth.Enabled then
-				local color = Color3.fromHSV(math.clamp(plr.Humanoid.Health / plr.Humanoid.MaxHealth, 0, 1) / 2.5, 0.89, 1)
-				nametagstrs[plr.Player] = nametagstrs[plr.Player]..' '..math.round(plr.Humanoid.Health)
-			end
-			if NameTagsDistance.Enabled then
-				nametagstrs[plr.Player] = '[%s] '..nametagstrs[plr.Player]
-			end
-			thing.Main.Text.Text = nametagstrs[plr.Player]
-			thing.Main.BG.Size = Vector2.new(thing.Main.Text.TextBounds.X + 4, thing.Main.Text.TextBounds.Y)
-			thing.Main.Text.Color = getPlayerColor(plr.Player) or Color3.fromHSV(NameTagsColor.Hue, NameTagsColor.Sat, NameTagsColor.Value)
-			nametagsfolderdrawing[plr.Player] = thing
-		end
-	}
-
-	local nametagfuncs2 = {
-		Normal = function(ent)
-			local v = nametagsfolderdrawing[ent]
-			nametagsfolderdrawing[ent] = nil
-			if v then
-				v.Main:Destroy()
-			end
-		end,
-		Drawing = function(ent)
-			local v = nametagsfolderdrawing[ent]
-			nametagsfolderdrawing[ent] = nil
-			if v then
-				for i2,v2 in pairs(v.Main) do
-					pcall(function() v2.Visible = false v2:Remove() end)
-				end
-			end
-		end
-	}
-
-	local nametagupdatefuncs = {
-		Normal = function(ent)
-			local v = nametagsfolderdrawing[ent.Player]
-			if v then
-				nametagstrs[ent.Player] = whitelist:tag(ent.Player, true)..(NameTagsDisplayName.Enabled and ent.Player.DisplayName or ent.Player.Name)
-				if NameTagsHealth.Enabled then
-					local color = Color3.fromHSV(math.clamp(ent.Humanoid.Health / ent.Humanoid.MaxHealth, 0, 1) / 2.5, 0.89, 1)
-					nametagstrs[ent.Player] = nametagstrs[ent.Player]..' <font color="rgb('..tostring(math.floor(color.R * 255))..','..tostring(math.floor(color.G * 255))..','..tostring(math.floor(color.B * 255))..')">'..math.round(ent.Humanoid.Health).."</font>"
-				end
-				if NameTagsDistance.Enabled then
-					nametagstrs[ent.Player] = '<font color="rgb(85, 255, 85)">[</font><font color="rgb(255, 255, 255)">%s</font><font color="rgb(85, 255, 85)">]</font> '..nametagstrs[ent.Player]
-				end
-				if NameTagsShowInventory.Enabled then
-					local inventory = store.inventories[ent.Player] or {armor = {}}
-					if inventory.hand then
-						v.Main.Hand.Image = bedwars.getIcon(inventory.hand, NameTagsShowInventory.Enabled)
-						if v.Main.Hand.Image:find("rbxasset://") then
-							v.Main.Hand.ResampleMode = Enum.ResamplerMode.Pixelated
-						end
-					else
-						v.Main.Hand.Image = ""
-					end
-					if inventory.armor[4] then
-						v.Main.Helmet.Image = bedwars.getIcon(inventory.armor[4], NameTagsShowInventory.Enabled)
-						if v.Main.Helmet.Image:find("rbxasset://") then
-							v.Main.Helmet.ResampleMode = Enum.ResamplerMode.Pixelated
-						end
-					else
-						v.Main.Helmet.Image = ""
-					end
-					if inventory.armor[5] then
-						v.Main.Chestplate.Image = bedwars.getIcon(inventory.armor[5], NameTagsShowInventory.Enabled)
-						if v.Main.Chestplate.Image:find("rbxasset://") then
-							v.Main.Chestplate.ResampleMode = Enum.ResamplerMode.Pixelated
-						end
-					else
-						v.Main.Chestplate.Image = ""
-					end
-					if inventory.armor[6] then
-						v.Main.Boots.Image = bedwars.getIcon(inventory.armor[6], NameTagsShowInventory.Enabled)
-						if v.Main.Boots.Image:find("rbxasset://") then
-							v.Main.Boots.ResampleMode = Enum.ResamplerMode.Pixelated
-						end
-					else
-						v.Main.Boots.Image = ""
-					end
-				end
-				local nametagSize = textService:GetTextSize(removeTags(nametagstrs[ent.Player]), v.Main.TextSize, v.Main.Font, Vector2.new(100000, 100000))
-				v.Main.Size = UDim2.new(0, nametagSize.X + 4, 0, nametagSize.Y)
-				v.Main.Text = nametagstrs[ent.Player]
-			end
-		end,
-		Drawing = function(ent)
-			local v = nametagsfolderdrawing[ent.Player]
-			if v then
-				nametagstrs[ent.Player] = whitelist:tag(ent.Player, true)..(NameTagsDisplayName.Enabled and ent.Player.DisplayName or ent.Player.Name)
-				if NameTagsHealth.Enabled then
-					nametagstrs[ent.Player] = nametagstrs[ent.Player]..' '..math.round(ent.Humanoid.Health)
-				end
-				if NameTagsDistance.Enabled then
-					nametagstrs[ent.Player] = '[%s] '..nametagstrs[ent.Player]
-					v.Main.Text.Text = entityLibrary.isAlive and string.format(nametagstrs[ent.Player], math.floor((entityLibrary.character.HumanoidRootPart.Position - ent.RootPart.Position).Magnitude)) or nametagstrs[ent.Player]
-				else
-					v.Main.Text.Text = nametagstrs[ent.Player]
-				end
-				v.Main.BG.Size = Vector2.new(v.Main.Text.TextBounds.X + 4, v.Main.Text.TextBounds.Y)
-				v.Main.Text.Color = getPlayerColor(ent.Player) or Color3.fromHSV(NameTagsColor.Hue, NameTagsColor.Sat, NameTagsColor.Value)
-			end
-		end
-	}
-
-	local nametagcolorfuncs = {
-		Normal = function(hue, sat, value)
-			local color = Color3.fromHSV(hue, sat, value)
-			for i,v in pairs(nametagsfolderdrawing) do
-				v.Main.TextColor3 = getPlayerColor(v.entity.Player) or color
-			end
-		end,
-		Drawing = function(hue, sat, value)
-			local color = Color3.fromHSV(hue, sat, value)
-			for i,v in pairs(nametagsfolderdrawing) do
-				v.Main.Text.Color = getPlayerColor(v.entity.Player) or color
-			end
-		end
-	}
-
-	local nametagloop = {
-		Normal = function()
-			for i,v in pairs(nametagsfolderdrawing) do
-				local headPos, headVis = worldtoscreenpoint((v.entity.RootPart:GetRenderCFrame() * CFrame.new(0, v.entity.Head.Size.Y + v.entity.RootPart.Size.Y, 0)).Position)
-				if not headVis then
-					v.Main.Visible = false
-					continue
-				end
-				local mag = entityLibrary.isAlive and math.floor((entityLibrary.character.HumanoidRootPart.Position - v.entity.RootPart.Position).Magnitude) or 0
-				if NameTagsRangeLimit.Value ~= 0 and mag > NameTagsRangeLimit.Value then
-					v.Main.Visible = false
-					continue
-				end
-				if NameTagsDistance.Enabled then
-					local stringsize = tostring(mag):len()
-					if nametagsizes[v.entity.Player] ~= stringsize then
-						local nametagSize = textService:GetTextSize(removeTags(string.format(nametagstrs[v.entity.Player], mag)), v.Main.TextSize, v.Main.Font, Vector2.new(100000, 100000))
-						v.Main.Size = UDim2.new(0, nametagSize.X + 4, 0, nametagSize.Y)
-					end
-					nametagsizes[v.entity.Player] = stringsize
-					v.Main.Text = string.format(nametagstrs[v.entity.Player], mag)
-				end
-				v.Main.Position = UDim2.new(0, headPos.X, 0, headPos.Y)
-				v.Main.Visible = true
-			end
-		end,
-		Drawing = function()
-			for i,v in pairs(nametagsfolderdrawing) do
-				local headPos, headVis = worldtoscreenpoint((v.entity.RootPart:GetRenderCFrame() * CFrame.new(0, v.entity.Head.Size.Y + v.entity.RootPart.Size.Y, 0)).Position)
-				if not headVis then
-					v.Main.Text.Visible = false
-					v.Main.BG.Visible = false
-					continue
-				end
-				local mag = entityLibrary.isAlive and math.floor((entityLibrary.character.HumanoidRootPart.Position - v.entity.RootPart.Position).Magnitude) or 0
-				if NameTagsRangeLimit.Value ~= 0 and mag > NameTagsRangeLimit.Value then
-					v.Main.Text.Visible = false
-					v.Main.BG.Visible = false
-					continue
-				end
-				if NameTagsDistance.Enabled then
-					local stringsize = tostring(mag):len()
-					v.Main.Text.Text = string.format(nametagstrs[v.entity.Player], mag)
-					if nametagsizes[v.entity.Player] ~= stringsize then
-						v.Main.BG.Size = Vector2.new(v.Main.Text.TextBounds.X + 4, v.Main.Text.TextBounds.Y)
-					end
-					nametagsizes[v.entity.Player] = stringsize
-				end
-				v.Main.BG.Position = Vector2.new(headPos.X - (v.Main.BG.Size.X / 2), (headPos.Y + v.Main.BG.Size.Y))
-				v.Main.Text.Position = v.Main.BG.Position + Vector2.new(2, 0)
-				v.Main.Text.Visible = true
-				v.Main.BG.Visible = NameTagsBackground.Enabled
-			end
-		end
-	}
-
-	local methodused
-
-	local NameTags = {Enabled = false}
-	NameTags = GuiLibrary.ObjectsThatCanBeSaved.RenderWindow.Api.CreateOptionsButton({
-		Name = "NameTags",
-		Function = function(callback)
-			if callback then
-				methodused = NameTagsDrawing.Enabled and "Drawing" or "Normal"
-				if nametagfuncs2[methodused] then
-					table.insert(NameTags.Connections, entityLibrary.entityRemovedEvent:Connect(nametagfuncs2[methodused]))
-				end
-				if nametagfuncs1[methodused] then
-					local addfunc = nametagfuncs1[methodused]
-					for i,v in pairs(entityLibrary.entityList) do
-						if nametagsfolderdrawing[v.Player] then nametagfuncs2[methodused](v.Player) end
-						addfunc(v)
-					end
-					table.insert(NameTags.Connections, entityLibrary.entityAddedEvent:Connect(function(ent)
-						if nametagsfolderdrawing[ent.Player] then nametagfuncs2[methodused](ent.Player) end
-						addfunc(ent)
-					end))
-				end
-				if nametagupdatefuncs[methodused] then
-					table.insert(NameTags.Connections, entityLibrary.entityUpdatedEvent:Connect(nametagupdatefuncs[methodused]))
-					for i,v in pairs(entityLibrary.entityList) do
-						nametagupdatefuncs[methodused](v)
-					end
-				end
-				if nametagcolorfuncs[methodused] then
-					table.insert(NameTags.Connections, GuiLibrary.ObjectsThatCanBeSaved.FriendsListTextCircleList.Api.FriendColorRefresh.Event:Connect(function()
-						nametagcolorfuncs[methodused](NameTagsColor.Hue, NameTagsColor.Sat, NameTagsColor.Value)
-					end))
-				end
-				if nametagloop[methodused] then
-					RunLoops:BindToRenderStep("NameTags", nametagloop[methodused])
-				end
-			else
-				RunLoops:UnbindFromRenderStep("NameTags")
-				if nametagfuncs2[methodused] then
-					for i,v in pairs(nametagsfolderdrawing) do
-						nametagfuncs2[methodused](i)
-					end
-				end
-			end
-		end,
-		HoverText = "Renders nametags on entities through walls."
-	})
-	for i,v in pairs(Enum.Font:GetEnumItems()) do
-		if v.Name ~= "SourceSans" then
-			table.insert(fontitems, v.Name)
-		end
-	end
-	NameTagsFont = NameTags.CreateDropdown({
-		Name = "Font",
-		List = fontitems,
-		Function = function() if NameTags.Enabled then NameTags.ToggleButton(false) NameTags.ToggleButton(false) end end,
-	})
-	NameTagsColor = NameTags.CreateColorSlider({
-		Name = "Player Color",
-		Function = function(hue, sat, val)
-			if NameTags.Enabled and nametagcolorfuncs[methodused] then
-				nametagcolorfuncs[methodused](hue, sat, val)
-			end
-		end
-	})
-	NameTagsScale = NameTags.CreateSlider({
-		Name = "Scale",
-		Function = function() if NameTags.Enabled then NameTags.ToggleButton(false) NameTags.ToggleButton(false) end end,
-		Default = 10,
-		Min = 1,
-		Max = 50
-	})
-	NameTagsRangeLimit = NameTags.CreateSlider({
-		Name = "Range",
-		Function = function() end,
-		Min = 0,
-		Max = 1000,
-		Default = 0
-	})
-	NameTagsBackground = NameTags.CreateToggle({
-		Name = "Background",
-		Function = function() if NameTags.Enabled then NameTags.ToggleButton(false) NameTags.ToggleButton(false) end end,
-		Default = true
-	})
-	NameTagsDisplayName = NameTags.CreateToggle({
-		Name = "Use Display Name",
-		Function = function() if NameTags.Enabled then NameTags.ToggleButton(false) NameTags.ToggleButton(false) end end,
-		Default = true
-	})
-	NameTagsHealth = NameTags.CreateToggle({
-		Name = "Health",
-		Function = function() if NameTags.Enabled then NameTags.ToggleButton(false) NameTags.ToggleButton(false) end end
-	})
-	NameTagsDistance = NameTags.CreateToggle({
-		Name = "Distance",
-		Function = function() if NameTags.Enabled then NameTags.ToggleButton(false) NameTags.ToggleButton(false) end end
-	})
-	NameTagsShowInventory = NameTags.CreateToggle({
-		Name = "Equipment",
-		Function = function() if NameTags.Enabled then NameTags.ToggleButton(false) NameTags.ToggleButton(false) end end,
-		Default = true
-	})
-	NameTagsTeammates = NameTags.CreateToggle({
-		Name = "Teammates",
-		Function = function() if NameTags.Enabled then NameTags.ToggleButton(false) NameTags.ToggleButton(false) end end,
-		Default = true
-	})
-	NameTagsDrawing = NameTags.CreateToggle({
-		Name = "Drawing",
-		Function = function() if NameTags.Enabled then NameTags.ToggleButton(false) NameTags.ToggleButton(false) end end,
-	})
+    local Size = 16
+    local Nametagsrw = {Enabled = false}
+    Nametagsrw = GuiLibrary.ObjectsThatCanBeSaved.RenderWindow.Api.CreateOptionsButton({
+        Name = "Nametags",
+        Function = function(callback)
+            if callback then
+                local Holder = Instance.new("Folder", game.CoreGui)
+                Holder.Name = "ESP"
+                
+                local NameTag = Instance.new("BillboardGui")
+                NameTag.Name = "nilNameTag"
+                NameTag.Enabled = false
+                NameTag.Size = UDim2.new(0, 300, 0, 75)
+                NameTag.AlwaysOnTop = true
+                NameTag.StudsOffset = Vector3.new(0, 1.8, 0)
+                local Tag = Instance.new("TextLabel", NameTag)
+                Tag.Name = "Tag"
+                Tag.BackgroundTransparency = 1
+                Tag.Position = UDim2.new(0, -75, 0, 0)
+                Tag.Size = UDim2.new(0, 450, 0, 30) 
+                Tag.TextSize = Size -- Set the initial text size to the default size
+                Tag.TextColor3 = Color3.new(100 / 255, 100 / 255, 100 / 255)
+                Tag.TextStrokeColor3 = Color3.new(0 / 255, 0 / 255, 0 / 255)
+                Tag.TextStrokeTransparency = 0.4
+                Tag.Text = "nil"
+                Tag.Font = Enum.Font.SourceSansBold
+                Tag.TextScaled = false
+                
+                local LoadCharacter = function(v)
+                    repeat wait() until v.Character ~= nil
+                    v.Character:WaitForChild("Humanoid")
+                    local vHolder = Holder:FindFirstChild(v.Name)
+                    vHolder:ClearAllChildren()
+                    local t = NameTag:Clone()
+                    t.Name = v.Name .. "NameTag"
+                    t.Enabled = true
+                    t.Parent = vHolder
+                    t.Adornee = v.Character:WaitForChild("Head", 5)
+                    if not t.Adornee then
+                        return UnloadCharacter(v)
+                    end
+                    t.Tag.Text = v.Name
+                    if v.Team then
+                        t.Tag.TextColor3 = v.Team.TeamColor.Color
+                    end
+                    t.Tag.TextSize = Size
+                end
+                
+                local UnloadCharacter = function(v)
+                    local vHolder = Holder:FindFirstChild(v.Name)
+                    if vHolder and (vHolder:FindFirstChild(v.Name .. "Box") ~= nil or vHolder:FindFirstChild(v.Name .. "NameTag") ~= nil) then
+                        vHolder:ClearAllChildren()
+                    end
+                end
+                
+                local LoadPlayer = function(v)
+                    local vHolder = Instance.new("Folder", Holder)
+                    vHolder.Name = v.Name
+                    v.CharacterAdded:Connect(function()
+                        pcall(LoadCharacter, v)
+                    end)
+                    v.CharacterRemoving:Connect(function()
+                        pcall(UnloadCharacter, v)
+                    end)
+                    v.Changed:Connect(function(prop)
+                        if prop == "TeamColor" then
+                            UnloadCharacter(v)
+                            wait()
+                            LoadCharacter(v)
+                        end
+                    end)
+                    LoadCharacter(v)
+                end
+                
+                local UnloadPlayer = function(v)
+                    UnloadCharacter(v)
+                    local vHolder = Holder:FindFirstChild(v.Name)
+                    if vHolder then
+                        vHolder:Destroy()
+                    end
+                end
+                
+                for i,v in pairs(game:GetService("Players"):GetPlayers()) do
+                    spawn(function() pcall(LoadPlayer, v) end)
+                end
+                
+                game:GetService("Players").PlayerAdded:Connect(function(v)
+                    pcall(LoadPlayer, v)
+                end)
+                
+                game:GetService("Players").PlayerRemoving:Connect(function(v)
+                    pcall(UnloadPlayer, v)
+                end)
+                
+                game:GetService("Players").LocalPlayer.NameDisplayDistance = 0
+            end 
+        end,
+        Hovertext = "Displays a name tag above other players"
+    })
+    
+    Nametagsrw.CreateSlider({
+        Name = "Size",
+        Function = function(selectedValue) 
+            Size = selectedValue
+            for _, player in ipairs(game:GetService("Players"):GetPlayers()) do
+                local holder = game.CoreGui.ESP:FindFirstChild(player.Name)
+                if holder then
+                    local nameTag = holder:FindFirstChild(player.Name .. "NameTag")
+                    if nameTag then
+                        local tag = nameTag:FindFirstChild("Tag")
+                        if tag then
+                            tag.TextSize = Size
+                        end
+                    end
+                end
+            end
+        end, 
+        Min = 1,
+        Max = 50,
+        Default = 16
+    })
 end)
 
 run(function()
