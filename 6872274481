@@ -369,13 +369,10 @@ local function getSpeed()
 	if lplr.Character then
 		local SpeedDamageBoost = lplr.Character:GetAttribute("SpeedBoost")
 		if SpeedDamageBoost and SpeedDamageBoost > 1 then
-			speed = speed + (8 * (SpeedDamageBoost - 1))
+			speed = speed + (10 * (SpeedDamageBoost - 1))
 		end
 		if store.grapple > tick() then
 			speed = speed + 90
-		end
-		if store.scythe > tick() then
-			speed = speed + 5
 		end
 		if lplr.Character:GetAttribute("GrimReaperChannel") then
 			speed = speed + 20
@@ -386,7 +383,7 @@ local function getSpeed()
 			speed = speed + 12
 		end
 		if store.zephyrOrb ~= 0 then
-			speed = speed + 12
+			speed = speed + 16
 		end
 	end
 	return speed
@@ -1295,9 +1292,6 @@ run(function()
 
 	local failedBreak = 0
 	bedwars.breakBlock = function(pos, effects, normal, bypass, anim)
-		if GuiLibrary.ObjectsThatCanBeSaved.InfiniteFlyOptionsButton.Api.Enabled then
-			return
-		end
 		if lplr:GetAttribute("DenyBlockBreak") then
 			return
 		end
@@ -2357,10 +2351,10 @@ run(function()
 					end)
 				end
 				table.insert(Fly.Connections, vapeEvents.BalloonPopped.Event:Connect(function(poppedTable)
-					if poppedTable.inflatedBalloon and poppedTable.inflatedBalloon:GetAttribute("BalloonOwner") == lplr.UserId then 
+					if poppedTable.inflatedBalloon and poppedTable.inflatedBalloon:GetAttribute("BalloonOwner") == lplr.UserId then
 						lastonground = not onground
 						repeat task.wait() until (lplr.Character:GetAttribute("InflatedBalloons") or 0) <= 0 or not Fly.Enabled
-						inflateBalloon() 
+						inflateBalloon()
 					end
 				end))
 				table.insert(Fly.Connections, vapeEvents.AutoBankBalloon.Event:Connect(function()
@@ -2369,24 +2363,24 @@ run(function()
 				end))
 
 				local balloons
-				if entityLibrary.isAlive and (not bedwarsStore.queueType:find("mega")) then
+				if entityLibrary.isAlive and (not store.queueType:find("mega")) then
 					balloons = inflateBalloon()
 				end
-				local megacheck = bedwarsStore.queueType:find("mega") or bedwarsStore.queueType == "winter_event"
+				local megacheck = store.queueType:find("mega") or store.queueType == "winter_event"
 
 				task.spawn(function()
-					repeat task.wait() until bedwarsStore.queueType ~= "bedwars_test" or (not Fly.Enabled)
+					repeat task.wait() until store.queueType ~= "bedwars_test" or (not Fly.Enabled)
 					if not Fly.Enabled then return end
-					megacheck = bedwarsStore.queueType:find("mega") or bedwarsStore.queueType == "winter_event"
+					megacheck = store.queueType:find("mega") or store.queueType == "winter_event"
 				end)
 
-				local flyAllowed = entityLibrary.isAlive and ((lplr.Character:GetAttribute("InflatedBalloons") and lplr.Character:GetAttribute("InflatedBalloons") > 0) or bedwarsStore.matchState == 2 or megacheck) and 1 or 0
-				if flyAllowed <= 0 and shared.damageanim and (not balloons) then 
+				local flyAllowed = entityLibrary.isAlive and ((lplr.Character:GetAttribute("InflatedBalloons") and lplr.Character:GetAttribute("InflatedBalloons") > 0) or store.matchState == 2 or megacheck) and 1 or 0
+				if flyAllowed <= 0 and shared.damageanim and (not balloons) then
 					shared.damageanim()
 					bedwars.SoundManager:playSound(bedwars.SoundList["DAMAGE_"..math.random(1, 3)])
 				end
 
-				if FlyAnywayProgressBarFrame and flyAllowed <= 0 and (not balloons) then 
+				if FlyAnywayProgressBarFrame and flyAllowed <= 0 and (not balloons) then
 					FlyAnywayProgressBarFrame.Visible = true
 					FlyAnywayProgressBarFrame.Frame:TweenSize(UDim2.new(1, 0, 0, 20), Enum.EasingDirection.InOut, Enum.EasingStyle.Linear, 0, true)
 				end
@@ -2395,20 +2389,20 @@ run(function()
 				FlyCoroutine = coroutine.create(function()
 					repeat
 						repeat task.wait() until (groundtime - tick()) < 0.6 and not onground
-						flyAllowed = ((lplr.Character and lplr.Character:GetAttribute("InflatedBalloons") and lplr.Character:GetAttribute("InflatedBalloons") > 0) or bedwarsStore.matchState == 2 or megacheck) and 1 or 0
+						flyAllowed = ((lplr.Character and lplr.Character:GetAttribute("InflatedBalloons") and lplr.Character:GetAttribute("InflatedBalloons") > 0) or store.matchState == 2 or megacheck) and 1 or 0
 						if (not Fly.Enabled) then break end
 						local Flytppos = -99999
-						if flyAllowed <= 0 and FlyTP.Enabled and entityLibrary.isAlive then 
-							local ray = workspace:Raycast(entityLibrary.character.HumanoidRootPart.Position, Vector3.new(0, -1000, 0), bedwarsStore.blockRaycast)
-							if ray then 
+						if flyAllowed <= 0 and FlyTP.Enabled and entityLibrary.isAlive then
+							local ray = workspace:Raycast(entityLibrary.character.HumanoidRootPart.Position, Vector3.new(0, -1000, 0), store.blockRaycast)
+							if ray then
 								Flytppos = entityLibrary.character.HumanoidRootPart.Position.Y
 								local args = {entityLibrary.character.HumanoidRootPart.CFrame:GetComponents()}
 								args[2] = ray.Position.Y + (entityLibrary.character.HumanoidRootPart.Size.Y / 2) + entityLibrary.character.Humanoid.HipHeight
 								entityLibrary.character.HumanoidRootPart.CFrame = CFrame.new(unpack(args))
 								task.wait(0.12)
 								if (not Fly.Enabled) then break end
-								flyAllowed = ((lplr.Character and lplr.Character:GetAttribute("InflatedBalloons") and lplr.Character:GetAttribute("InflatedBalloons") > 0) or bedwarsStore.matchState == 2 or megacheck) and 1 or 0
-								if flyAllowed <= 0 and Flytppos ~= -99999 and entityLibrary.isAlive then 
+								flyAllowed = ((lplr.Character and lplr.Character:GetAttribute("InflatedBalloons") and lplr.Character:GetAttribute("InflatedBalloons") > 0) or store.matchState == 2 or megacheck) and 1 or 0
+								if flyAllowed <= 0 and Flytppos ~= -99999 and entityLibrary.isAlive then
 									local args = {entityLibrary.character.HumanoidRootPart.CFrame:GetComponents()}
 									args[2] = Flytppos
 									entityLibrary.character.HumanoidRootPart.CFrame = CFrame.new(unpack(args))
@@ -2419,13 +2413,13 @@ run(function()
 				end)
 				coroutine.resume(FlyCoroutine)
 
-				RunLoops:BindToHeartbeat("Fly", function(delta) 
-					if GuiLibrary.ObjectsThatCanBeSaved["Lobby CheckToggle"].Api.Enabled then 
+				RunLoops:BindToHeartbeat("Fly", function(delta)
+					if GuiLibrary.ObjectsThatCanBeSaved["Lobby CheckToggle"].Api.Enabled then
 						if bedwars.matchState == 0 then return end
 					end
 					if entityLibrary.isAlive then
 						local playerMass = (entityLibrary.character.HumanoidRootPart:GetMass() - 1.4) * (delta * 100)
-						flyAllowed = ((lplr.Character:GetAttribute("InflatedBalloons") and lplr.Character:GetAttribute("InflatedBalloons") > 0) or bedwarsStore.matchState == 2 or megacheck) and 1 or 0
+						flyAllowed = ((lplr.Character:GetAttribute("InflatedBalloons") and lplr.Character:GetAttribute("InflatedBalloons") > 0) or store.matchState == 2 or megacheck) and 1 or 0
 						playerMass = playerMass + (flyAllowed > 0 and 4 or 0) * (tick() % 0.4 < 0.2 and -1 or 1)
 
 						if FlyAnywayProgressBarFrame then
@@ -2434,22 +2428,22 @@ run(function()
 							FlyAnywayProgressBarFrame.Frame.BackgroundColor3 = Color3.fromHSV(GuiLibrary.ObjectsThatCanBeSaved["Gui ColorSliderColor"].Api.Hue, GuiLibrary.ObjectsThatCanBeSaved["Gui ColorSliderColor"].Api.Sat, GuiLibrary.ObjectsThatCanBeSaved["Gui ColorSliderColor"].Api.Value)
 						end
 
-						if flyAllowed <= 0 then 
+						if flyAllowed <= 0 then
 							local newray = getPlacedBlock(entityLibrary.character.HumanoidRootPart.Position + Vector3.new(0, (entityLibrary.character.Humanoid.HipHeight * -2) - 1, 0))
 							onground = newray and true or false
-							if lastonground ~= onground then 
-								if (not onground) then 
+							if lastonground ~= onground then
+								if (not onground) then
 									groundtime = tick() + (2.6 + (entityLibrary.groundTick - tick()))
-									if FlyAnywayProgressBarFrame then 
+									if FlyAnywayProgressBarFrame then
 										FlyAnywayProgressBarFrame.Frame:TweenSize(UDim2.new(0, 0, 0, 20), Enum.EasingDirection.InOut, Enum.EasingStyle.Linear, groundtime - tick(), true)
 									end
 								else
-									if FlyAnywayProgressBarFrame then 
+									if FlyAnywayProgressBarFrame then
 										FlyAnywayProgressBarFrame.Frame:TweenSize(UDim2.new(1, 0, 0, 20), Enum.EasingDirection.InOut, Enum.EasingStyle.Linear, 0, true)
 									end
 								end
 							end
-							if FlyAnywayProgressBarFrame then 
+							if FlyAnywayProgressBarFrame then
 								FlyAnywayProgressBarFrame.TextLabel.Text = math.max(onground and 2.5 or math.floor((groundtime - tick()) * 10) / 10, 0).."s"
 							end
 							lastonground = onground
@@ -2473,7 +2467,7 @@ run(function()
 				FlyUp = false
 				FlyDown = false
 				RunLoops:UnbindFromHeartbeat("Fly")
-				if FlyAnywayProgressBarFrame then 
+				if FlyAnywayProgressBarFrame then
 					FlyAnywayProgressBarFrame.Visible = false
 				end
 				if FlyAutoPop.Enabled then
@@ -2488,7 +2482,7 @@ run(function()
 			end
 		end,
 		HoverText = "Makes you go zoom (longer Fly discovered by exelys and Cqded)",
-		ExtraText = function() 
+		ExtraText = function()
 			return "Heatseeker"
 		end
 	})
@@ -2496,24 +2490,24 @@ run(function()
 		Name = "Speed",
 		Min = 1,
 		Max = 23,
-		Function = function(val) end, 
+		Function = function(val) end,
 		Default = 23
 	})
 	FlyVerticalSpeed = Fly.CreateSlider({
 		Name = "Vertical Speed",
 		Min = 1,
 		Max = 100,
-		Function = function(val) end, 
+		Function = function(val) end,
 		Default = 44
 	})
 	FlyVertical = Fly.CreateToggle({
 		Name = "Y Level",
-		Function = function() end, 
+		Function = function() end,
 		Default = true
 	})
 	FlyAutoPop = Fly.CreateToggle({
 		Name = "Pop Balloon",
-		Function = function() end, 
+		Function = function() end,
 		HoverText = "Pops balloons when Fly is disabled."
 	})
 	local oldcamupdate
@@ -2521,15 +2515,15 @@ run(function()
 	local Flydamagecamera = {Enabled = false}
 	FlyDamageAnimation = Fly.CreateToggle({
 		Name = "Damage Animation",
-		Function = function(callback) 
-			if Flydamagecamera.Object then 
+		Function = function(callback)
+			if Flydamagecamera.Object then
 				Flydamagecamera.Object.Visible = callback
 			end
-			if callback then 
+			if callback then
 				task.spawn(function()
 					repeat
 						task.wait(0.1)
-						for i,v in pairs(getconnections(gameCamera:GetPropertyChangedSignal("CameraType"))) do 
+						for i,v in pairs(getconnections(gameCamera:GetPropertyChangedSignal("CameraType"))) do
 							if v.Function then
 								camcontrol = debug.getupvalue(v.Function, 1)
 							end
@@ -2547,7 +2541,7 @@ run(function()
 						end
 					end
 					oldcamupdate = camcontrol.Update
-					camcontrol.Update = function(self, dt) 
+					camcontrol.Update = function(self, dt)
 						if camcontrol.activeCameraController then
 							camcontrol.activeCameraController:UpdateMouseBehavior()
 							local newCameraCFrame, newCameraFocus = camcontrol.activeCameraController:Update(dt)
@@ -2564,7 +2558,7 @@ run(function()
 				end)
 			else
 				shared.damageanim = nil
-				if camcontrol then 
+				if camcontrol then
 					camcontrol.Update = oldcamupdate
 				end
 			end
@@ -2581,8 +2575,8 @@ run(function()
 	Flydamagecamera.Object.Visible = false
 	FlyAnywayProgressBar = Fly.CreateToggle({
 		Name = "Progress Bar",
-		Function = function(callback) 
-			if callback then 
+		Function = function(callback)
+			if callback then
 				FlyAnywayProgressBarFrame = Instance.new("Frame")
 				FlyAnywayProgressBarFrame.AnchorPoint = Vector2.new(0.5, 0)
 				FlyAnywayProgressBarFrame.Position = UDim2.new(0.5, 0, 1, -200)
@@ -2622,6 +2616,79 @@ run(function()
 		Default = true
 	})
 end)
+
+run(function()
+	local GrappleExploit = {Enabled = false}
+	local GrappleExploitMode = {Value = "Normal"}
+	local GrappleExploitVerticalSpeed = {Value = 40}
+	local GrappleExploitVertical = {Enabled = true}
+	local GrappleExploitUp = false
+	local GrappleExploitDown = false
+	local alternatelist = {"Normal", "AntiCheat A", "AntiCheat B"}
+	local projectileRemote = bedwars.Client:Get(bedwars.ProjectileRemote)
+
+	--me when I have to fix bw code omegalol
+	bedwars.Client:Get("GrapplingHookFunctions"):Connect(function(p4)
+		if p4.hookFunction == "PLAYER_IN_TRANSIT" then
+			bedwars.CooldownController:setOnCooldown("grappling_hook", 3.5)
+		end
+	end)
+
+	GrappleExploit = GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
+		Name = "GrappleExploit",
+		Function = function(callback)
+			if callback then
+				local grappleHooked = false
+				table.insert(GrappleExploit.Connections, bedwars.Client:Get("GrapplingHookFunctions"):Connect(function(p4)
+					if p4.hookFunction == "PLAYER_IN_TRANSIT" then
+						store.grapple = tick() + 1.8
+						grappleHooked = true
+						GrappleExploit.ToggleButton(false)
+					end
+				end))
+
+				local fireball = getItem("grappling_hook")
+				if fireball then
+					task.spawn(function()
+						repeat task.wait() until bedwars.CooldownController:getRemainingCooldown("grappling_hook") == 0 or (not GrappleExploit.Enabled)
+						if (not GrappleExploit.Enabled) then return end
+						switchItem(fireball.tool)
+						local pos = entityLibrary.character.HumanoidRootPart.CFrame.p
+						local offsetshootpos = (CFrame.new(pos, pos + Vector3.new(0, -60, 0)) * CFrame.new(Vector3.new(-bedwars.BowConstantsTable.RelX, -bedwars.BowConstantsTable.RelY, -bedwars.BowConstantsTable.RelZ))).p
+						projectileRemote:CallServerAsync(fireball["tool"], nil, "grappling_hook_projectile", offsetshootpos, pos, Vector3.new(0, -60, 0), game:GetService("HttpService"):GenerateGUID(true), {drawDurationSeconds = 1}, workspace:GetServerTimeNow() - 0.045)
+					end)
+				else
+					warningNotification("GrappleExploit", "missing grapple hook", 3)
+					GrappleExploit.ToggleButton(false)
+					return
+				end
+
+				local startCFrame = entityLibrary.isAlive and entityLibrary.character.HumanoidRootPart.CFrame
+				RunLoops:BindToHeartbeat("GrappleExploit", function(delta)
+					if GuiLibrary.ObjectsThatCanBeSaved["Lobby CheckToggle"].Api.Enabled then
+						if bedwars.matchState == 0 then return end
+					end
+					if entityLibrary.isAlive then
+						entityLibrary.character.HumanoidRootPart.Velocity = Vector3.zero
+						entityLibrary.character.HumanoidRootPart.CFrame = startCFrame
+					end
+				end)
+			else
+				GrappleExploitUp = false
+				GrappleExploitDown = false
+				RunLoops:UnbindFromHeartbeat("GrappleExploit")
+			end
+		end,
+		HoverText = "Makes you go zoom (longer GrappleExploit discovered by exelys and Cqded)",
+		ExtraText = function()
+			if GuiLibrary.ObjectsThatCanBeSaved["Text GUIAlternate TextToggle"]["Api"].Enabled then
+				return alternatelist[table.find(GrappleExploitMode["List"], GrappleExploitMode.Value)]
+			end
+			return GrappleExploitMode.Value
+		end
+	})
+end)
+
 
 local killauraNearPlayer
 run(function()
@@ -3967,8 +4034,6 @@ run(function()
 						if bedwarsStore.matchState == 0 then return end
 					end
 					if entityLibrary.isAlive then
-						if not (isnetworkowner(entityLibrary.character.HumanoidRootPart) and entityLibrary.character.Humanoid:GetState() ~= Enum.HumanoidStateType.Climbing and (not spiderActive) and (not GuiLibrary.ObjectsThatCanBeSaved.InfiniteFlyOptionsButton.Api.Enabled) and (not GuiLibrary.ObjectsThatCanBeSaved.FlyOptionsButton.Api.Enabled)) then return end
-						if GuiLibrary.ObjectsThatCanBeSaved.GrappleExploitOptionsButton and GuiLibrary.ObjectsThatCanBeSaved.GrappleExploitOptionsButton.Api.Enabled then return end
 						if LongJump.Enabled then return end
 						if SpeedAnimation.Enabled then
 							for i, v in pairs(entityLibrary.character.Humanoid:GetPlayingAnimationTracks()) do
@@ -6387,273 +6452,6 @@ run(function()
 end)
 
 run(function()
-	local justsaid = ""
-	local leavesaid = false
-	local alreadyreported = {}
-
-	local function removerepeat(str)
-		local newstr = ""
-		local lastlet = ""
-		for i,v in pairs(str:split("")) do
-			if v ~= lastlet then
-				newstr = newstr..v
-				lastlet = v
-			end
-		end
-		return newstr
-	end
-
-	local reporttable = {
-		gay = "Bullying",
-		gae = "Bullying",
-		gey = "Bullying",
-		hack = "Scamming",
-		exploit = "Scamming",
-		cheat = "Scamming",
-		hecker = "Scamming",
-		haxker = "Scamming",
-		hacer = "Scamming",
-		report = "Bullying",
-		fat = "Bullying",
-		black = "Bullying",
-		getalife = "Bullying",
-		fatherless = "Bullying",
-		report = "Bullying",
-		fatherless = "Bullying",
-		disco = "Offsite Links",
-		yt = "Offsite Links",
-		dizcourde = "Offsite Links",
-		retard = "Swearing",
-		bad = "Bullying",
-		trash = "Bullying",
-		nolife = "Bullying",
-		nolife = "Bullying",
-		loser = "Bullying",
-		killyour = "Bullying",
-		kys = "Bullying",
-		hacktowin = "Bullying",
-		bozo = "Bullying",
-		kid = "Bullying",
-		adopted = "Bullying",
-		linlife = "Bullying",
-		commitnotalive = "Bullying",
-		vape = "Offsite Links",
-		futureclient = "Offsite Links",
-		download = "Offsite Links",
-		youtube = "Offsite Links",
-		die = "Bullying",
-		lobby = "Bullying",
-		ban = "Bullying",
-		wizard = "Bullying",
-		wisard = "Bullying",
-		witch = "Bullying",
-		magic = "Bullying",
-	}
-	local reporttableexact = {
-		L = "Bullying",
-	}
-
-
-	local function findreport(msg)
-		local checkstr = removerepeat(msg:gsub("%W+", ""):lower())
-		for i,v in pairs(reporttable) do
-			if checkstr:find(i) then
-				return v, i
-			end
-		end
-		for i,v in pairs(reporttableexact) do
-			if checkstr == i then
-				return v, i
-			end
-		end
-		for i,v in pairs(AutoToxicPhrases5.ObjectList) do
-			if checkstr:find(v) then
-				return "Bullying", v
-			end
-		end
-		return nil
-	end
-
-	AutoToxic = GuiLibrary.ObjectsThatCanBeSaved.UtilityWindow.Api.CreateOptionsButton({
-		Name = "AutoToxic",
-		Function = function(callback)
-			if callback then
-				table.insert(AutoToxic.Connections, vapeEvents.BedwarsBedBreak.Event:Connect(function(bedTable)
-					if AutoToxicBedDestroyed.Enabled and bedTable.brokenBedTeam.id == lplr:GetAttribute("Team") then
-						local custommsg = #AutoToxicPhrases6.ObjectList > 0 and AutoToxicPhrases6.ObjectList[math.random(1, #AutoToxicPhrases6.ObjectList)] or "How dare you break my bed >:( <name> | vxpe on top"
-						if custommsg then
-							custommsg = custommsg:gsub("<name>", (bedTable.player.DisplayName or bedTable.player.Name))
-						end
-						textChatService.ChatInputBarConfiguration.TargetTextChannel:SendAsync(custommsg)
-					elseif AutoToxicBedBreak.Enabled and bedTable.player.UserId == lplr.UserId then
-						local custommsg = #AutoToxicPhrases7.ObjectList > 0 and AutoToxicPhrases7.ObjectList[math.random(1, #AutoToxicPhrases7.ObjectList)] or "nice bed <teamname> | vxpe on top"
-						if custommsg then
-							local team = bedwars.QueueMeta[store.queueType].teams[tonumber(bedTable.brokenBedTeam.id)]
-							local teamname = team and team.displayName:lower() or "white"
-							custommsg = custommsg:gsub("<teamname>", teamname)
-						end
-						textChatService.ChatInputBarConfiguration.TargetTextChannel:SendAsync(custommsg)
-					end
-				end))
-				table.insert(AutoToxic.Connections, vapeEvents.EntityDeathEvent.Event:Connect(function(deathTable)
-					if deathTable.finalKill then
-						local killer = playersService:GetPlayerFromCharacter(deathTable.fromEntity)
-						local killed = playersService:GetPlayerFromCharacter(deathTable.entityInstance)
-						if not killed or not killer then return end
-						if killed == lplr then
-							if (not leavesaid) and killer ~= lplr and AutoToxicDeath.Enabled then
-								leavesaid = true
-								local custommsg = #AutoToxicPhrases3.ObjectList > 0 and AutoToxicPhrases3.ObjectList[math.random(1, #AutoToxicPhrases3.ObjectList)] or "My gaming chair expired midfight, thats why you won <name> | vxpe on top"
-								if custommsg then
-									custommsg = custommsg:gsub("<name>", (killer.DisplayName or killer.Name))
-								end
-								textChatService.ChatInputBarConfiguration.TargetTextChannel:SendAsync(custommsg)
-							end
-						else
-							if killer == lplr and AutoToxicFinalKill.Enabled then
-								local custommsg = #AutoToxicPhrases2.ObjectList > 0 and AutoToxicPhrases2.ObjectList[math.random(1, #AutoToxicPhrases2.ObjectList)] or "L <name> | vxpe on top"
-								if custommsg == lastsaid then
-									custommsg = #AutoToxicPhrases2.ObjectList > 0 and AutoToxicPhrases2.ObjectList[math.random(1, #AutoToxicPhrases2.ObjectList)] or "L <name> | vxpe on top"
-								else
-									lastsaid = custommsg
-								end
-								if custommsg then
-									custommsg = custommsg:gsub("<name>", (killed.DisplayName or killed.Name))
-								end
-								textChatService.ChatInputBarConfiguration.TargetTextChannel:SendAsync(custommsg)
-							end
-						end
-					end
-				end))
-				table.insert(AutoToxic.Connections, vapeEvents.MatchEndEvent.Event:Connect(function(winstuff)
-					local myTeam = bedwars.ClientStoreHandler:getState().Game.myTeam
-					if myTeam and myTeam.id == winstuff.winningTeamId or lplr.Neutral then
-						if AutoToxicGG.Enabled then
-							textChatService.ChatInputBarConfiguration.TargetTextChannel:SendAsync("gg")
-							if shared.ggfunction then
-								shared.ggfunction()
-							end
-						end
-						if AutoToxicWin.Enabled then
-							textChatService.ChatInputBarConfiguration.TargetTextChannel:SendAsync(#AutoToxicPhrases.ObjectList > 0 and AutoToxicPhrases.ObjectList[math.random(1, #AutoToxicPhrases.ObjectList)] or "EZ L TRASH KIDS | vxpe on top")
-						end
-					end
-				end))
-				table.insert(AutoToxic.Connections, vapeEvents.LagbackEvent.Event:Connect(function(plr)
-					if AutoToxicLagback.Enabled then
-						local custommsg = #AutoToxicPhrases8.ObjectList > 0 and AutoToxicPhrases8.ObjectList[math.random(1, #AutoToxicPhrases8.ObjectList)]
-						if custommsg then
-							custommsg = custommsg:gsub("<name>", (plr.DisplayName or plr.Name))
-						end
-						local msg = custommsg or "Imagine lagbacking L "..(plr.DisplayName or plr.Name).." | vxpe on top"
-						textChatService.ChatInputBarConfiguration.TargetTextChannel:SendAsync(msg)
-					end
-				end))
-				table.insert(AutoToxic.Connections, textChatService.MessageReceived:Connect(function(tab)
-					if AutoToxicRespond.Enabled then
-						local plr = playersService:GetPlayerByUserId(tab.TextSource.UserId)
-						local args = tab.Text:split(" ")
-						if plr and plr ~= lplr and not alreadyreported[plr] then
-							local reportreason, reportedmatch = findreport(tab.Text)
-							if reportreason then
-								alreadyreported[plr] = true
-								local custommsg = #AutoToxicPhrases4.ObjectList > 0 and AutoToxicPhrases4.ObjectList[math.random(1, #AutoToxicPhrases4.ObjectList)]
-								if custommsg then
-									custommsg = custommsg:gsub("<name>", (plr.DisplayName or plr.Name))
-								end
-								local msg = custommsg or "I don't care about the fact that I'm hacking, I care about you dying in a block game. L "..(plr.DisplayName or plr.Name).." | vxpe on top"
-								textChatService.ChatInputBarConfiguration.TargetTextChannel:SendAsync(msg)
-							end
-						end
-					end
-				end))
-			end
-		end
-	})
-	AutoToxicGG = AutoToxic.CreateToggle({
-		Name = "AutoGG",
-		Function = function() end,
-		Default = true
-	})
-	AutoToxicWin = AutoToxic.CreateToggle({
-		Name = "Win",
-		Function = function() end,
-		Default = true
-	})
-	AutoToxicDeath = AutoToxic.CreateToggle({
-		Name = "Death",
-		Function = function() end,
-		Default = true
-	})
-	AutoToxicBedBreak = AutoToxic.CreateToggle({
-		Name = "Bed Break",
-		Function = function() end,
-		Default = true
-	})
-	AutoToxicBedDestroyed = AutoToxic.CreateToggle({
-		Name = "Bed Destroyed",
-		Function = function() end,
-		Default = true
-	})
-	AutoToxicRespond = AutoToxic.CreateToggle({
-		Name = "Respond",
-		Function = function() end,
-		Default = true
-	})
-	AutoToxicFinalKill = AutoToxic.CreateToggle({
-		Name = "Final Kill",
-		Function = function() end,
-		Default = true
-	})
-	AutoToxicTeam = AutoToxic.CreateToggle({
-		Name = "Teammates",
-		Function = function() end,
-	})
-	AutoToxicLagback = AutoToxic.CreateToggle({
-		Name = "Lagback",
-		Function = function() end,
-		Default = true
-	})
-	AutoToxicPhrases = AutoToxic.CreateTextList({
-		Name = "ToxicList",
-		TempText = "phrase (win)",
-	})
-	AutoToxicPhrases2 = AutoToxic.CreateTextList({
-		Name = "ToxicList2",
-		TempText = "phrase (kill) <name>",
-	})
-	AutoToxicPhrases3 = AutoToxic.CreateTextList({
-		Name = "ToxicList3",
-		TempText = "phrase (death) <name>",
-	})
-	AutoToxicPhrases7 = AutoToxic.CreateTextList({
-		Name = "ToxicList7",
-		TempText = "phrase (bed break) <teamname>",
-	})
-	AutoToxicPhrases7.Object.AddBoxBKG.AddBox.TextSize = 12
-	AutoToxicPhrases6 = AutoToxic.CreateTextList({
-		Name = "ToxicList6",
-		TempText = "phrase (bed destroyed) <name>",
-	})
-	AutoToxicPhrases6.Object.AddBoxBKG.AddBox.TextSize = 12
-	AutoToxicPhrases4 = AutoToxic.CreateTextList({
-		Name = "ToxicList4",
-		TempText = "phrase (text to respond with) <name>",
-	})
-	AutoToxicPhrases4.Object.AddBoxBKG.AddBox.TextSize = 12
-	AutoToxicPhrases5 = AutoToxic.CreateTextList({
-		Name = "ToxicList5",
-		TempText = "phrase (text to respond to)",
-	})
-	AutoToxicPhrases5.Object.AddBoxBKG.AddBox.TextSize = 12
-	AutoToxicPhrases8 = AutoToxic.CreateTextList({
-		Name = "ToxicList8",
-		TempText = "phrase (lagback) <name>",
-	})
-	AutoToxicPhrases8.Object.AddBoxBKG.AddBox.TextSize = 12
-end)
-
-run(function()
 	local ChestStealer = {Enabled = false}
 	local ChestStealerDistance = {Value = 1}
 	local ChestStealerDelay = {Value = 1}
@@ -7706,145 +7504,6 @@ GuiLibrary.RemoveObject("ChinaHatOptionsButton")
 GuiLibrary.RemoveObject("GamingChairOptionsButton")
 GuiLibrary.RemoveObject("SearchOptionsButton")
 GuiLibrary.RemoveObject("ArrowsOptionsButton")
-
-local GuiLibrary = shared.GuiLibrary
-local plrs = game.Players:GetPlayers()
-local hps_detected = {}
-local detected = {}
-local lplr = game.Players.LocalPlayer
-local setcallback = {}
-local hpsset = {}
-local InfFlyD = {["Enabled"] = false,}
-function char(v)
-	repeat task.wait() until v.Character
-	v.Character:WaitForChild("Humanoid").Changed:Connect(function ()
-		if v.Character:WaitForChild("Humanoid").Health ~= 100 then
-			if not hpsset[v.Name] then
-				hpsset[v.Name] = v.Character.Humanoid.Health
-			end
-			if hps_detected[v.Name] then
-				if not setcallback[v.Name] then setcallback[v.Name] = {} end
-				if hpsset[v.Name] >= v.Character.Humanoid.Health then
-					setcallback[v.Name][#setcallback[v.Name] + 1] = true;
-					hpsset[v.Name] = v.Character.Humanoid.Health
-				end
-				return
-			end
-			hps_detected[v.Name] = true;
-			task.wait(0.25)
-			local number = # (setcallback[v.Name] or {})
-			repeat task.wait()
-				for i,z in pairs(setcallback[v.Name] or {}) do
-					task.wait(0.25)
-					table.remove(setcallback[v.Name],i)
-				end
-			until # (setcallback[v.Name] or {}) == 0
-			task.wait(0.04)
-			hps_detected[v.Name] = false;
-		end
-	end)
-	local old
-	local my;
-	my = v.Character.Humanoid.Died:Connect(function()
-		repeat task.wait()
-			old = nil
-			task.wait()
-		until old == nil
-		my:Disconnect()
-	end)
-	local check;
-	local telepearlon = false
-	 check = v.Character.DescendantAdded:Connect(function(telepearl)
-	     if telepearl.Name == "telepearl" then
-	         telepearlon = true;
-	     end
-	 end)
-	 check2 = v.Character.DescendantRemoving:Connect(function(telepearl)
-	     if telepearl.Name == "telepearl" then
-	         telepearlon = false;
-	     end
-	 end)
-	v:GetAttributeChangedSignal("LastTeleported"):Connect(function()
-		if (workspace:GetServerTimeNow() - lplr:GetAttribute("LastTeleported")) < 3 then
-			telepearlon = true
-			task.wait(2)
-			telepearlon = false;
-		end
-	end)
-	while task.wait(0.06) do
-		repeat task.wait() until v.Character
-		 local root = v.Character:WaitForChild("HumanoidRootPart")
-		 local total = (root.Velocity.X < 0 and -root.Velocity.X or root.Velocity.X) + (root.Velocity.Z < 0 and -root.Velocity.Z or root.Velocity.Z)
-		 local a = (root.Position.Y < 0 and -root.Position.Y or root.Position.Y) * (root.Parent.Humanoid.MoveDirection.Y == 0 and 1 or root.Parent.Humanoid.MoveDirection.Y + 1)
-		 if (total > (a + ((total * .5)) or root:FindFirstChild("BodyVelocity"))
-		 	and (detected[v.Name] == false or detected[v.Name] == nil) and (not hps_detected[v.Name])
-		 	and root.Position.Y <= 400) then
-		 	detected[v.Name] = true;
-		 	createwarning("Purple theme","High jump or fly detected on "..v.Name,3)
-		 	break
-		 end
-		local root = v.Character:WaitForChild("HumanoidRootPart")
-		if old then
-			local pos = root.Position
-			local x,y,z = (pos.X < 0 and -pos.X or pos.X),(pos.Y < 0 and -pos.Y or pos.Y),(pos.Z < 0 and -pos.Z or pos.Z)
-			local ox,oy,oz = (old.X < 0 and -old.X or old.X),(old.Y < 0 and -old.Y or old.Y),(old.Z < 0 and -old.Z or old.Z)
-			local hecker
-			if ox + (v.Character.Humanoid.WalkSpeed * 0.855) < x then
-				hecker = true
-				 elseif oy + (v.Character.Humanoid.WalkSpeed * 0.900) < y then
-				 	hecker = true
-			elseif oz + (v.Character.Humanoid.WalkSpeed * 0.850) < z then
-				hecker = true
-			end
-			if hecker and not detected[v.Name] and v ~= game.Players.LocalPlayer
-				and bedwarsStore.matchState ~= 0 and not bedwarsStore.secs and not telepearlon
-				and not hps_detected[v.Name]  then
-				detected[v.Name] = true;
-				task.wait(0.06)
-				if telepearlon then continue end
-				if telepearlon or not (game.Players.LocalPlayer.Character and game.Players.LocalPlayer:FindFirstChild("HumanoidRootPart")) then
-				else
-					createwarning("Purple theme","Speed detected on "..v.Name,3)
-					break
-				end
-			end
-			if InfFlyD.Enabled and y > 1605 then
-				createwarning("Purple theme","inf fly detected on "..v.Name,3)
-				break
-			end 
-			if v == game.Players.LocalPlayer then break end
-		end
-		old = root.Position
-	end
-end
-local Detection;Detection = GuiLibrary.ObjectsThatCanBeSaved.FunnisWindow.Api.CreateOptionsButton({
-	Name = 'Vape User Detection',
-	Function = function (enabled)
-		if enabled then
-			task.spawn(function()
-				for i,v in pairs(plrs) do
-					task.spawn(function ()
-						char(v)
-					end)
-					task.spawn(function ()
-						v.CharacterAdded:Connect(function ()
-							task.wait(5)
-							char(v)
-						end)
-					end)
-				end
-				game.Players.PlayerAdded:Connect(function(v)
-					task.wait(5)
-					char(v)
-				end)
-			end)
-		end
-	end,
-})
-InfFlyD = Detection.CreateToggle({
-	Name = 'Inf Fly detector',
-	Function = function() end,
-})
 
 run(function()
     local transformed = false
