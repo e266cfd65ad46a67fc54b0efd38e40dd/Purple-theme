@@ -2324,8 +2324,8 @@ runFunction(function()
 
 	Fly = GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
 		Name = 'Fly',
-		Function = function(calling)
-			if calling then
+		Function = function(callback)
+			if callback then
 				olddeflate = bedwars.BalloonController.deflateBalloon
 				bedwars.BalloonController.deflateBalloon = function() end
 
