@@ -1,2 +1,2 @@
-{Autoupdate{true}
-{Discord{true}
+{Autoupdate=true}
+{Discord=false}
