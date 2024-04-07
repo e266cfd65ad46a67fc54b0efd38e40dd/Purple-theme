@@ -2290,16 +2290,16 @@ run(function()
 end)
 
 local autobankballoon = false
-run(function()
-	local Fly = {Enabled = false}
-	local FlyMode = {Value = "CFrame"}
+runFunction(function()
+	local Fly = {}
+	local FlyMode = {Value = 'CFrame'}
 	local FlyVerticalSpeed = {Value = 40}
-	local FlyVertical = {Enabled = true}
-	local FlyAutoPop = {Enabled = true}
-	local FlyAnyway = {Enabled = false}
-	local FlyAnywayProgressBar = {Enabled = false}
-	local FlyDamageAnimation = {Enabled = false}
-	local FlyTP = {Enabled = false}
+	local FlyVertical = {}
+	local FlyAutoPop = {}
+	local FlyAnyway = {}
+	local FlyAnywayProgressBar = {}
+	local FlyDamageAnimation = {}
+	local FlyTP = {}
 	local FlyAnywayProgressBarFrame
 	local olddeflate
 	local FlyUp = false
@@ -2308,13 +2308,13 @@ run(function()
 	local groundtime = tick()
 	local onground = false
 	local lastonground = false
-	local alternatelist = {"Normal", "AntiCheat A", "AntiCheat B"}
+	local alternatelist = {'Normal', 'AntiCheat A', 'AntiCheat B'}
 
 	local function inflateBalloon()
 		if not Fly.Enabled then return end
-		if entityLibrary.isAlive and (lplr.Character:GetAttribute("InflatedBalloons") or 0) < 1 then
+		if entityLibrary.isAlive and (lplr.Character:GetAttribute('InflatedBalloons') or 0) < 1 then
 			autobankballoon = true
-			if getItem("balloon") then
+			if getItem('balloon') then
 				bedwars.BalloonController:inflateBalloon()
 				return true
 			end
@@ -2323,9 +2323,9 @@ run(function()
 	end
 
 	Fly = GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
-		Name = "Fly",
-		Function = function(callback)
-			if callback then
+		Name = 'Fly',
+		Function = function(calling)
+			if calling then
 				olddeflate = bedwars.BalloonController.deflateBalloon
 				bedwars.BalloonController.deflateBalloon = function() end
 
@@ -2350,43 +2350,43 @@ run(function()
 				if inputService.TouchEnabled then
 					pcall(function()
 						local jumpButton = lplr.PlayerGui.TouchGui.TouchControlFrame.JumpButton
-						table.insert(Fly.Connections, jumpButton:GetPropertyChangedSignal("ImageRectOffset"):Connect(function()
+						table.insert(Fly.Connections, jumpButton:GetPropertyChangedSignal('ImageRectOffset'):Connect(function()
 							FlyUp = jumpButton.ImageRectOffset.X == 146
 						end))
 						FlyUp = jumpButton.ImageRectOffset.X == 146
 					end)
 				end
 				table.insert(Fly.Connections, vapeEvents.BalloonPopped.Event:Connect(function(poppedTable)
-					if poppedTable.inflatedBalloon and poppedTable.inflatedBalloon:GetAttribute("BalloonOwner") == lplr.UserId then
+					if poppedTable.inflatedBalloon and poppedTable.inflatedBalloon:GetAttribute('BalloonOwner') == lplr.UserId then 
 						lastonground = not onground
-						repeat task.wait() until (lplr.Character:GetAttribute("InflatedBalloons") or 0) <= 0 or not Fly.Enabled
-						inflateBalloon()
+						repeat task.wait() until (lplr.Character:GetAttribute('InflatedBalloons') or 0) <= 0 or not Fly.Enabled
+						inflateBalloon() 
 					end
 				end))
 				table.insert(Fly.Connections, vapeEvents.AutoBankBalloon.Event:Connect(function()
-					repeat task.wait() until getItem("balloon")
+					repeat task.wait() until getItem('balloon')
 					inflateBalloon()
 				end))
 
 				local balloons
-				if entityLibrary.isAlive and (not store.queueType:find("mega")) then
+				if entityLibrary.isAlive and (not bedwarsStore.queueType:find('mega')) then
 					balloons = inflateBalloon()
 				end
-				local megacheck = store.queueType:find("mega") or store.queueType == "winter_event"
+				local megacheck = bedwarsStore.queueType:find('mega') or bedwarsStore.queueType == 'winter_event'
 
 				task.spawn(function()
-					repeat task.wait() until store.queueType ~= "bedwars_test" or (not Fly.Enabled)
+					repeat task.wait() until bedwarsStore.queueType ~= 'bedwars_test' or (not Fly.Enabled)
 					if not Fly.Enabled then return end
-					megacheck = store.queueType:find("mega") or store.queueType == "winter_event"
+					megacheck = bedwarsStore.queueType:find('mega') or bedwarsStore.queueType == 'winter_event'
 				end)
 
-				local flyAllowed = entityLibrary.isAlive and ((lplr.Character:GetAttribute("InflatedBalloons") and lplr.Character:GetAttribute("InflatedBalloons") > 0) or store.matchState == 2 or megacheck) and 1 or 0
-				if flyAllowed <= 0 and shared.damageanim and (not balloons) then
+				local flyAllowed = entityLibrary.isAlive and ((lplr.Character:GetAttribute('InflatedBalloons') and lplr.Character:GetAttribute('InflatedBalloons') > 0) or bedwarsStore.matchState == 2 or megacheck) and 1 or 0
+				if flyAllowed <= 0 and shared.damageanim and (not balloons) then 
 					shared.damageanim()
-					bedwars.SoundManager:playSound(bedwars.SoundList["DAMAGE_"..math.random(1, 3)])
+					bedwars.SoundManager:playSound(bedwars.SoundList['DAMAGE_'..math.random(1, 3)])
 				end
 
-				if FlyAnywayProgressBarFrame and flyAllowed <= 0 and (not balloons) then
+				if FlyAnywayProgressBarFrame and flyAllowed <= 0 and (not balloons) then 
 					FlyAnywayProgressBarFrame.Visible = true
 					FlyAnywayProgressBarFrame.Frame:TweenSize(UDim2.new(1, 0, 0, 20), Enum.EasingDirection.InOut, Enum.EasingStyle.Linear, 0, true)
 				end
@@ -2395,20 +2395,20 @@ run(function()
 				FlyCoroutine = coroutine.create(function()
 					repeat
 						repeat task.wait() until (groundtime - tick()) < 0.6 and not onground
-						flyAllowed = ((lplr.Character and lplr.Character:GetAttribute("InflatedBalloons") and lplr.Character:GetAttribute("InflatedBalloons") > 0) or store.matchState == 2 or megacheck) and 1 or 0
+						flyAllowed = ((lplr.Character and lplr.Character:GetAttribute('InflatedBalloons') and lplr.Character:GetAttribute('InflatedBalloons') > 0) or bedwarsStore.matchState == 2 or megacheck) and 1 or 0
 						if (not Fly.Enabled) then break end
 						local Flytppos = -99999
-						if flyAllowed <= 0 and FlyTP.Enabled and entityLibrary.isAlive then
-							local ray = workspace:Raycast(entityLibrary.character.HumanoidRootPart.Position, Vector3.new(0, -1000, 0), store.blockRaycast)
-							if ray then
+						if flyAllowed <= 0 and FlyTP.Enabled and entityLibrary.isAlive then 
+							local ray = workspace:Raycast(entityLibrary.character.HumanoidRootPart.Position, Vector3.new(0, -1000, 0), bedwarsStore.blockRaycast)
+							if ray then 
 								Flytppos = entityLibrary.character.HumanoidRootPart.Position.Y
 								local args = {entityLibrary.character.HumanoidRootPart.CFrame:GetComponents()}
 								args[2] = ray.Position.Y + (entityLibrary.character.HumanoidRootPart.Size.Y / 2) + entityLibrary.character.Humanoid.HipHeight
 								entityLibrary.character.HumanoidRootPart.CFrame = CFrame.new(unpack(args))
 								task.wait(0.12)
 								if (not Fly.Enabled) then break end
-								flyAllowed = ((lplr.Character and lplr.Character:GetAttribute("InflatedBalloons") and lplr.Character:GetAttribute("InflatedBalloons") > 0) or store.matchState == 2 or megacheck) and 1 or 0
-								if flyAllowed <= 0 and Flytppos ~= -99999 and entityLibrary.isAlive then
+								flyAllowed = ((lplr.Character and lplr.Character:GetAttribute('InflatedBalloons') and lplr.Character:GetAttribute('InflatedBalloons') > 0) or bedwarsStore.matchState == 2 or megacheck) and 1 or 0
+								if flyAllowed <= 0 and Flytppos ~= -99999 and entityLibrary.isAlive and (tick() - entityLibrary.groundTick) <= 2.5 then 
 									local args = {entityLibrary.character.HumanoidRootPart.CFrame:GetComponents()}
 									args[2] = Flytppos
 									entityLibrary.character.HumanoidRootPart.CFrame = CFrame.new(unpack(args))
@@ -2419,38 +2419,38 @@ run(function()
 				end)
 				coroutine.resume(FlyCoroutine)
 
-				RunLoops:BindToHeartbeat("Fly", function(delta)
-					if GuiLibrary.ObjectsThatCanBeSaved["Lobby CheckToggle"].Api.Enabled then
+				RunLoops:BindToHeartbeat('Fly', function(delta) 
+					if GuiLibrary.ObjectsThatCanBeSaved['Lobby CheckToggle'].Api.Enabled then 
 						if bedwars.matchState == 0 then return end
 					end
 					if entityLibrary.isAlive then
 						local playerMass = (entityLibrary.character.HumanoidRootPart:GetMass() - 1.4) * (delta * 100)
-						flyAllowed = ((lplr.Character:GetAttribute("InflatedBalloons") and lplr.Character:GetAttribute("InflatedBalloons") > 0) or store.matchState == 2 or megacheck) and 1 or 0
+						flyAllowed = ((lplr.Character:GetAttribute('InflatedBalloons') and lplr.Character:GetAttribute('InflatedBalloons') > 0) or bedwarsStore.matchState == 2 or megacheck) and 1 or 0
 						playerMass = playerMass + (flyAllowed > 0 and 4 or 0) * (tick() % 0.4 < 0.2 and -1 or 1)
 
 						if FlyAnywayProgressBarFrame then
 							FlyAnywayProgressBarFrame.Visible = flyAllowed <= 0
-							FlyAnywayProgressBarFrame.BackgroundColor3 = Color3.fromHSV(GuiLibrary.ObjectsThatCanBeSaved["Gui ColorSliderColor"].Api.Hue, GuiLibrary.ObjectsThatCanBeSaved["Gui ColorSliderColor"].Api.Sat, GuiLibrary.ObjectsThatCanBeSaved["Gui ColorSliderColor"].Api.Value)
-							FlyAnywayProgressBarFrame.Frame.BackgroundColor3 = Color3.fromHSV(GuiLibrary.ObjectsThatCanBeSaved["Gui ColorSliderColor"].Api.Hue, GuiLibrary.ObjectsThatCanBeSaved["Gui ColorSliderColor"].Api.Sat, GuiLibrary.ObjectsThatCanBeSaved["Gui ColorSliderColor"].Api.Value)
+							FlyAnywayProgressBarFrame.BackgroundColor3 = Color3.fromHSV(GuiLibrary.ObjectsThatCanBeSaved['Gui ColorSliderColor'].Api.Hue, GuiLibrary.ObjectsThatCanBeSaved['Gui ColorSliderColor'].Api.Sat, GuiLibrary.ObjectsThatCanBeSaved['Gui ColorSliderColor'].Api.Value)
+							FlyAnywayProgressBarFrame.Frame.BackgroundColor3 = Color3.fromHSV(GuiLibrary.ObjectsThatCanBeSaved['Gui ColorSliderColor'].Api.Hue, GuiLibrary.ObjectsThatCanBeSaved['Gui ColorSliderColor'].Api.Sat, GuiLibrary.ObjectsThatCanBeSaved['Gui ColorSliderColor'].Api.Value)
 						end
 
-						if flyAllowed <= 0 then
+						if flyAllowed <= 0 then 
 							local newray = getPlacedBlock(entityLibrary.character.HumanoidRootPart.Position + Vector3.new(0, (entityLibrary.character.Humanoid.HipHeight * -2) - 1, 0))
 							onground = newray and true or false
-							if lastonground ~= onground then
-								if (not onground) then
+							if lastonground ~= onground then 
+								if (not onground) then 
 									groundtime = tick() + (2.6 + (entityLibrary.groundTick - tick()))
-									if FlyAnywayProgressBarFrame then
+									if FlyAnywayProgressBarFrame then 
 										FlyAnywayProgressBarFrame.Frame:TweenSize(UDim2.new(0, 0, 0, 20), Enum.EasingDirection.InOut, Enum.EasingStyle.Linear, groundtime - tick(), true)
 									end
 								else
-									if FlyAnywayProgressBarFrame then
+									if FlyAnywayProgressBarFrame then 
 										FlyAnywayProgressBarFrame.Frame:TweenSize(UDim2.new(1, 0, 0, 20), Enum.EasingDirection.InOut, Enum.EasingStyle.Linear, 0, true)
 									end
 								end
 							end
-							if FlyAnywayProgressBarFrame then
-								FlyAnywayProgressBarFrame.TextLabel.Text = math.max(onground and 2.5 or math.floor((groundtime - tick()) * 10) / 10, 0).."s"
+							if FlyAnywayProgressBarFrame then 
+								FlyAnywayProgressBarFrame.TextLabel.Text = math.max(onground and 2.5 or math.floor((groundtime - tick()) * 10) / 10, 0)..'s'
 							end
 							lastonground = onground
 						else
@@ -2458,9 +2458,9 @@ run(function()
 							lastonground = true
 						end
 
-						local flyVelocity = entityLibrary.character.Humanoid.MoveDirection * (FlyMode.Value == "Normal" and FlySpeed.Value or 20)
+						local flyVelocity = entityLibrary.character.Humanoid.MoveDirection * (FlyMode.Value == 'Normal' and FlySpeed.Value or 20)
 						entityLibrary.character.HumanoidRootPart.Velocity = flyVelocity + (Vector3.new(0, playerMass + (FlyUp and FlyVerticalSpeed.Value or 0) + (FlyDown and -FlyVerticalSpeed.Value or 0), 0))
-						if FlyMode.Value ~= "Normal" then
+						if FlyMode.Value ~= 'Normal' then
 							entityLibrary.character.HumanoidRootPart.CFrame = entityLibrary.character.HumanoidRootPart.CFrame + (entityLibrary.character.Humanoid.MoveDirection * ((FlySpeed.Value + getSpeed()) - 20)) * delta
 						end
 					end
@@ -2472,13 +2472,13 @@ run(function()
 				lastonground = nil
 				FlyUp = false
 				FlyDown = false
-				RunLoops:UnbindFromHeartbeat("Fly")
-				if FlyAnywayProgressBarFrame then
+				RunLoops:UnbindFromHeartbeat('Fly')
+				if FlyAnywayProgressBarFrame then 
 					FlyAnywayProgressBarFrame.Visible = false
 				end
 				if FlyAutoPop.Enabled then
-					if entityLibrary.isAlive and lplr.Character:GetAttribute("InflatedBalloons") then
-						for i = 1, lplr.Character:GetAttribute("InflatedBalloons") do
+					if entityLibrary.isAlive and lplr.Character:GetAttribute('InflatedBalloons') then
+						for i = 1, lplr.Character:GetAttribute('InflatedBalloons') do
 							olddeflate()
 						end
 					end
@@ -2487,56 +2487,56 @@ run(function()
 				olddeflate = nil
 			end
 		end,
-		HoverText = "Makes you go zoom (longer Fly discovered by exelys and Cqded)",
-		ExtraText = function()
-			return "Heatseeker"
+		HoverText = 'Makes you go zoom (longer Fly discovered by exelys and Cqded)',
+		ExtraText = function() 
+			return 'Heatseeker'
 		end
 	})
 	FlySpeed = Fly.CreateSlider({
-		Name = "Speed",
+		Name = 'Speed',
 		Min = 1,
 		Max = 23,
-		Function = function(val) end,
+		Function = function(val) end, 
 		Default = 23
 	})
 	FlyVerticalSpeed = Fly.CreateSlider({
-		Name = "Vertical Speed",
+		Name = 'Vertical Speed',
 		Min = 1,
 		Max = 100,
-		Function = function(val) end,
+		Function = function(val) end, 
 		Default = 44
 	})
 	FlyVertical = Fly.CreateToggle({
-		Name = "Y Level",
-		Function = function() end,
+		Name = 'Y Level',
+		Function = function() end, 
 		Default = true
 	})
 	FlyAutoPop = Fly.CreateToggle({
-		Name = "Pop Balloon",
-		Function = function() end,
-		HoverText = "Pops balloons when Fly is disabled."
+		Name = 'Pop Balloon',
+		Function = function() end, 
+		HoverText = 'Pops balloons when Fly is disabled.'
 	})
 	local oldcamupdate
 	local camcontrol
-	local Flydamagecamera = {Enabled = false}
+	local Flydamagecamera = {}
 	FlyDamageAnimation = Fly.CreateToggle({
-		Name = "Damage Animation",
-		Function = function(callback)
-			if Flydamagecamera.Object then
-				Flydamagecamera.Object.Visible = callback
+		Name = 'Damage Animation',
+		Function = function(calling) 
+			if Flydamagecamera.Object then 
+				Flydamagecamera.Object.Visible = calling
 			end
-			if callback then
+			if calling then 
 				task.spawn(function()
 					repeat
 						task.wait(0.1)
-						for i,v in pairs(getconnections(gameCamera:GetPropertyChangedSignal("CameraType"))) do
+						for i,v in next, (getconnections(gameCamera:GetPropertyChangedSignal('CameraType'))) do 
 							if v.Function then
 								camcontrol = debug.getupvalue(v.Function, 1)
 							end
 						end
 					until camcontrol
 					local caminput = require(lplr.PlayerScripts.PlayerModule.CameraModule.CameraInput)
-					local num = Instance.new("IntValue")
+					local num = Instance.new('IntValue')
 					local numanim
 					shared.damageanim = function()
 						if numanim then numanim:Cancel() end
@@ -2547,7 +2547,7 @@ run(function()
 						end
 					end
 					oldcamupdate = camcontrol.Update
-					camcontrol.Update = function(self, dt)
+					camcontrol.Update = function(self, dt) 
 						if camcontrol.activeCameraController then
 							camcontrol.activeCameraController:UpdateMouseBehavior()
 							local newCameraCFrame, newCameraFocus = camcontrol.activeCameraController:Update(dt)
@@ -2564,14 +2564,14 @@ run(function()
 				end)
 			else
 				shared.damageanim = nil
-				if camcontrol then
+				if camcontrol then 
 					camcontrol.Update = oldcamupdate
 				end
 			end
 		end
 	})
 	Flydamagecamera = Fly.CreateToggle({
-		Name = "Camera Animation",
+		Name = 'Camera Animation',
 		Function = function() end,
 		Default = true
 	})
@@ -2580,10 +2580,10 @@ run(function()
 	Flydamagecamera.Object.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
 	Flydamagecamera.Object.Visible = false
 	FlyAnywayProgressBar = Fly.CreateToggle({
-		Name = "Progress Bar",
-		Function = function(callback)
-			if callback then
-				FlyAnywayProgressBarFrame = Instance.new("Frame")
+		Name = 'Progress Bar',
+		Function = function(calling) 
+			if calling then 
+				FlyAnywayProgressBarFrame = Instance.new('Frame')
 				FlyAnywayProgressBarFrame.AnchorPoint = Vector2.new(0.5, 0)
 				FlyAnywayProgressBarFrame.Position = UDim2.new(0.5, 0, 1, -200)
 				FlyAnywayProgressBarFrame.Size = UDim2.new(0.2, 0, 0, 20)
@@ -2599,8 +2599,8 @@ run(function()
 				FlyAnywayProgressBarFrame2.BackgroundTransparency = 0
 				FlyAnywayProgressBarFrame2.Visible = true
 				FlyAnywayProgressBarFrame2.Parent = FlyAnywayProgressBarFrame
-				local FlyAnywayProgressBartext = Instance.new("TextLabel")
-				FlyAnywayProgressBartext.Text = "2s"
+				local FlyAnywayProgressBartext = Instance.new('TextLabel')
+				FlyAnywayProgressBartext.Text = '2s'
 				FlyAnywayProgressBartext.Font = Enum.Font.Gotham
 				FlyAnywayProgressBartext.TextStrokeTransparency = 0
 				FlyAnywayProgressBartext.TextColor3 =  Color3.new(0.9, 0.9, 0.9)
@@ -2609,15 +2609,20 @@ run(function()
 				FlyAnywayProgressBartext.BackgroundTransparency = 1
 				FlyAnywayProgressBartext.Position = UDim2.new(0, 0, -1, 0)
 				FlyAnywayProgressBartext.Parent = FlyAnywayProgressBarFrame
+				table.insert(vapeConnections, FlyAnywayProgressBartext:GetPropertyChangedSignal('Text'):Connect(function()
+					if bedwarsStore.floatDisabled then 
+						FlyAnywayProgressBartext.Text = 'inf'
+					end
+				end))
 			else
 				if FlyAnywayProgressBarFrame then FlyAnywayProgressBarFrame:Destroy() FlyAnywayProgressBarFrame = nil end
 			end
 		end,
-		HoverText = "show amount of Fly time",
+		HoverText = 'show amount of Fly time',
 		Default = true
 	})
 	FlyTP = Fly.CreateToggle({
-		Name = "TP Down",
+		Name = 'TP Down',
 		Function = function() end,
 		Default = true
 	})
