@@ -2357,10 +2357,10 @@ run(function()
 					end)
 				end
 				table.insert(Fly.Connections, vapeEvents.BalloonPopped.Event:Connect(function(poppedTable)
-					if poppedTable.inflatedBalloon and poppedTable.inflatedBalloon:GetAttribute("BalloonOwner") == lplr.UserId then
+					if poppedTable.inflatedBalloon and poppedTable.inflatedBalloon:GetAttribute("BalloonOwner") == lplr.UserId then 
 						lastonground = not onground
 						repeat task.wait() until (lplr.Character:GetAttribute("InflatedBalloons") or 0) <= 0 or not Fly.Enabled
-						inflateBalloon()
+						inflateBalloon() 
 					end
 				end))
 				table.insert(Fly.Connections, vapeEvents.AutoBankBalloon.Event:Connect(function()
@@ -2369,24 +2369,24 @@ run(function()
 				end))
 
 				local balloons
-				if entityLibrary.isAlive and (not store.queueType:find("mega")) then
+				if entityLibrary.isAlive and (not bedwarsStore.queueType:find("mega")) then
 					balloons = inflateBalloon()
 				end
-				local megacheck = store.queueType:find("mega") or store.queueType == "winter_event"
+				local megacheck = bedwarsStore.queueType:find("mega") or bedwarsStore.queueType == "winter_event"
 
 				task.spawn(function()
-					repeat task.wait() until store.queueType ~= "bedwars_test" or (not Fly.Enabled)
+					repeat task.wait() until bedwarsStore.queueType ~= "bedwars_test" or (not Fly.Enabled)
 					if not Fly.Enabled then return end
-					megacheck = store.queueType:find("mega") or store.queueType == "winter_event"
+					megacheck = bedwarsStore.queueType:find("mega") or bedwarsStore.queueType == "winter_event"
 				end)
 
-				local flyAllowed = entityLibrary.isAlive and ((lplr.Character:GetAttribute("InflatedBalloons") and lplr.Character:GetAttribute("InflatedBalloons") > 0) or store.matchState == 2 or megacheck) and 1 or 0
-				if flyAllowed <= 0 and shared.damageanim and (not balloons) then
+				local flyAllowed = entityLibrary.isAlive and ((lplr.Character:GetAttribute("InflatedBalloons") and lplr.Character:GetAttribute("InflatedBalloons") > 0) or bedwarsStore.matchState == 2 or megacheck) and 1 or 0
+				if flyAllowed <= 0 and shared.damageanim and (not balloons) then 
 					shared.damageanim()
 					bedwars.SoundManager:playSound(bedwars.SoundList["DAMAGE_"..math.random(1, 3)])
 				end
 
-				if FlyAnywayProgressBarFrame and flyAllowed <= 0 and (not balloons) then
+				if FlyAnywayProgressBarFrame and flyAllowed <= 0 and (not balloons) then 
 					FlyAnywayProgressBarFrame.Visible = true
 					FlyAnywayProgressBarFrame.Frame:TweenSize(UDim2.new(1, 0, 0, 20), Enum.EasingDirection.InOut, Enum.EasingStyle.Linear, 0, true)
 				end
@@ -2395,20 +2395,20 @@ run(function()
 				FlyCoroutine = coroutine.create(function()
 					repeat
 						repeat task.wait() until (groundtime - tick()) < 0.6 and not onground
-						flyAllowed = ((lplr.Character and lplr.Character:GetAttribute("InflatedBalloons") and lplr.Character:GetAttribute("InflatedBalloons") > 0) or store.matchState == 2 or megacheck) and 1 or 0
+						flyAllowed = ((lplr.Character and lplr.Character:GetAttribute("InflatedBalloons") and lplr.Character:GetAttribute("InflatedBalloons") > 0) or bedwarsStore.matchState == 2 or megacheck) and 1 or 0
 						if (not Fly.Enabled) then break end
 						local Flytppos = -99999
-						if flyAllowed <= 0 and FlyTP.Enabled and entityLibrary.isAlive then
-							local ray = workspace:Raycast(entityLibrary.character.HumanoidRootPart.Position, Vector3.new(0, -1000, 0), store.blockRaycast)
-							if ray then
+						if flyAllowed <= 0 and FlyTP.Enabled and entityLibrary.isAlive then 
+							local ray = workspace:Raycast(entityLibrary.character.HumanoidRootPart.Position, Vector3.new(0, -1000, 0), bedwarsStore.blockRaycast)
+							if ray then 
 								Flytppos = entityLibrary.character.HumanoidRootPart.Position.Y
 								local args = {entityLibrary.character.HumanoidRootPart.CFrame:GetComponents()}
 								args[2] = ray.Position.Y + (entityLibrary.character.HumanoidRootPart.Size.Y / 2) + entityLibrary.character.Humanoid.HipHeight
 								entityLibrary.character.HumanoidRootPart.CFrame = CFrame.new(unpack(args))
 								task.wait(0.12)
 								if (not Fly.Enabled) then break end
-								flyAllowed = ((lplr.Character and lplr.Character:GetAttribute("InflatedBalloons") and lplr.Character:GetAttribute("InflatedBalloons") > 0) or store.matchState == 2 or megacheck) and 1 or 0
-								if flyAllowed <= 0 and Flytppos ~= -99999 and entityLibrary.isAlive then
+								flyAllowed = ((lplr.Character and lplr.Character:GetAttribute("InflatedBalloons") and lplr.Character:GetAttribute("InflatedBalloons") > 0) or bedwarsStore.matchState == 2 or megacheck) and 1 or 0
+								if flyAllowed <= 0 and Flytppos ~= -99999 and entityLibrary.isAlive then 
 									local args = {entityLibrary.character.HumanoidRootPart.CFrame:GetComponents()}
 									args[2] = Flytppos
 									entityLibrary.character.HumanoidRootPart.CFrame = CFrame.new(unpack(args))
@@ -2419,13 +2419,13 @@ run(function()
 				end)
 				coroutine.resume(FlyCoroutine)
 
-				RunLoops:BindToHeartbeat("Fly", function(delta)
-					if GuiLibrary.ObjectsThatCanBeSaved["Lobby CheckToggle"].Api.Enabled then
+				RunLoops:BindToHeartbeat("Fly", function(delta) 
+					if GuiLibrary.ObjectsThatCanBeSaved["Lobby CheckToggle"].Api.Enabled then 
 						if bedwars.matchState == 0 then return end
 					end
 					if entityLibrary.isAlive then
 						local playerMass = (entityLibrary.character.HumanoidRootPart:GetMass() - 1.4) * (delta * 100)
-						flyAllowed = ((lplr.Character:GetAttribute("InflatedBalloons") and lplr.Character:GetAttribute("InflatedBalloons") > 0) or store.matchState == 2 or megacheck) and 1 or 0
+						flyAllowed = ((lplr.Character:GetAttribute("InflatedBalloons") and lplr.Character:GetAttribute("InflatedBalloons") > 0) or bedwarsStore.matchState == 2 or megacheck) and 1 or 0
 						playerMass = playerMass + (flyAllowed > 0 and 4 or 0) * (tick() % 0.4 < 0.2 and -1 or 1)
 
 						if FlyAnywayProgressBarFrame then
@@ -2434,22 +2434,22 @@ run(function()
 							FlyAnywayProgressBarFrame.Frame.BackgroundColor3 = Color3.fromHSV(GuiLibrary.ObjectsThatCanBeSaved["Gui ColorSliderColor"].Api.Hue, GuiLibrary.ObjectsThatCanBeSaved["Gui ColorSliderColor"].Api.Sat, GuiLibrary.ObjectsThatCanBeSaved["Gui ColorSliderColor"].Api.Value)
 						end
 
-						if flyAllowed <= 0 then
+						if flyAllowed <= 0 then 
 							local newray = getPlacedBlock(entityLibrary.character.HumanoidRootPart.Position + Vector3.new(0, (entityLibrary.character.Humanoid.HipHeight * -2) - 1, 0))
 							onground = newray and true or false
-							if lastonground ~= onground then
-								if (not onground) then
+							if lastonground ~= onground then 
+								if (not onground) then 
 									groundtime = tick() + (2.6 + (entityLibrary.groundTick - tick()))
-									if FlyAnywayProgressBarFrame then
+									if FlyAnywayProgressBarFrame then 
 										FlyAnywayProgressBarFrame.Frame:TweenSize(UDim2.new(0, 0, 0, 20), Enum.EasingDirection.InOut, Enum.EasingStyle.Linear, groundtime - tick(), true)
 									end
 								else
-									if FlyAnywayProgressBarFrame then
+									if FlyAnywayProgressBarFrame then 
 										FlyAnywayProgressBarFrame.Frame:TweenSize(UDim2.new(1, 0, 0, 20), Enum.EasingDirection.InOut, Enum.EasingStyle.Linear, 0, true)
 									end
 								end
 							end
-							if FlyAnywayProgressBarFrame then
+							if FlyAnywayProgressBarFrame then 
 								FlyAnywayProgressBarFrame.TextLabel.Text = math.max(onground and 2.5 or math.floor((groundtime - tick()) * 10) / 10, 0).."s"
 							end
 							lastonground = onground
@@ -2473,7 +2473,7 @@ run(function()
 				FlyUp = false
 				FlyDown = false
 				RunLoops:UnbindFromHeartbeat("Fly")
-				if FlyAnywayProgressBarFrame then
+				if FlyAnywayProgressBarFrame then 
 					FlyAnywayProgressBarFrame.Visible = false
 				end
 				if FlyAutoPop.Enabled then
@@ -2488,7 +2488,7 @@ run(function()
 			end
 		end,
 		HoverText = "Makes you go zoom (longer Fly discovered by exelys and Cqded)",
-		ExtraText = function()
+		ExtraText = function() 
 			return "Heatseeker"
 		end
 	})
@@ -2496,24 +2496,24 @@ run(function()
 		Name = "Speed",
 		Min = 1,
 		Max = 23,
-		Function = function(val) end,
+		Function = function(val) end, 
 		Default = 23
 	})
 	FlyVerticalSpeed = Fly.CreateSlider({
 		Name = "Vertical Speed",
 		Min = 1,
 		Max = 100,
-		Function = function(val) end,
+		Function = function(val) end, 
 		Default = 44
 	})
 	FlyVertical = Fly.CreateToggle({
 		Name = "Y Level",
-		Function = function() end,
+		Function = function() end, 
 		Default = true
 	})
 	FlyAutoPop = Fly.CreateToggle({
 		Name = "Pop Balloon",
-		Function = function() end,
+		Function = function() end, 
 		HoverText = "Pops balloons when Fly is disabled."
 	})
 	local oldcamupdate
@@ -2521,15 +2521,15 @@ run(function()
 	local Flydamagecamera = {Enabled = false}
 	FlyDamageAnimation = Fly.CreateToggle({
 		Name = "Damage Animation",
-		Function = function(callback)
-			if Flydamagecamera.Object then
+		Function = function(callback) 
+			if Flydamagecamera.Object then 
 				Flydamagecamera.Object.Visible = callback
 			end
-			if callback then
+			if callback then 
 				task.spawn(function()
 					repeat
 						task.wait(0.1)
-						for i,v in pairs(getconnections(gameCamera:GetPropertyChangedSignal("CameraType"))) do
+						for i,v in pairs(getconnections(gameCamera:GetPropertyChangedSignal("CameraType"))) do 
 							if v.Function then
 								camcontrol = debug.getupvalue(v.Function, 1)
 							end
@@ -2547,7 +2547,7 @@ run(function()
 						end
 					end
 					oldcamupdate = camcontrol.Update
-					camcontrol.Update = function(self, dt)
+					camcontrol.Update = function(self, dt) 
 						if camcontrol.activeCameraController then
 							camcontrol.activeCameraController:UpdateMouseBehavior()
 							local newCameraCFrame, newCameraFocus = camcontrol.activeCameraController:Update(dt)
@@ -2564,7 +2564,7 @@ run(function()
 				end)
 			else
 				shared.damageanim = nil
-				if camcontrol then
+				if camcontrol then 
 					camcontrol.Update = oldcamupdate
 				end
 			end
@@ -2581,8 +2581,8 @@ run(function()
 	Flydamagecamera.Object.Visible = false
 	FlyAnywayProgressBar = Fly.CreateToggle({
 		Name = "Progress Bar",
-		Function = function(callback)
-			if callback then
+		Function = function(callback) 
+			if callback then 
 				FlyAnywayProgressBarFrame = Instance.new("Frame")
 				FlyAnywayProgressBarFrame.AnchorPoint = Vector2.new(0.5, 0)
 				FlyAnywayProgressBarFrame.Position = UDim2.new(0.5, 0, 1, -200)
@@ -2618,249 +2618,6 @@ run(function()
 	})
 	FlyTP = Fly.CreateToggle({
 		Name = "TP Down",
-		Function = function() end,
-		Default = true
-	})
-end)
-
-run(function()
-	local InfiniteFly = {Enabled = false}
-	local InfiniteFlyMode = {Value = "CFrame"}
-	local InfiniteFlySpeed = {Value = 23}
-	local InfiniteFlyVerticalSpeed = {Value = 40}
-	local InfiniteFlyVertical = {Enabled = true}
-	local InfiniteFlyUp = false
-	local InfiniteFlyDown = false
-	local alternatelist = {"Normal", "AntiCheat A", "AntiCheat B"}
-	local clonesuccess = false
-	local disabledproper = true
-	local oldcloneroot
-	local cloned
-	local clone
-	local bodyvelo
-	local FlyOverlap = OverlapParams.new()
-	FlyOverlap.MaxParts = 9e9
-	FlyOverlap.FilterDescendantsInstances = {}
-	FlyOverlap.RespectCanCollide = true
-
-	local function disablefunc()
-		if bodyvelo then bodyvelo:Destroy() end
-		RunLoops:UnbindFromHeartbeat("InfiniteFlyOff")
-		disabledproper = true
-		if not oldcloneroot or not oldcloneroot.Parent then return end
-		lplr.Character.Parent = game
-		oldcloneroot.Parent = lplr.Character
-		lplr.Character.PrimaryPart = oldcloneroot
-		lplr.Character.Parent = workspace
-		oldcloneroot.CanCollide = true
-		for i,v in pairs(lplr.Character:GetDescendants()) do
-			if v:IsA("Weld") or v:IsA("Motor6D") then
-				if v.Part0 == clone then v.Part0 = oldcloneroot end
-				if v.Part1 == clone then v.Part1 = oldcloneroot end
-			end
-			if v:IsA("BodyVelocity") then
-				v:Destroy()
-			end
-		end
-		for i,v in pairs(oldcloneroot:GetChildren()) do
-			if v:IsA("BodyVelocity") then
-				v:Destroy()
-			end
-		end
-		local oldclonepos = clone.Position.Y
-		if clone then
-			clone:Destroy()
-			clone = nil
-		end
-		lplr.Character.Humanoid.HipHeight = hip or 2
-		local origcf = {oldcloneroot.CFrame:GetComponents()}
-		origcf[2] = oldclonepos
-		oldcloneroot.CFrame = CFrame.new(unpack(origcf))
-		oldcloneroot = nil
-		warningNotification("InfiniteFly", "Landed!", 3)
-	end
-
-	InfiniteFly = GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
-		Name = "InfiniteFly",
-		Function = function(callback)
-			if callback then
-				if not entityLibrary.isAlive then
-					disabledproper = true
-				end
-				if not disabledproper then
-					warningNotification("InfiniteFly", "Wait for the last fly to finish", 3)
-					InfiniteFly.ToggleButton(false)
-					return
-				end
-				table.insert(InfiniteFly.Connections, inputService.InputBegan:Connect(function(input1)
-					if InfiniteFlyVertical.Enabled and inputService:GetFocusedTextBox() == nil then
-						if input1.KeyCode == Enum.KeyCode.Space or input1.KeyCode == Enum.KeyCode.ButtonA then
-							InfiniteFlyUp = true
-						end
-						if input1.KeyCode == Enum.KeyCode.LeftShift or input1.KeyCode == Enum.KeyCode.ButtonL2 then
-							InfiniteFlyDown = true
-						end
-					end
-				end))
-				table.insert(InfiniteFly.Connections, inputService.InputEnded:Connect(function(input1)
-					if input1.KeyCode == Enum.KeyCode.Space or input1.KeyCode == Enum.KeyCode.ButtonA then
-						InfiniteFlyUp = false
-					end
-					if input1.KeyCode == Enum.KeyCode.LeftShift or input1.KeyCode == Enum.KeyCode.ButtonL2 then
-						InfiniteFlyDown = false
-					end
-				end))
-				if inputService.TouchEnabled then
-					pcall(function()
-						local jumpButton = lplr.PlayerGui.TouchGui.TouchControlFrame.JumpButton
-						table.insert(InfiniteFly.Connections, jumpButton:GetPropertyChangedSignal("ImageRectOffset"):Connect(function()
-							InfiniteFlyUp = jumpButton.ImageRectOffset.X == 146
-						end))
-						InfiniteFlyUp = jumpButton.ImageRectOffset.X == 146
-					end)
-				end
-				clonesuccess = false
-				if entityLibrary.isAlive and entityLibrary.character.Humanoid.Health > 0 and isnetworkowner(entityLibrary.character.HumanoidRootPart) then
-					cloned = lplr.Character
-					oldcloneroot = entityLibrary.character.HumanoidRootPart
-					if not lplr.Character.Parent then
-						InfiniteFly.ToggleButton(false)
-						return
-					end
-					lplr.Character.Parent = game
-					clone = oldcloneroot:Clone()
-					clone.Parent = lplr.Character
-					oldcloneroot.Parent = gameCamera
-					bedwars.QueryUtil:setQueryIgnored(oldcloneroot, true)
-					clone.CFrame = oldcloneroot.CFrame
-					lplr.Character.PrimaryPart = clone
-					lplr.Character.Parent = workspace
-					for i,v in pairs(lplr.Character:GetDescendants()) do
-						if v:IsA("Weld") or v:IsA("Motor6D") then
-							if v.Part0 == oldcloneroot then v.Part0 = clone end
-							if v.Part1 == oldcloneroot then v.Part1 = clone end
-						end
-						if v:IsA("BodyVelocity") then
-							v:Destroy()
-						end
-					end
-					for i,v in pairs(oldcloneroot:GetChildren()) do
-						if v:IsA("BodyVelocity") then
-							v:Destroy()
-						end
-					end
-					if hip then
-						lplr.Character.Humanoid.HipHeight = hip
-					end
-					hip = lplr.Character.Humanoid.HipHeight
-					clonesuccess = true
-				end
-				if not clonesuccess then
-					warningNotification("InfiniteFly", "Character missing", 3)
-					InfiniteFly.ToggleButton(false)
-					return
-				end
-				local goneup = false
-				RunLoops:BindToHeartbeat("InfiniteFly", function(delta)
-					if GuiLibrary.ObjectsThatCanBeSaved["Lobby CheckToggle"].Api.Enabled then
-						if store.matchState == 0 then return end
-					end
-					if entityLibrary.isAlive then
-						if isnetworkowner(oldcloneroot) then
-							local playerMass = (entityLibrary.character.HumanoidRootPart:GetMass() - 1.4) * (delta * 100)
-
-							local flyVelocity = entityLibrary.character.Humanoid.MoveDirection * (InfiniteFlyMode.Value == "Normal" and InfiniteFlySpeed.Value or 20)
-							entityLibrary.character.HumanoidRootPart.Velocity = flyVelocity + (Vector3.new(0, playerMass + (InfiniteFlyUp and InfiniteFlyVerticalSpeed.Value or 0) + (InfiniteFlyDown and -InfiniteFlyVerticalSpeed.Value or 0), 0))
-							if InfiniteFlyMode.Value ~= "Normal" then
-								entityLibrary.character.HumanoidRootPart.CFrame = entityLibrary.character.HumanoidRootPart.CFrame + (entityLibrary.character.Humanoid.MoveDirection * ((InfiniteFlySpeed.Value + getSpeed()) - 20)) * delta
-							end
-
-							local speedCFrame = {oldcloneroot.CFrame:GetComponents()}
-							speedCFrame[1] = clone.CFrame.X
-							if speedCFrame[2] < 1000 or (not goneup) then
-								task.spawn(warningNotification, "InfiniteFly", "Teleported Up", 3)
-								speedCFrame[2] = 100000
-								goneup = true
-							end
-							speedCFrame[3] = clone.CFrame.Z
-							oldcloneroot.CFrame = CFrame.new(unpack(speedCFrame))
-							oldcloneroot.Velocity = Vector3.new(clone.Velocity.X, oldcloneroot.Velocity.Y, clone.Velocity.Z)
-						else
-							InfiniteFly.ToggleButton(false)
-						end
-					end
-				end)
-			else
-				RunLoops:UnbindFromHeartbeat("InfiniteFly")
-				if clonesuccess and oldcloneroot and clone and lplr.Character.Parent == workspace and oldcloneroot.Parent ~= nil and disabledproper and cloned == lplr.Character then
-					local rayparams = RaycastParams.new()
-					rayparams.FilterDescendantsInstances = {lplr.Character, gameCamera}
-					rayparams.RespectCanCollide = true
-					local ray = workspace:Raycast(Vector3.new(oldcloneroot.Position.X, clone.CFrame.p.Y, oldcloneroot.Position.Z), Vector3.new(0, -1000, 0), rayparams)
-					local origcf = {clone.CFrame:GetComponents()}
-					origcf[1] = oldcloneroot.Position.X
-					origcf[2] = ray and ray.Position.Y + (entityLibrary.character.Humanoid.HipHeight + (oldcloneroot.Size.Y / 2)) or clone.CFrame.p.Y
-					origcf[3] = oldcloneroot.Position.Z
-					oldcloneroot.CanCollide = true
-					bodyvelo = Instance.new("BodyVelocity")
-					bodyvelo.MaxForce = Vector3.new(0, 9e9, 0)
-					bodyvelo.Velocity = Vector3.new(0, -1, 0)
-					bodyvelo.Parent = oldcloneroot
-					oldcloneroot.Velocity = Vector3.new(clone.Velocity.X, -1, clone.Velocity.Z)
-					RunLoops:BindToHeartbeat("InfiniteFlyOff", function(dt)
-						if oldcloneroot then
-							oldcloneroot.Velocity = Vector3.new(clone.Velocity.X, -1, clone.Velocity.Z)
-							local bruh = {clone.CFrame:GetComponents()}
-							bruh[2] = oldcloneroot.CFrame.Y
-							local newcf = CFrame.new(unpack(bruh))
-							FlyOverlap.FilterDescendantsInstances = {lplr.Character, gameCamera}
-							local allowed = true
-							for i,v in pairs(workspace:GetPartBoundsInRadius(newcf.p, 2, FlyOverlap)) do
-								if (v.Position.Y + (v.Size.Y / 2)) > (newcf.p.Y + 0.5) then
-									allowed = false
-									break
-								end
-							end
-							if allowed then
-								oldcloneroot.CFrame = newcf
-							end
-						end
-					end)
-					oldcloneroot.CFrame = CFrame.new(unpack(origcf))
-					entityLibrary.character.Humanoid:ChangeState(Enum.HumanoidStateType.Landed)
-					disabledproper = false
-					if isnetworkowner(oldcloneroot) then
-						warningNotification("InfiniteFly", "Waiting 1.1s to not flag", 3)
-						task.delay(1.1, disablefunc)
-					else
-						disablefunc()
-					end
-				end
-				InfiniteFlyUp = false
-				InfiniteFlyDown = false
-			end
-		end,
-		HoverText = "Makes you go zoom",
-		ExtraText = function()
-			return "Heatseeker"
-		end
-	})
-	InfiniteFlySpeed = InfiniteFly.CreateSlider({
-		Name = "Speed",
-		Min = 1,
-		Max = 23,
-		Function = function(val) end,
-		Default = 23
-	})
-	InfiniteFlyVerticalSpeed = InfiniteFly.CreateSlider({
-		Name = "Vertical Speed",
-		Min = 1,
-		Max = 100,
-		Function = function(val) end,
-		Default = 44
-	})
-	InfiniteFlyVertical = InfiniteFly.CreateToggle({
-		Name = "Y Level",
 		Function = function() end,
 		Default = true
 	})
@@ -4185,6 +3942,7 @@ run(function()
 	local SpeedMode = {Value = "CFrame"}
 	local SpeedValue = {Value = 1}
 	local SpeedValueLarge = {Value = 1}
+	local SpeedDamageBoost = {Enabled = false}
 	local SpeedJump = {Enabled = false}
 	local SpeedJumpHeight = {Value = 20}
 	local SpeedJumpAlways = {Enabled = false}
@@ -4192,15 +3950,21 @@ run(function()
 	local SpeedJumpVanilla = {Enabled = false}
 	local SpeedAnimation = {Enabled = false}
 	local raycastparameters = RaycastParams.new()
+	local damagetick = tick()
 
 	local alternatelist = {"Normal", "AntiCheat A", "AntiCheat B"}
 	Speed = GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
 		Name = "Speed",
 		Function = function(callback)
 			if callback then
+				table.insert(Speed.Connections, vapeEvents.EntityDamageEvent.Event:Connect(function(damageTable)
+					if damageTable.entityInstance == lplr.Character and (damageTable.damageType ~= 0 or damageTable.extra and damageTable.extra.chargeRatio ~= nil) and (not (damageTable.knockbackMultiplier and damageTable.knockbackMultiplier.disabled or damageTable.knockbackMultiplier and damageTable.knockbackMultiplier.horizontal == 0)) and SpeedDamageBoost.Enabled then 
+						damagetick = tick() + 1
+					end
+				end))
 				RunLoops:BindToHeartbeat("Speed", function(delta)
 					if GuiLibrary.ObjectsThatCanBeSaved["Lobby CheckToggle"].Api.Enabled then
-						if store.matchState == 0 then return end
+						if bedwarsStore.matchState == 0 then return end
 					end
 					if entityLibrary.isAlive then
 						if not (isnetworkowner(entityLibrary.character.HumanoidRootPart) and entityLibrary.character.Humanoid:GetState() ~= Enum.HumanoidStateType.Climbing and (not spiderActive) and (not GuiLibrary.ObjectsThatCanBeSaved.InfiniteFlyOptionsButton.Api.Enabled) and (not GuiLibrary.ObjectsThatCanBeSaved.FlyOptionsButton.Api.Enabled)) then return end
@@ -4209,15 +3973,17 @@ run(function()
 						if SpeedAnimation.Enabled then
 							for i, v in pairs(entityLibrary.character.Humanoid:GetPlayingAnimationTracks()) do
 								if v.Name == "WalkAnim" or v.Name == "RunAnim" then
-									v:AdjustSpeed(entityLibrary.character.Humanoid.WalkSpeed / 16)
+									v:AdjustSpeed(entityLibrary.character.Humanoid.WalkSpeed / 6)
 								end
 							end
 						end
 
 						local speedValue = SpeedValue.Value + getSpeed()
+						if damagetick > tick() then speedValue = speedValue + 36 end
+
 						local speedVelocity = entityLibrary.character.Humanoid.MoveDirection * (SpeedMode.Value == "Normal" and SpeedValue.Value or 20)
 						entityLibrary.character.HumanoidRootPart.Velocity = antivoidvelo or Vector3.new(speedVelocity.X, entityLibrary.character.HumanoidRootPart.Velocity.Y, speedVelocity.Z)
-						if SpeedMode.Value ~= "Normal" then
+						if SpeedMode.Value ~= "Normal" then 
 							local speedCFrame = entityLibrary.character.Humanoid.MoveDirection * (speedValue - 20) * delta
 							raycastparameters.FilterDescendantsInstances = {lplr.Character}
 							local ray = workspace:Raycast(entityLibrary.character.HumanoidRootPart.Position, speedCFrame, raycastparameters)
@@ -4227,24 +3993,24 @@ run(function()
 
 						if SpeedJump.Enabled and (not Scaffold.Enabled) and (SpeedJumpAlways.Enabled or killauraNearPlayer) then
 							if (entityLibrary.character.Humanoid.FloorMaterial ~= Enum.Material.Air) and entityLibrary.character.Humanoid.MoveDirection ~= Vector3.zero then
-								if SpeedJumpSound.Enabled then
+								if SpeedJumpSound.Enabled then 
 									pcall(function() entityLibrary.character.HumanoidRootPart.Jumping:Play() end)
 								end
-								if SpeedJumpVanilla.Enabled then
+								if SpeedJumpVanilla.Enabled then 
 									entityLibrary.character.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
 								else
 									entityLibrary.character.HumanoidRootPart.Velocity = Vector3.new(entityLibrary.character.HumanoidRootPart.Velocity.X, SpeedJumpHeight.Value, entityLibrary.character.HumanoidRootPart.Velocity.Z)
 								end
-							end
+							end 
 						end
 					end
 				end)
 			else
 				RunLoops:UnbindFromHeartbeat("Speed")
 			end
-		end,
+		end, 
 		HoverText = "Increases your movement.",
-		ExtraText = function()
+		ExtraText = function() 
 			return "Heatseeker"
 		end
 	})
@@ -4262,9 +4028,14 @@ run(function()
 		Function = function(val) end,
 		Default = 23
 	})
+	SpeedDamageBoost = Speed.CreateToggle({
+		Name = "Damage Boost",
+		Function = function() end,
+		Default = true
+	})
 	SpeedJump = Speed.CreateToggle({
-		Name = "AutoJump",
-		Function = function(callback)
+		Name = "AutoJump", 
+		Function = function(callback) 
 			if SpeedJumpHeight.Object then SpeedJumpHeight.Object.Visible = callback end
 			if SpeedJumpAlways.Object then
 				SpeedJump.Object.ToggleArrow.Visible = callback
@@ -4284,10 +4055,6 @@ run(function()
 	})
 	SpeedJumpAlways = Speed.CreateToggle({
 		Name = "Always Jump",
-		Function = function() end
-	})
-	SpeedJumpSound = Speed.CreateToggle({
-		Name = "Jump Sound",
 		Function = function() end
 	})
 	SpeedAnimation = Speed.CreateToggle({
