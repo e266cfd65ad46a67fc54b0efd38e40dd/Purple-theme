@@ -32,7 +32,6 @@ local store = {
 	equippedKit = "none",
 	forgeMasteryPoints = 0,
 	forgeUpgrades = {},
-	grapple = tick(),
 	inventories = {},
 	localInventory = {
 		inventory = {
@@ -370,9 +369,6 @@ local function getSpeed()
 		local SpeedDamageBoost = lplr.Character:GetAttribute("SpeedBoost")
 		if SpeedDamageBoost and SpeedDamageBoost > 1 then
 			speed = speed + (10 * (SpeedDamageBoost - 1))
-		end
-		if store.grapple > tick() then
-			speed = speed + 90
 		end
 		if lplr.Character:GetAttribute("GrimReaperChannel") then
 			speed = speed + 20
@@ -1660,7 +1656,7 @@ do
 	end)
 	local textlabel = Instance.new("TextLabel")
 	textlabel.Size = UDim2.new(1, 0, 0, 36)
-	textlabel.Text = "The current version of vape is no longer being maintained, join the discord (click the discord icon) to get updates on the latest release."
+	textlabel.Text = "Purple rewrite"
 	textlabel.BackgroundTransparency = 1
 	textlabel.ZIndex = 10
 	textlabel.TextStrokeTransparency = 0
@@ -1911,11 +1907,17 @@ run(function()
 	})
 	autoclickercps = autoclicker.CreateTwoSlider({
 		Name = "CPS",
-		Min = 1000,
-		Max = 1500,
+		Min = 1,
+		Max = 20,
 		Function = function(val) end,
-		Default = 1500,
-		Default2 = 1500
+		Default = 8,
+		Default2 = 12
+	})
+	autoclickerblocks = autoclicker.CreateToggle({
+		Name = "Place Blocks",
+		Function = function() end,
+		Default = true,
+		HoverText = "Automatically places blocks when left click is held."
 	})
 
 	local noclickfunc
@@ -1924,9 +1926,9 @@ run(function()
 		Function = function(callback)
 			if callback then
 				noclickfunc = bedwars.SwordController.isClickingTooFast
-				bedwars.SwordController.isClickingTooFast = function(self)
+				bedwars.SwordController.isClickingTooFast = function(self) 
 					self.lastSwing = tick()
-					return false
+					return false 
 				end
 			else
 				bedwars.SwordController.isClickingTooFast = noclickfunc
@@ -2284,208 +2286,205 @@ run(function()
 end)
 
 local autobankballoon = false
+
 run(function()
-	local Fly = {Enabled = false}
-	local FlyMode = {Value = "CFrame"}
-	local FlyVerticalSpeed = {Value = 40}
-	local FlyVertical = {Enabled = true}
-	local FlyAutoPop = {Enabled = true}
-	local FlyAnyway = {Enabled = false}
-	local FlyAnywayProgressBar = {Enabled = false}
-	local FlyDamageAnimation = {Enabled = false}
-	local FlyTP = {Enabled = false}
-	local FlyAnywayProgressBarFrame
-	local olddeflate
-	local FlyUp = false
-	local FlyDown = false
-	local FlyCoroutine
-	local groundtime = tick()
-	local onground = false
-	local lastonground = false
-	local alternatelist = {"Normal", "AntiCheat A", "AntiCheat B"}
+    local Fly = {Enabled = false}
+    local FlyMode = {Value = "CFrame"}
+    local FlyVerticalSpeed = {Value = 40}
+    local FlyVertical = {Enabled = true}
+    local FlyAutoPop = {Enabled = true}
+    local FlyAnyway = {Enabled = false}
+    local FlyAnywayProgressBar = {Enabled = false}
+    local FlyDamageAnimation = {Enabled = false}
+    local FlyTP = {Enabled = false}
+    local FlyAnywayProgressBarFrame
+    local olddeflate
+    local FlyUp = false
+    local FlyDown = false
+    local FlyCoroutine
+    local groundtime = tick()
+    local onground = false
+    local lastonground = false
+    local alternatelist = {"Normal", "AntiCheat A", "AntiCheat B"}
 
-	local function inflateBalloon()
-		if not Fly.Enabled then return end
-		if entityLibrary.isAlive and (lplr.Character:GetAttribute("InflatedBalloons") or 0) < 1 then
-			autobankballoon = true
-			if getItem("balloon") then
-				bedwars.BalloonController:inflateBalloon()
-				return true
-			end
-		end
-		return false
-	end
+    local function inflateBalloon()
+        if not Fly.Enabled then return end
+        if entityLibrary.isAlive and (lplr.Character:GetAttribute("InflatedBalloons") or 0) < 1 then
+            autobankballoon = true
+            if getItem("balloon") then
+                bedwars.BalloonController:inflateBalloon()
+                return true
+            end
+        end
+        return false
+    end
 
-	Fly = GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
-		Name = "Fly",
-		Function = function(callback)
-			if callback then
-				olddeflate = bedwars.BalloonController.deflateBalloon
-				bedwars.BalloonController.deflateBalloon = function() end
+    Fly = GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
+        Name = "Fly",
+        Function = function(callback)
+            if callback then
+                olddeflate = bedwars.BalloonController.deflateBalloon
+                bedwars.BalloonController.deflateBalloon = function() end
 
-				table.insert(Fly.Connections, inputService.InputBegan:Connect(function(input1)
-					if FlyVertical.Enabled and inputService:GetFocusedTextBox() == nil then
-						if input1.KeyCode == Enum.KeyCode.Space or input1.KeyCode == Enum.KeyCode.ButtonA then
-							FlyUp = true
-						end
-						if input1.KeyCode == Enum.KeyCode.LeftShift or input1.KeyCode == Enum.KeyCode.ButtonL2 then
-							FlyDown = true
-						end
-					end
-				end))
-				table.insert(Fly.Connections, inputService.InputEnded:Connect(function(input1)
-					if input1.KeyCode == Enum.KeyCode.Space or input1.KeyCode == Enum.KeyCode.ButtonA then
-						FlyUp = false
-					end
-					if input1.KeyCode == Enum.KeyCode.LeftShift or input1.KeyCode == Enum.KeyCode.ButtonL2 then
-						FlyDown = false
-					end
-				end))
-				if inputService.TouchEnabled then
-					pcall(function()
-						local jumpButton = lplr.PlayerGui.TouchGui.TouchControlFrame.JumpButton
-						table.insert(Fly.Connections, jumpButton:GetPropertyChangedSignal("ImageRectOffset"):Connect(function()
-							FlyUp = jumpButton.ImageRectOffset.X == 146
-						end))
-						FlyUp = jumpButton.ImageRectOffset.X == 146
-					end)
-				end
-				table.insert(Fly.Connections, vapeEvents.BalloonPopped.Event:Connect(function(poppedTable)
-					if poppedTable.inflatedBalloon and poppedTable.inflatedBalloon:GetAttribute("BalloonOwner") == lplr.UserId then
-						lastonground = not onground
-						repeat task.wait() until (lplr.Character:GetAttribute("InflatedBalloons") or 0) <= 0 or not Fly.Enabled
-						inflateBalloon()
-					end
-				end))
-				table.insert(Fly.Connections, vapeEvents.AutoBankBalloon.Event:Connect(function()
-					repeat task.wait() until getItem("balloon")
-					inflateBalloon()
-				end))
+                table.insert(Fly.Connections, inputService.InputBegan:Connect(function(input1)
+                    if FlyVertical.Enabled and inputService:GetFocusedTextBox() == nil then
+                        if input1.KeyCode == Enum.KeyCode.Space or input1.KeyCode == Enum.KeyCode.ButtonA then
+                            FlyUp = true
+                        end
+                        if input1.KeyCode == Enum.KeyCode.LeftShift or input1.KeyCode == Enum.KeyCode.ButtonL2 then
+                            FlyDown = true
+                        end
+                    end
+                end))
+                table.insert(Fly.Connections, inputService.InputEnded:Connect(function(input1)
+                    if input1.KeyCode == Enum.KeyCode.Space or input1.KeyCode == Enum.KeyCode.ButtonA then
+                        FlyUp = false
+                    end
+                    if input1.KeyCode == Enum.KeyCode.LeftShift or input1.KeyCode == Enum.KeyCode.ButtonL2 then
+                        FlyDown = false
+                    end
+                end))
+                if inputService.TouchEnabled then
+                    pcall(function()
+                        local jumpButton = lplr.PlayerGui.TouchGui.TouchControlFrame.JumpButton
+                        table.insert(Fly.Connections, jumpButton:GetPropertyChangedSignal("ImageRectOffset"):Connect(function()
+                            FlyUp = jumpButton.ImageRectOffset.X == 146
+                        end))
+                        FlyUp = jumpButton.ImageRectOffset.X == 146
+                    end)
+                end
+                table.insert(Fly.Connections, vapeEvents.BalloonPopped.Event:Connect(function(poppedTable)
+                    if poppedTable.inflatedBalloon and poppedTable.inflatedBalloon:GetAttribute("BalloonOwner") == lplr.UserId then
+                        lastonground = not onground
+                        repeat task.wait() until (lplr.Character:GetAttribute("InflatedBalloons") or 0) <= 0 or not Fly.Enabled
+                        inflateBalloon()
+                    end
+                end))
+                table.insert(Fly.Connections, vapeEvents.AutoBankBalloon.Event:Connect(function()
+                    repeat task.wait() until getItem("balloon")
+                    inflateBalloon()
+                end))
 
-				local balloons
-				if entityLibrary.isAlive and (not store.queueType:find("mega")) then
-					balloons = inflateBalloon()
-				end
-				local megacheck = store.queueType:find("mega") or store.queueType == "winter_event"
+                local balloons
+                if entityLibrary.isAlive then
+                    balloons = inflateBalloon()
+                end
 
-				task.spawn(function()
-					repeat task.wait() until store.queueType ~= "bedwars_test" or (not Fly.Enabled)
-					if not Fly.Enabled then return end
-					megacheck = store.queueType:find("mega") or store.queueType == "winter_event"
-				end)
+                task.spawn(function()
+                    repeat task.wait() until store.queueType ~= "bedwars_test" or (not Fly.Enabled)
+                end)
 
-				local flyAllowed = entityLibrary.isAlive and ((lplr.Character:GetAttribute("InflatedBalloons") and lplr.Character:GetAttribute("InflatedBalloons") > 0) or store.matchState == 2 or megacheck) and 1 or 0
-				if flyAllowed <= 0 and shared.damageanim and (not balloons) then
-					shared.damageanim()
-					bedwars.SoundManager:playSound(bedwars.SoundList["DAMAGE_"..math.random(1, 3)])
-				end
+                local flyAllowed = entityLibrary.isAlive and ((lplr.Character:GetAttribute("InflatedBalloons") and lplr.Character:GetAttribute("InflatedBalloons") > 0) or megacheck) and 1 or 0
+                if flyAllowed <= 0 and shared.damageanim and (not balloons) then
+                    shared.damageanim()
+                    bedwars.SoundManager:playSound(bedwars.SoundList["DAMAGE_"..math.random(1, 3)])
+                end
 
-				if FlyAnywayProgressBarFrame and flyAllowed <= 0 and (not balloons) then
-					FlyAnywayProgressBarFrame.Visible = true
-					FlyAnywayProgressBarFrame.Frame:TweenSize(UDim2.new(1, 0, 0, 20), Enum.EasingDirection.InOut, Enum.EasingStyle.Linear, 0, true)
-				end
+                if FlyAnywayProgressBarFrame and flyAllowed <= 0 and (not balloons) then
+                    FlyAnywayProgressBarFrame.Visible = true
+                    FlyAnywayProgressBarFrame.Frame:TweenSize(UDim2.new(1, 0, 0, 20), Enum.EasingDirection.InOut, Enum.EasingStyle.Linear, 0, true)
+                end
 
-				groundtime = tick() + (2.6 + (entityLibrary.groundTick - tick()))
-				FlyCoroutine = coroutine.create(function()
-					repeat
-						repeat task.wait() until (groundtime - tick()) < 0.6 and not onground
-						flyAllowed = ((lplr.Character and lplr.Character:GetAttribute("InflatedBalloons") and lplr.Character:GetAttribute("InflatedBalloons") > 0) or store.matchState == 2 or megacheck) and 1 or 0
-						if (not Fly.Enabled) then break end
-						local Flytppos = -99999
-						if flyAllowed <= 0 and FlyTP.Enabled and entityLibrary.isAlive then
-							local ray = workspace:Raycast(entityLibrary.character.HumanoidRootPart.Position, Vector3.new(0, -1000, 0), store.blockRaycast)
-							if ray then
-								Flytppos = entityLibrary.character.HumanoidRootPart.Position.Y
-								local args = {entityLibrary.character.HumanoidRootPart.CFrame:GetComponents()}
-								args[2] = ray.Position.Y + (entityLibrary.character.HumanoidRootPart.Size.Y / 2) + entityLibrary.character.Humanoid.HipHeight
-								entityLibrary.character.HumanoidRootPart.CFrame = CFrame.new(unpack(args))
-								task.wait(0.12)
-								if (not Fly.Enabled) then break end
-								flyAllowed = ((lplr.Character and lplr.Character:GetAttribute("InflatedBalloons") and lplr.Character:GetAttribute("InflatedBalloons") > 0) or store.matchState == 2 or megacheck) and 1 or 0
-								if flyAllowed <= 0 and Flytppos ~= -99999 and entityLibrary.isAlive then
-									local args = {entityLibrary.character.HumanoidRootPart.CFrame:GetComponents()}
-									args[2] = Flytppos
-									entityLibrary.character.HumanoidRootPart.CFrame = CFrame.new(unpack(args))
-								end
-							end
-						end
-					until (not Fly.Enabled)
-				end)
-				coroutine.resume(FlyCoroutine)
+                groundtime = tick() + (1 + (entityLibrary.groundTick - tick()))
+                FlyCoroutine = coroutine.create(function()
+                    repeat
+                        repeat task.wait() until (groundtime - tick()) < 0.6 and not onground
+                        flyAllowed = ((lplr.Character and lplr.Character:GetAttribute("InflatedBalloons") and lplr.Character:GetAttribute("InflatedBalloons") > 0) or megacheck) and 1 or 0
+                        if (not Fly.Enabled) then break end
+                        local Flytppos = -99999
+                        if flyAllowed <= 0 and FlyTP.Enabled and entityLibrary.isAlive then
+                            local ray = workspace:Raycast(entityLibrary.character.HumanoidRootPart.Position, Vector3.new(0, -1000, 0), store.blockRaycast)
+                            if ray then
+                                Flytppos = entityLibrary.character.HumanoidRootPart.Position.Y
+                                local args = {entityLibrary.character.HumanoidRootPart.CFrame:GetComponents()}
+                                args[2] = ray.Position.Y + (entityLibrary.character.HumanoidRootPart.Size.Y / 2) + entityLibrary.character.Humanoid.HipHeight
+                                entityLibrary.character.HumanoidRootPart.CFrame = CFrame.new(unpack(args))
+                                task.wait(0.12)
+                                if (not Fly.Enabled) then break end
+                                flyAllowed = ((lplr.Character and lplr.Character:GetAttribute("InflatedBalloons") and lplr.Character:GetAttribute("InflatedBalloons") > 0) or megacheck) and 1 or 0
+                                if flyAllowed <= 0 and Flytppos ~= -99999 and entityLibrary.isAlive then
+                                    local args = {entityLibrary.character.HumanoidRootPart.CFrame:GetComponents()}
+                                    args[2] = Flytppos
+                                    entityLibrary.character.HumanoidRootPart.CFrame = CFrame.new(unpack(args))
+                                end
+                            end
+                        end
+                    until (not Fly.Enabled)
+                end)
+                coroutine.resume(FlyCoroutine)
 
-				RunLoops:BindToHeartbeat("Fly", function(delta)
-					if GuiLibrary.ObjectsThatCanBeSaved["Lobby CheckToggle"].Api.Enabled then
-						if bedwars.matchState == 0 then return end
-					end
-					if entityLibrary.isAlive then
-						local playerMass = (entityLibrary.character.HumanoidRootPart:GetMass() - 1.4) * (delta * 100)
-						flyAllowed = ((lplr.Character:GetAttribute("InflatedBalloons") and lplr.Character:GetAttribute("InflatedBalloons") > 0) or store.matchState == 2 or megacheck) and 1 or 0
-						playerMass = playerMass + (flyAllowed > 0 and 4 or 0) * (tick() % 0.4 < 0.2 and -1 or 1)
+                RunLoops:BindToHeartbeat("Fly", function(delta)
+                    if GuiLibrary.ObjectsThatCanBeSaved["Lobby CheckToggle"].Api.Enabled then
+                        if bedwars.matchState == 0 then return end
+                    end
+                    if entityLibrary.isAlive then
+                        local playerMass = (entityLibrary.character.HumanoidRootPart:GetMass() - 1.4) * (delta * 100)
+                        flyAllowed = ((lplr.Character:GetAttribute("InflatedBalloons") and lplr.Character:GetAttribute("InflatedBalloons") > 0) or megacheck) and 1 or 0
+                        playerMass = playerMass + (flyAllowed > 0 and 4 or 0) * (tick() % 0.4 < 0.2 and -1 or 1)
 
-						if FlyAnywayProgressBarFrame then
-							FlyAnywayProgressBarFrame.Visible = flyAllowed <= 0
-							FlyAnywayProgressBarFrame.BackgroundColor3 = Color3.fromHSV(GuiLibrary.ObjectsThatCanBeSaved["Gui ColorSliderColor"].Api.Hue, GuiLibrary.ObjectsThatCanBeSaved["Gui ColorSliderColor"].Api.Sat, GuiLibrary.ObjectsThatCanBeSaved["Gui ColorSliderColor"].Api.Value)
-							FlyAnywayProgressBarFrame.Frame.BackgroundColor3 = Color3.fromHSV(GuiLibrary.ObjectsThatCanBeSaved["Gui ColorSliderColor"].Api.Hue, GuiLibrary.ObjectsThatCanBeSaved["Gui ColorSliderColor"].Api.Sat, GuiLibrary.ObjectsThatCanBeSaved["Gui ColorSliderColor"].Api.Value)
-						end
+                        if FlyAnywayProgressBarFrame then
+                            FlyAnywayProgressBarFrame.Visible = flyAllowed <= 0
+                            FlyAnywayProgressBarFrame.BackgroundColor3 = Color3.fromHSV(GuiLibrary.ObjectsThatCanBeSaved["Gui ColorSliderColor"].Api.Hue, GuiLibrary.ObjectsThatCanBeSaved["Gui ColorSliderColor"].Api.Sat, GuiLibrary.ObjectsThatCanBeSaved["Gui ColorSliderColor"].Api.Value)
+                            FlyAnywayProgressBarFrame.Frame.BackgroundColor3 = Color3.fromHSV(GuiLibrary.ObjectsThatCanBeSaved["Gui ColorSliderColor"].Api.Hue, GuiLibrary.ObjectsThatCanBeSaved["Gui ColorSliderColor"].Api.Sat, GuiLibrary.ObjectsThatCanBeSaved["Gui ColorSliderColor"].Api.Value)
+                        end
 
-						if flyAllowed <= 0 then
-							local newray = getPlacedBlock(entityLibrary.character.HumanoidRootPart.Position + Vector3.new(0, (entityLibrary.character.Humanoid.HipHeight * -2) - 1, 0))
-							onground = newray and true or false
-							if lastonground ~= onground then
-								if (not onground) then
-									groundtime = tick() + (2.6 + (entityLibrary.groundTick - tick()))
-									if FlyAnywayProgressBarFrame then
-										FlyAnywayProgressBarFrame.Frame:TweenSize(UDim2.new(0, 0, 0, 20), Enum.EasingDirection.InOut, Enum.EasingStyle.Linear, groundtime - tick(), true)
-									end
-								else
-									if FlyAnywayProgressBarFrame then
-										FlyAnywayProgressBarFrame.Frame:TweenSize(UDim2.new(1, 0, 0, 20), Enum.EasingDirection.InOut, Enum.EasingStyle.Linear, 0, true)
-									end
-								end
-							end
-							if FlyAnywayProgressBarFrame then
-								FlyAnywayProgressBarFrame.TextLabel.Text = math.max(onground and 2.5 or math.floor((groundtime - tick()) * 10) / 10, 0).."s"
-							end
-							lastonground = onground
-						else
-							onground = true
-							lastonground = true
-						end
+                        if flyAllowed <= 0 then
+                            local newray = getPlacedBlock(entityLibrary.character.HumanoidRootPart.Position + Vector3.new(0, (entityLibrary.character.Humanoid.HipHeight * -2) - 1, 0))
+                            onground = newray and true or false
+                            if lastonground ~= onground then
+                                if (not onground) then
+                                    groundtime = tick() + (1.5 + (entityLibrary.groundTick - tick()))
+                                    if FlyAnywayProgressBarFrame then
+                                        FlyAnywayProgressBarFrame.Frame:TweenSize(UDim2.new(0, 0, 0, 20), Enum.EasingDirection.InOut, Enum.EasingStyle.Linear, groundtime - tick(), true)
+                                    end
+                                else
+                                    if FlyAnywayProgressBarFrame then
+                                        FlyAnywayProgressBarFrame.Frame:TweenSize(UDim2.new(1, 0, 0, 20), Enum.EasingDirection.InOut, Enum.EasingStyle.Linear, 0, true)
+                                    end
+                                end
+                            end
+                            if FlyAnywayProgressBarFrame then
+                                FlyAnywayProgressBarFrame.TextLabel.Text = math.max(onground and 2.5 or math.floor((groundtime - tick()) * 10) / 10, 0).."s"
+                            end
+                            lastonground = onground
+                        else
+                            onground = true
+                            lastonground = true
+                        end
 
-						local flyVelocity = entityLibrary.character.Humanoid.MoveDirection * (FlyMode.Value == "Normal" and FlySpeed.Value or 20)
-						entityLibrary.character.HumanoidRootPart.Velocity = flyVelocity + (Vector3.new(0, playerMass + (FlyUp and FlyVerticalSpeed.Value or 0) + (FlyDown and -FlyVerticalSpeed.Value or 0), 0))
-						if FlyMode.Value ~= "Normal" then
-							entityLibrary.character.HumanoidRootPart.CFrame = entityLibrary.character.HumanoidRootPart.CFrame + (entityLibrary.character.Humanoid.MoveDirection * ((FlySpeed.Value + getSpeed()) - 20)) * delta
-						end
-					end
-				end)
-			else
-				pcall(function() coroutine.close(FlyCoroutine) end)
-				autobankballoon = false
-				waitingforballoon = false
-				lastonground = nil
-				FlyUp = false
-				FlyDown = false
-				RunLoops:UnbindFromHeartbeat("Fly")
-				if FlyAnywayProgressBarFrame then
-					FlyAnywayProgressBarFrame.Visible = false
-				end
-				if FlyAutoPop.Enabled then
-					if entityLibrary.isAlive and lplr.Character:GetAttribute("InflatedBalloons") then
-						for i = 1, lplr.Character:GetAttribute("InflatedBalloons") do
-							olddeflate()
-						end
-					end
-				end
-				bedwars.BalloonController.deflateBalloon = olddeflate
-				olddeflate = nil
-			end
-		end,
-		HoverText = "Makes you go zoom (longer Fly discovered by exelys and Cqded)",
-		ExtraText = function()
-			return "Heatseeker"
-		end
-	})
+                        local flyVelocity = entityLibrary.character.Humanoid.MoveDirection * (FlyMode.Value == "Normal" and FlySpeed.Value or 20)
+                        entityLibrary.character.HumanoidRootPart.Velocity = flyVelocity + (Vector3.new(0, playerMass + (FlyUp and FlyVerticalSpeed.Value or 0) + (FlyDown and -FlyVerticalSpeed.Value or 0), 0))
+                        if FlyMode.Value ~= "Normal" then
+                            entityLibrary.character.HumanoidRootPart.CFrame = entityLibrary.character.HumanoidRootPart.CFrame + (entityLibrary.character.Humanoid.MoveDirection * ((FlySpeed.Value + getSpeed()) - 20)) * delta
+                        end
+                    end
+                end)
+            else
+                pcall(function() coroutine.close(FlyCoroutine) end)
+                autobankballoon = false
+                lastonground = nil
+                FlyUp = false
+                FlyDown = false
+                RunLoops:UnbindFromHeartbeat("Fly")
+                if FlyAnywayProgressBarFrame then
+                    FlyAnywayProgressBarFrame.Visible = false
+                end
+                if FlyAutoPop.Enabled then
+                    if entityLibrary.isAlive and lplr.Character:GetAttribute("InflatedBalloons") then
+                        for i = 1, lplr.Character:GetAttribute("InflatedBalloons") do
+                            olddeflate()
+                        end
+                    end
+                end
+                bedwars.BalloonController.deflateBalloon = olddeflate
+                olddeflate = nil
+            end
+        end,
+        HoverText = "Makes you go zoom (longer Fly discovered by exelys and Cqded)",
+        ExtraText = function()
+            return "Heatseeker"
+        end
+    })
 	FlySpeed = Fly.CreateSlider({
 		Name = "Speed",
 		Min = 1,
@@ -2671,7 +2670,7 @@ run(function()
 		origcf[2] = oldclonepos
 		oldcloneroot.CFrame = CFrame.new(unpack(origcf))
 		oldcloneroot = nil
-		warningNotification("InfiniteFly", "Landed!", 3)
+		warningNotification("InfiniteFly", "Landed!", 1)
 	end
 
 	InfiniteFly = GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
@@ -2682,7 +2681,7 @@ run(function()
 					disabledproper = true
 				end
 				if not disabledproper then
-					warningNotification("InfiniteFly", "Wait for the last fly to finish", 3)
+					warningNotification("InfiniteFly", "Wait for the last fly to finish", 1)
 					InfiniteFly.ToggleButton(false)
 					return
 				end
@@ -2771,9 +2770,9 @@ run(function()
 
 							local speedCFrame = {oldcloneroot.CFrame:GetComponents()}
 							speedCFrame[1] = clone.CFrame.X
-							if speedCFrame[2] < 1000 or (not goneup) then
+							if speedCFrame[2] < 0 or (not goneup) then
 								task.spawn(warningNotification, "InfiniteFly", "Teleported Up", 3)
-								speedCFrame[2] = 100000
+								speedCFrame[2] = 10000
 								goneup = true
 							end
 							speedCFrame[3] = clone.CFrame.Z
@@ -2790,14 +2789,14 @@ run(function()
 					local rayparams = RaycastParams.new()
 					rayparams.FilterDescendantsInstances = {lplr.Character, gameCamera}
 					rayparams.RespectCanCollide = true
-					local ray = workspace:Raycast(Vector3.new(oldcloneroot.Position.X, clone.CFrame.p.Y, oldcloneroot.Position.Z), Vector3.new(0, -1000, 0), rayparams)
+					local ray = workspace:Raycast(Vector3.new(oldcloneroot.Position.X, clone.CFrame.p.Y, oldcloneroot.Position.Z), Vector3.new(0, 0, 0), rayparams)
 					local origcf = {clone.CFrame:GetComponents()}
 					origcf[1] = oldcloneroot.Position.X
-					origcf[2] = ray and ray.Position.Y + (entityLibrary.character.Humanoid.HipHeight + (oldcloneroot.Size.Y / 2)) or clone.CFrame.p.Y
+					origcf[2] = ray and ray.Position.Y + (entityLibrary.character.Humanoid.HipHeight + (oldcloneroot.Size.Y / 0.06)) or clone.CFrame.p.Y
 					origcf[3] = oldcloneroot.Position.Z
 					oldcloneroot.CanCollide = true
 					bodyvelo = Instance.new("BodyVelocity")
-					bodyvelo.MaxForce = Vector3.new(0, 9e9, 0)
+					bodyvelo.MaxForce = Vector3.new(0, 1000, 0)
 					bodyvelo.Velocity = Vector3.new(0, -1, 0)
 					bodyvelo.Parent = oldcloneroot
 					oldcloneroot.Velocity = Vector3.new(clone.Velocity.X, -1, clone.Velocity.Z)
@@ -2810,7 +2809,7 @@ run(function()
 							FlyOverlap.FilterDescendantsInstances = {lplr.Character, gameCamera}
 							local allowed = true
 							for i,v in pairs(workspace:GetPartBoundsInRadius(newcf.p, 2, FlyOverlap)) do
-								if (v.Position.Y + (v.Size.Y / 2)) > (newcf.p.Y + 0.5) then
+								if (v.Position.Y + (v.Size.Y / 0.06)) > (newcf.p.Y + 0.5) then
 									allowed = false
 									break
 								end
@@ -2824,8 +2823,8 @@ run(function()
 					entityLibrary.character.Humanoid:ChangeState(Enum.HumanoidStateType.Landed)
 					disabledproper = false
 					if isnetworkowner(oldcloneroot) then
-						warningNotification("InfiniteFly", "Waiting 1.1s to not flag", 3)
-						task.delay(1.1, disablefunc)
+						warningNotification("InfiniteFly", "Waiting 1s to not flag", 3)
+						task.delay(1, disablefunc)
 					else
 						disablefunc()
 					end
@@ -2859,79 +2858,6 @@ run(function()
 		Default = true
 	})
 end)
-
-run(function()
-	local GrappleExploit = {Enabled = false}
-	local GrappleExploitMode = {Value = "Normal"}
-	local GrappleExploitVerticalSpeed = {Value = 40}
-	local GrappleExploitVertical = {Enabled = true}
-	local GrappleExploitUp = false
-	local GrappleExploitDown = false
-	local alternatelist = {"Normal", "AntiCheat A", "AntiCheat B"}
-	local projectileRemote = bedwars.Client:Get(bedwars.ProjectileRemote)
-
-	--me when I have to fix bw code omegalol
-	bedwars.Client:Get("GrapplingHookFunctions"):Connect(function(p4)
-		if p4.hookFunction == "PLAYER_IN_TRANSIT" then
-			bedwars.CooldownController:setOnCooldown("grappling_hook", 3.5)
-		end
-	end)
-
-	GrappleExploit = GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
-		Name = "GrappleExploit",
-		Function = function(callback)
-			if callback then
-				local grappleHooked = false
-				table.insert(GrappleExploit.Connections, bedwars.Client:Get("GrapplingHookFunctions"):Connect(function(p4)
-					if p4.hookFunction == "PLAYER_IN_TRANSIT" then
-						store.grapple = tick() + 1.8
-						grappleHooked = true
-						GrappleExploit.ToggleButton(false)
-					end
-				end))
-
-				local fireball = getItem("grappling_hook")
-				if fireball then
-					task.spawn(function()
-						repeat task.wait() until bedwars.CooldownController:getRemainingCooldown("grappling_hook") == 0 or (not GrappleExploit.Enabled)
-						if (not GrappleExploit.Enabled) then return end
-						switchItem(fireball.tool)
-						local pos = entityLibrary.character.HumanoidRootPart.CFrame.p
-						local offsetshootpos = (CFrame.new(pos, pos + Vector3.new(0, -60, 0)) * CFrame.new(Vector3.new(-bedwars.BowConstantsTable.RelX, -bedwars.BowConstantsTable.RelY, -bedwars.BowConstantsTable.RelZ))).p
-						projectileRemote:CallServerAsync(fireball["tool"], nil, "grappling_hook_projectile", offsetshootpos, pos, Vector3.new(0, -60, 0), game:GetService("HttpService"):GenerateGUID(true), {drawDurationSeconds = 1}, workspace:GetServerTimeNow() - 0.045)
-					end)
-				else
-					warningNotification("GrappleExploit", "missing grapple hook", 3)
-					GrappleExploit.ToggleButton(false)
-					return
-				end
-
-				local startCFrame = entityLibrary.isAlive and entityLibrary.character.HumanoidRootPart.CFrame
-				RunLoops:BindToHeartbeat("GrappleExploit", function(delta)
-					if GuiLibrary.ObjectsThatCanBeSaved["Lobby CheckToggle"].Api.Enabled then
-						if bedwars.matchState == 0 then return end
-					end
-					if entityLibrary.isAlive then
-						entityLibrary.character.HumanoidRootPart.Velocity = Vector3.zero
-						entityLibrary.character.HumanoidRootPart.CFrame = startCFrame
-					end
-				end)
-			else
-				GrappleExploitUp = false
-				GrappleExploitDown = false
-				RunLoops:UnbindFromHeartbeat("GrappleExploit")
-			end
-		end,
-		HoverText = "Makes you go zoom (longer GrappleExploit discovered by exelys and Cqded)",
-		ExtraText = function()
-			if GuiLibrary.ObjectsThatCanBeSaved["Text GUIAlternate TextToggle"]["Api"].Enabled then
-				return alternatelist[table.find(GrappleExploitMode["List"], GrappleExploitMode.Value)]
-			end
-			return GrappleExploitMode.Value
-		end
-	})
-end)
-
 
 local killauraNearPlayer
 run(function()
@@ -3413,6 +3339,29 @@ run(function()
 			end
 		end
     })
+		--[[killaurarangecircle = Killaura.CreateToggle({
+			Name = "Range Visualizer",
+			Function = function(callback)
+					if callback then
+							killaurarangecirclepart = Instance.new("MeshPart")
+							killaurarangecirclepart.MeshId = "rbxassetid://3726303797"
+							killaurarangecirclepart.Color = Color3.fromHSV(killauracolor["Hue"], killauracolor["Sat"], killauracolor["Value"])
+							killaurarangecirclepart.CanCollide = false
+							killaurarangecirclepart.Anchored = true
+							killaurarangecirclepart.Material = Enum.Material.Neon
+							killaurarangecirclepart.Size = Vector3.new(killaurarange.Value * 0.7, 0.01, killaurarange.Value * 0.7)
+							if Killaura.Enabled then
+									killaurarangecirclepart.Parent = gameCamera
+							end
+							bedwars.QueryUtil:setQueryIgnored(killaurarangecirclepart, true)
+					else
+							if killaurarangecirclepart then
+									killaurarangecirclepart:Destroy()
+									killaurarangecirclepart = nil
+							end
+					end
+			end
+	})]]
 	killauratargethighlight = Killaura.CreateToggle({
 		Name = "Use New Highlight",
 		Function = function(callback)
@@ -3477,29 +3426,6 @@ run(function()
         Function = function() end,
 		HoverText = "Makes your character face the opponent."
     })
-	killaurarangecircle = Killaura.CreateToggle({
-		Name = "Range Visualizer",
-		Function = function(callback)
-			if callback then
-				killaurarangecirclepart = Instance.new("MeshPart")
-				killaurarangecirclepart.MeshId = "rbxassetid://3726303797"
-				killaurarangecirclepart.Color = Color3.fromHSV(killauracolor["Hue"], killauracolor["Sat"], killauracolor.Value)
-				killaurarangecirclepart.CanCollide = false
-				killaurarangecirclepart.Anchored = true
-				killaurarangecirclepart.Material = Enum.Material.Neon
-				killaurarangecirclepart.Size = Vector3.new(killaurarange.Value * 0.7, 0.01, killaurarange.Value * 0.7)
-				if Killaura.Enabled then
-					killaurarangecirclepart.Parent = gameCamera
-				end
-				bedwars.QueryUtil:setQueryIgnored(killaurarangecirclepart, true)
-			else
-				if killaurarangecirclepart then
-					killaurarangecirclepart:Destroy()
-					killaurarangecirclepart = nil
-				end
-			end
-		end
-	})
 	killauraaimcircle = Killaura.CreateToggle({
 		Name = "Aim Visualizer",
 		Function = function(callback)
@@ -4273,21 +4199,20 @@ run(function()
 					end
 				end))
 				RunLoops:BindToHeartbeat("Speed", function(delta)
-					if GuiLibrary.ObjectsThatCanBeSaved["Lobby CheckToggle"].Api.Enabled then
-						if bedwarsStore.matchState == 0 then return end
-					end
 					if entityLibrary.isAlive then
+						if not (isnetworkowner(entityLibrary.character.HumanoidRootPart) and entityLibrary.character.Humanoid:GetState() ~= Enum.HumanoidStateType.Climbing and (not spiderActive) and (not GuiLibrary.ObjectsThatCanBeSaved.InfiniteFlyOptionsButton.Api.Enabled) and (not GuiLibrary.ObjectsThatCanBeSaved.FlyOptionsButton.Api.Enabled)) then return end
+						if GuiLibrary.ObjectsThatCanBeSaved.GrappleExploitOptionsButton and GuiLibrary.ObjectsThatCanBeSaved.GrappleExploitOptionsButton.Api.Enabled then return end
 						if LongJump.Enabled then return end
 						if SpeedAnimation.Enabled then
 							for i, v in pairs(entityLibrary.character.Humanoid:GetPlayingAnimationTracks()) do
 								if v.Name == "WalkAnim" or v.Name == "RunAnim" then
-									v:AdjustSpeed(entityLibrary.character.Humanoid.WalkSpeed / 6)
+									v:AdjustSpeed(entityLibrary.character.Humanoid.WalkSpeed / 4)
 								end
 							end
 						end
 
 						local speedValue = SpeedValue.Value + getSpeed()
-						if damagetick > tick() then speedValue = speedValue + 36 end
+						if damagetick > tick() then speedValue = speedValue + 30 end
 
 						local speedVelocity = entityLibrary.character.Humanoid.MoveDirection * (SpeedMode.Value == "Normal" and SpeedValue.Value or 20)
 						entityLibrary.character.HumanoidRootPart.Velocity = antivoidvelo or Vector3.new(speedVelocity.X, entityLibrary.character.HumanoidRootPart.Velocity.Y, speedVelocity.Z)
@@ -4363,6 +4288,14 @@ run(function()
 	})
 	SpeedJumpAlways = Speed.CreateToggle({
 		Name = "Always Jump",
+		Function = function() end
+	})
+	SpeedJumpSound = Speed.CreateToggle({
+		Name = "Jump Sound",
+		Function = function() end
+	})
+	SpeedJumpVanilla = Speed.CreateToggle({
+		Name = "Real Jump",
 		Function = function() end
 	})
 	SpeedAnimation = Speed.CreateToggle({
@@ -4519,58 +4452,93 @@ run(function()
 	local BedESPTable = {}
 	local BedESPColor = {Value = 0.44}
 	local BedESPTransparency = {Value = 1}
+	local BedESPLineThickness = {Value = 0.05}
 	local BedESPOnTop = {Enabled = true}
 	BedESP = GuiLibrary.ObjectsThatCanBeSaved.RenderWindow.Api.CreateOptionsButton({
-		Name = "BedESP",
-		Function = function(callback)
-			if callback then
-				table.insert(BedESP.Connections, collectionService:GetInstanceAddedSignal("bed"):Connect(function(bed)
-					task.wait(0.2)
-					if not BedESP.Enabled then return end
-					local BedFolder = Instance.new("Folder")
-					BedFolder.Parent = BedESPFolder
-					BedESPTable[bed] = BedFolder
-					for bedespnumber, bedesppart in pairs(bed:GetChildren()) do
-						local boxhandle = Instance.new("BoxHandleAdornment")
-						boxhandle.Size = bedesppart.Size + Vector3.new(.01, .01, .01)
-						boxhandle.AlwaysOnTop = true
-						boxhandle.ZIndex = (bedesppart.Name == "Blanket" and 10 or 0)
-						boxhandle.Visible = true
-						boxhandle.Adornee = bedesppart
-						boxhandle.Color3 = bedesppart.Color
-						boxhandle.Name = bedespnumber
-						boxhandle.Parent = BedFolder
+			Name = "BedESP",
+			Function = function(callback)
+					if callback then
+							table.insert(BedESP.Connections, collectionService:GetInstanceAddedSignal("bed"):Connect(function(bed)
+									task.wait(0.2)
+									if not BedESP.Enabled then return end
+									local BedFolder = Instance.new("Folder")
+									BedFolder.Parent = BedESPFolder
+									BedESPTable[bed] = BedFolder
+									for bedespnumber, bedesppart in pairs(bed:GetChildren()) do
+											if bedesppart:IsA("BasePart") then
+													local selectionBox = Instance.new("SelectionBox")
+													selectionBox.Adornee = bedesppart
+													selectionBox.Color3 = Color3.fromHSV(BedESPColor.Value, 1, 1)
+													selectionBox.LineThickness = BedESPLineThickness.Value
+													selectionBox.Parent = BedFolder
+											end
+									end
+							end))
+							table.insert(BedESP.Connections, collectionService:GetInstanceRemovedSignal("bed"):Connect(function(bed)
+									if BedESPTable[bed] then
+											BedESPTable[bed]:Destroy()
+											BedESPTable[bed] = nil
+									end
+							end))
+							for i, bed in pairs(collectionService:GetTagged("bed")) do
+									local BedFolder = Instance.new("Folder")
+									BedFolder.Parent = BedESPFolder
+									BedESPTable[bed] = BedFolder
+									for bedespnumber, bedesppart in pairs(bed:GetChildren()) do
+											if bedesppart:IsA("BasePart") then
+													local selectionBox = Instance.new("SelectionBox")
+													selectionBox.Adornee = bedesppart
+													selectionBox.Color3 = Color3.fromHSV(BedESPColor.Value, 1, 1)
+													selectionBox.LineThickness = BedESPLineThickness.Value
+													selectionBox.Parent = BedFolder
+											end
+									end
+							end
+					else
+							BedESPFolder:ClearAllChildren()
+							table.clear(BedESPTable)
 					end
-				end))
-				table.insert(BedESP.Connections, collectionService:GetInstanceRemovedSignal("bed"):Connect(function(bed)
-					if BedESPTable[bed] then
-						BedESPTable[bed]:Destroy()
-						BedESPTable[bed] = nil
+			end,
+			HoverText = "Render Beds through walls"
+	})
+
+	local function UpdateLineThickness(newThickness)
+			BedESPLineThickness.Value = newThickness
+			for bed, BedFolder in pairs(BedESPTable) do
+					for _, selectionBox in ipairs(BedFolder:GetChildren()) do
+							if selectionBox:IsA("SelectionBox") then
+									selectionBox.LineThickness = newThickness
+							end
 					end
-				end))
-				for i, bed in pairs(collectionService:GetTagged("bed")) do
-					local BedFolder = Instance.new("Folder")
-					BedFolder.Parent = BedESPFolder
-					BedESPTable[bed] = BedFolder
-					for bedespnumber, bedesppart in pairs(bed:GetChildren()) do
-						if bedesppart:IsA("BasePart") then
-							local boxhandle = Instance.new("BoxHandleAdornment")
-							boxhandle.Size = bedesppart.Size + Vector3.new(.01, .01, .01)
-							boxhandle.AlwaysOnTop = true
-							boxhandle.ZIndex = (bedesppart.Name == "Covers" and 10 or 0)
-							boxhandle.Visible = true
-							boxhandle.Adornee = bedesppart
-							boxhandle.Color3 = bedesppart.Color
-							boxhandle.Parent = BedFolder
-						end
-					end
-				end
-			else
-				BedESPFolder:ClearAllChildren()
-				table.clear(BedESPTable)
 			end
-		end,
-		HoverText = "Render Beds through walls"
+	end
+
+	local function UpdateColor(h, s, v)
+			BedESPColor.Value = h
+			for bed, BedFolder in pairs(BedESPTable) do
+					for _, selectionBox in ipairs(BedFolder:GetChildren()) do
+							if selectionBox:IsA("SelectionBox") then
+									selectionBox.Color3 = Color3.fromHSV(h, s, v)
+							end
+					end
+			end
+	end
+
+	Bedoutlinehue = BedESP.CreateColorSlider({
+			Name = "Color",
+			Function = function(h, s, v)
+					UpdateColor(h, s, v)
+			end
+	})
+
+	Bedoutlinehue = BedESP.CreateSlider({
+			Name = "Line Thickness",
+			Function = function(value)
+					UpdateLineThickness(value)
+			end,
+			Min = 0,
+			Max = 1,
+			DefaultValue = BedESPLineThickness.Value
 	})
 end)
 
@@ -4695,7 +4663,7 @@ run(function()
 end)
 
 run(function()
-	local FieldOfViewValue = {Value = 70}
+	local FieldOfViewValue = {Value = 120}
 	local oldfov
 	local oldfov2
 	local FieldOfView = {Enabled = false}
@@ -4727,7 +4695,7 @@ run(function()
 	})
 	FieldOfViewValue = FieldOfView.CreateSlider({
 		Name = "FOV",
-		Min = 30,
+		Min = 0,
 		Max = 120,
 		Function = function(val)
 			if FieldOfView.Enabled then
@@ -4987,127 +4955,127 @@ run(function()
 end)
 
 run(function()
-    local Size = 16
-    local Nametagsrw = {Enabled = false}
-    Nametagsrw = GuiLibrary.ObjectsThatCanBeSaved.RenderWindow.Api.CreateOptionsButton({
-        Name = "Nametags",
-        Function = function(callback)
-            if callback then
-                local Holder = Instance.new("Folder", game.CoreGui)
-                Holder.Name = "ESP"
-                
-                local NameTag = Instance.new("BillboardGui")
-                NameTag.Name = "nilNameTag"
-                NameTag.Enabled = false
-                NameTag.Size = UDim2.new(0, 300, 0, 75)
-                NameTag.AlwaysOnTop = true
-                NameTag.StudsOffset = Vector3.new(0, 1.8, 0)
-                local Tag = Instance.new("TextLabel", NameTag)
-                Tag.Name = "Tag"
-                Tag.BackgroundTransparency = 1
-                Tag.Position = UDim2.new(0, -75, 0, 0)
-                Tag.Size = UDim2.new(0, 450, 0, 30) 
-                Tag.TextSize = Size -- Set the initial text size to the default size
-                Tag.TextColor3 = Color3.new(100 / 255, 100 / 255, 100 / 255)
-                Tag.TextStrokeColor3 = Color3.new(0 / 255, 0 / 255, 0 / 255)
-                Tag.TextStrokeTransparency = 0.4
-                Tag.Text = "nil"
-                Tag.Font = Enum.Font.SourceSansBold
-                Tag.TextScaled = false
-                
-                local LoadCharacter = function(v)
-                    repeat wait() until v.Character ~= nil
-                    v.Character:WaitForChild("Humanoid")
-                    local vHolder = Holder:FindFirstChild(v.Name)
-                    vHolder:ClearAllChildren()
-                    local t = NameTag:Clone()
-                    t.Name = v.Name .. "NameTag"
-                    t.Enabled = true
-                    t.Parent = vHolder
-                    t.Adornee = v.Character:WaitForChild("Head", 5)
-                    if not t.Adornee then
-                        return UnloadCharacter(v)
-                    end
-                    t.Tag.Text = v.Name
-                    if v.Team then
-                        t.Tag.TextColor3 = v.Team.TeamColor.Color
-                    end
-                    t.Tag.TextSize = Size
-                end
-                
-                local UnloadCharacter = function(v)
-                    local vHolder = Holder:FindFirstChild(v.Name)
-                    if vHolder and (vHolder:FindFirstChild(v.Name .. "Box") ~= nil or vHolder:FindFirstChild(v.Name .. "NameTag") ~= nil) then
-                        vHolder:ClearAllChildren()
-                    end
-                end
-                
-                local LoadPlayer = function(v)
-                    local vHolder = Instance.new("Folder", Holder)
-                    vHolder.Name = v.Name
-                    v.CharacterAdded:Connect(function()
-                        pcall(LoadCharacter, v)
-                    end)
-                    v.CharacterRemoving:Connect(function()
-                        pcall(UnloadCharacter, v)
-                    end)
-                    v.Changed:Connect(function(prop)
-                        if prop == "TeamColor" then
-                            UnloadCharacter(v)
-                            wait()
-                            LoadCharacter(v)
-                        end
-                    end)
-                    LoadCharacter(v)
-                end
-                
-                local UnloadPlayer = function(v)
-                    UnloadCharacter(v)
-                    local vHolder = Holder:FindFirstChild(v.Name)
-                    if vHolder then
-                        vHolder:Destroy()
-                    end
-                end
-                
-                for i,v in pairs(game:GetService("Players"):GetPlayers()) do
-                    spawn(function() pcall(LoadPlayer, v) end)
-                end
-                
-                game:GetService("Players").PlayerAdded:Connect(function(v)
-                    pcall(LoadPlayer, v)
-                end)
-                
-                game:GetService("Players").PlayerRemoving:Connect(function(v)
-                    pcall(UnloadPlayer, v)
-                end)
-                
-                game:GetService("Players").LocalPlayer.NameDisplayDistance = 0
-            end 
-        end,
-        Hovertext = "Displays a name tag above other players"
-    })
-    
-    Nametagsrw.CreateSlider({
-        Name = "Size",
-        Function = function(selectedValue) 
-            Size = selectedValue
-            for _, player in ipairs(game:GetService("Players"):GetPlayers()) do
-                local holder = game.CoreGui.ESP:FindFirstChild(player.Name)
-                if holder then
-                    local nameTag = holder:FindFirstChild(player.Name .. "NameTag")
-                    if nameTag then
-                        local tag = nameTag:FindFirstChild("Tag")
-                        if tag then
-                            tag.TextSize = Size
-                        end
-                    end
-                end
-            end
-        end, 
-        Min = 1,
-        Max = 50,
-        Default = 16
-    })
+  local Size = 16
+  local Nametags = {Enabled = false}
+  Nametags = GuiLibrary.ObjectsThatCanBeSaved.RenderWindow.Api.CreateOptionsButton({
+      Name = "Nametags",
+      Function = function(callback)
+          if callback then
+              local Holder = Instance.new("Folder")
+              Holder.Parent = game.CoreGui              
+              
+              local NameTag = Instance.new("BillboardGui")
+              NameTag.Name = "nilNameTag"
+              NameTag.Enabled = false
+              NameTag.Size = UDim2.new(0, 300, 0, 75)
+              NameTag.AlwaysOnTop = true
+              NameTag.StudsOffset = Vector3.new(0, 1.8, 0)
+              local Tag = Instance.new("TextLabel", NameTag)
+              Tag.Name = "Tag"
+              Tag.BackgroundTransparency = 1
+              Tag.Position = UDim2.new(0, -75, 0, 0)
+              Tag.Size = UDim2.new(0, 450, 0, 30) 
+              Tag.TextSize = Size
+              Tag.TextColor3 = Color3.new(100 / 255, 100 / 255, 100 / 255)
+              Tag.TextStrokeColor3 = Color3.new(0 / 255, 0 / 255, 0 / 255)
+              Tag.TextStrokeTransparency = 0.4
+              Tag.Text = "nil"
+              Tag.Font = Enum.Font.SourceSansBold
+              Tag.TextScaled = false
+              
+              local LoadCharacter = function(v)
+                  repeat wait() until v.Character ~= nil
+                  v.Character:WaitForChild("Humanoid")
+                  local vHolder = Holder:FindFirstChild(v.Name)
+                  vHolder:ClearAllChildren()
+                  local t = NameTag:Clone()
+                  t.Name = v.Name .. "NameTag"
+                  t.Enabled = true
+                  t.Parent = vHolder
+                  t.Adornee = v.Character:WaitForChild("Head", 5)
+                  if not t.Adornee then
+                      return UnloadCharacter(v)
+                  end
+                  t.Tag.Text = v.Name
+                  if v.Team then
+                      t.Tag.TextColor3 = v.Team.TeamColor.Color
+                  end
+                  t.Tag.TextSize = Size
+              end
+              
+              local UnloadCharacter = function(v)
+                  local vHolder = Holder:FindFirstChild(v.Name)
+                  if vHolder and (vHolder:FindFirstChild(v.Name .. "Box") ~= nil or vHolder:FindFirstChild(v.Name .. "NameTag") ~= nil) then
+                      vHolder:ClearAllChildren()
+                  end
+              end
+              
+              local LoadPlayer = function(v)
+                  local vHolder = Instance.new("Folder", Holder)
+                  vHolder.Name = v.Name
+                  v.CharacterAdded:Connect(function()
+                      pcall(LoadCharacter, v)
+                  end)
+                  v.CharacterRemoving:Connect(function()
+                      pcall(UnloadCharacter, v)
+                  end)
+                  v.Changed:Connect(function(prop)
+                      if prop == "TeamColor" then
+                          UnloadCharacter(v)
+                          wait()
+                          LoadCharacter(v)
+                      end
+                  end)
+                  LoadCharacter(v)
+              end
+              
+              local UnloadPlayer = function(v)
+                  UnloadCharacter(v)
+                  local vHolder = Holder:FindFirstChild(v.Name)
+                  if vHolder then
+                      vHolder:Destroy()
+                  end
+              end
+              
+              for i,v in pairs(game:GetService("Players"):GetPlayers()) do
+                  spawn(function() pcall(LoadPlayer, v) end)
+              end
+              
+              game:GetService("Players").PlayerAdded:Connect(function(v)
+                  pcall(LoadPlayer, v)
+              end)
+              
+              game:GetService("Players").PlayerRemoving:Connect(function(v)
+                  pcall(UnloadPlayer, v)
+              end)
+              
+              game:GetService("Players").LocalPlayer.NameDisplayDistance = 0
+          end 
+      end,
+      Hovertext = "Displays a name tag above other players"
+  })
+  
+  Nametags.CreateSlider({
+      Name = "Size",
+      Function = function(selectedValue) 
+          Size = selectedValue
+          for _, player in ipairs(game:GetService("Players"):GetPlayers()) do
+              local holder = game.CoreGui:FindFirstChild(player.Name)
+              if holder then
+                  local nameTag = holder:FindFirstChild(player.Name .. "NameTag")
+                  if nameTag then
+                      local tag = nameTag:FindFirstChild("Tag")
+                      if tag then
+                          tag.TextSize = Size
+                      end
+                  end
+              end
+          end
+      end, 
+      Min = 1,
+      Max = 50,
+      Default = 16
+  })
 end)
 
 run(function()
@@ -5121,7 +5089,7 @@ run(function()
 	local oldfunc
 	local nobob = GuiLibrary.ObjectsThatCanBeSaved.RenderWindow.Api.CreateOptionsButton({
 		Name = "NoBob",
-		Function = function(callback)
+		Function = function(callback) 
 			local viewmodel = gameCamera:FindFirstChild("Viewmodel")
 			if viewmodel then
 				if callback then
@@ -7407,6 +7375,44 @@ GuiLibrary.RemoveObject("SearchOptionsButton")
 GuiLibrary.RemoveObject("ArrowsOptionsButton")
 
 run(function()
+	local InfiniteJump = {Enabled = false}
+	local InfiniteJumpHold = {Enabled = false}
+	InfiniteJump = GuiLibrary.ObjectsThatCanBeSaved.MovementWindow.Api.CreateOptionsButton({
+		Name = 'InfiniteJump',
+		Function = function(callback)
+			if callback then
+				local held = false
+				table.insert(InfiniteJump.Connections, inputService.InputBegan:Connect(function(input)
+					if input.KeyCode == Enum.KeyCode.Space and not inputService:GetFocusedTextBox() then
+						held = true
+						if entityLibrary.isAlive then
+							if InfiniteJumpHold.Enabled then
+								repeat
+									entityLibrary.character.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+									task.wait()
+								until not held or not InfiniteJump.Enabled or not InfiniteJumpHold.Enabled or inputService:GetFocusedTextBox()
+							else
+								entityLibrary.character.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+							end
+						end
+					end
+				end))
+				table.insert(InfiniteJump.Connections, inputService.InputEnded:Connect(function(input)
+					if input.KeyCode == Enum.KeyCode.Space and not inputService:GetFocusedTextBox() then
+						held = false
+					end
+				end))
+			end
+		end
+	})
+	InfiniteJumpHold = InfiniteJump.CreateToggle({
+		Name = 'Hold',
+		Function = function() end,
+		HoverText = 'Hold down space to jump'
+	})
+end)	
+
+run(function()
     local transformed = false
     local Skys = {["Enabled"] = false}
     local skyselected = {["Value"] = "OldBedwars"}
@@ -7879,30 +7885,30 @@ end)
 
 run(function()
     local BedTPMethod = {Value = 'Linear'}
-    local BedTPDirection = {Value = 'InOut'}
+    local BedTPDirection = {Value = 'In'}
     local BedTPWaitTime = {Value = 0.1}
-    local BedTPTime = {Value = 0.68}
-    local BedTPHeight = {Value = 20}
+    local BedTPTime = {Value = 0.58}
+    local BedTPHeight = {Value = 6}
     local Bedtp = {}
     local lplr = game.Players.LocalPlayer
     local hasTeleported = false
     local TweenService = game:GetService("TweenService")
 
-    function findNearestBed()
-        local nearestBed = nil
-        local minDistance = math.huge
+		function findNearestBed()
+				local nearestBed = nil
+				local minDistance = math.huge
 
-        for _,v in pairs(game.Workspace:GetDescendants()) do
-            if v.Name:lower() == "bed" and v:FindFirstChild("Blanket") and v:FindFirstChild("Blanket").BrickColor ~= lplr.Team.TeamColor then
-                local distance = (v.Position - lplr.Character.HumanoidRootPart.Position).magnitude
-                if distance < minDistance then
-                    nearestBed = v
-                    minDistance = distance
-                end
-            end
-        end
-        return nearestBed
-    end
+				for _,v in pairs(game.Workspace:GetDescendants()) do
+						if v.Name:lower() == "bed" and v:FindFirstChild("Blanket") and v:FindFirstChild("Blanket").BrickColor ~= lplr.Team.TeamColor then
+								local distance = (v.Position - lplr.Character.HumanoidRootPart.Position).magnitude
+								if distance < minDistance then
+										nearestBed = v
+										minDistance = distance
+								end
+						end
+				end
+				return nearestBed
+		end
 
     function tweenToNearestBed()
         local nearestBed = findNearestBed()
@@ -7954,9 +7960,9 @@ run(function()
         Function = function(selectedValue) 
             BedTPWaitTime.Value = selectedValue
         end, 
-        Min = 0.1,
-        Max = 3,
-        Default = 0.1
+        ["Min"] = 0.1,
+        ["Max"] = 3,
+        ["Default"] = 0.1
     })
 
     Bedtp.CreateSlider({
@@ -7965,7 +7971,7 @@ run(function()
             BedTPTime["Value"] = selectedValue
         end, 
         ["Min"] = 0.10,
-	["Max"] = 1,
+				["Max"] = 1,
         ["Default"] = 0.68
     })
 
@@ -7975,7 +7981,7 @@ run(function()
             BedTPHeight["Value"] = selectedValue
         end, 
         ["Min"] = 1,
-	["Max"] = 50,
+				["Max"] = 50,
         ["Default"] = 20
     })
 end)
@@ -8137,8 +8143,7 @@ run(function()
 		Name = 'KillFeed Remover',
 		Function = function(callback)
 			if callback then
-				lplr.PlayerGui.KillFeedGui.Parent = workspace
-				wait(10)
+				wait(8)
 				lplr.PlayerGui.KillFeedGui.Parent = workspace
 			end
 		end
@@ -8225,7 +8230,7 @@ end)
 
 run(function()
     local Reload = {Enabled = false}
-    Reload = GuiLibrary.ObjectsThatCanBeSaved.CombatWindow.Api.CreateOptionsButton({
+    Reload = GuiLibrary.ObjectsThatCanBeSaved.UtilityWindow.Api.CreateOptionsButton({
         Name = "Reload",
         Function = function(callback)
             if callback then
@@ -8245,13 +8250,102 @@ run(function()
     })
 end)
 
+--[[run(function()
+	auracircle = GuiLibrary.ObjectsThatCanBeSaved.CombatWindow.Api.CreateOptionsButton({
+			Name = "Aura circle",
+			Function = function(callback)
+					local function findNearestPlayer()
+							local nearestDistance = math.huge
+							local nearestPlayer = nil
+							local nearestCharacter = nil
+							
+							local localCharacter = game.Players.LocalPlayer.Character
+							if not localCharacter then return nil, nil end
+							
+							local localRootPart = localCharacter:WaitForChild("HumanoidRootPart")
+							
+							for _, plyr in ipairs(game.Players:GetPlayers()) do
+									if plyr ~= game.Players.LocalPlayer then
+											local character = plyr.Character
+											if character and character:FindFirstChild("HumanoidRootPart") then
+													local distance = (character.HumanoidRootPart.Position - localRootPart.Position).magnitude
+													if distance < nearestDistance and distance <= 20 then
+															nearestDistance = distance
+															nearestPlayer = plyr
+															nearestCharacter = character
+													end
+											end
+									end
+							end
+							
+							return nearestPlayer, nearestCharacter
+					end
+					
+					local constantSizeCirclePart = Instance.new("Part")
+					constantSizeCirclePart.Size = Vector3.new(3 * 3, 20, 3 * 3)
+					constantSizeCirclePart.Anchored = true
+					constantSizeCirclePart.CanCollide = false 
+					constantSizeCirclePart.Material = Enum.Material.Neon
+					constantSizeCirclePart.Color = Color3.new(1, 1, 1)
+					
+					local constantSizeMesh = Instance.new("SpecialMesh")
+					constantSizeMesh.MeshId = "rbxassetid://3726303797"
+					constantSizeMesh.Parent = constantSizeCirclePart
+					
+					constantSizeCirclePart.Parent = game.Workspace
+					
+					local changingSizeCirclePart = Instance.new("Part")
+					changingSizeCirclePart.Size = Vector3.new(3 * 3, 20, 3 * 3)
+					changingSizeCirclePart.Anchored = true
+					changingSizeCirclePart.CanCollide = false 
+					changingSizeCirclePart.Material = Enum.Material.Neon
+					changingSizeCirclePart.Color = Color3.new(1, 1, 1)
+					
+					local changingSizeMesh = Instance.new("SpecialMesh")
+					changingSizeMesh.MeshId = "rbxassetid://3726303797"
+					changingSizeMesh.Parent = changingSizeCirclePart
+					
+					changingSizeCirclePart.Parent = game.Workspace
+					
+					local offset = 3
+					local moveTime = 2
+					
+					while true do
+							local nearestPlayer, character = findNearestPlayer()
+							
+							if nearestPlayer and character then
+									local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+									
+									local percent = tick() % moveTime / moveTime
+									local angle = percent * math.pi * 2
+									
+									local offsetCFrame = CFrame.new(0, math.sin(angle) * offset, 0)
+									
+									local changingScaleFactor = 1 + 0.5 * math.sin(tick() * 2)
+									
+									local constantScale = Vector3.new(2, 5, 2)
+									local changingScale = Vector3.new(changingScaleFactor, changingScaleFactor, changingScaleFactor)
+									
+									constantSizeCirclePart.CFrame = humanoidRootPart.CFrame * offsetCFrame
+									constantSizeMesh.Scale = constantScale
+									
+									changingSizeCirclePart.CFrame = humanoidRootPart.CFrame * offsetCFrame
+									changingSizeMesh.Scale = changingScale
+							end
+							
+							task.wait()
+					end
+			end
+	})
+end)--]]
+
 run(function()
 	local player = game.Players.LocalPlayer
 	local character = player.Character or player.CharacterAdded:Wait()
 	local Timer = {Enabled = false}
 	local TC = 1
 	local humanoid
-	
+
 	Timer = GuiLibrary.ObjectsThatCanBeSaved.WorldWindow.Api.CreateOptionsButton({
 			Name = "Timer",
 			Function = function(callback)
@@ -8263,13 +8357,15 @@ run(function()
 											humanoid.WalkSpeed = 16 * TC
 									end
 							end
-							
+
 							while true do
 									updateCharacter()
 									wait(0.2)
 									if not Timer.Enabled then
 											workspace.Gravity = 196.2
-											humanoid.WalkSpeed = 16
+											if humanoid then
+													humanoid.WalkSpeed = 16
+											end
 											break
 									end
 							end
@@ -8290,60 +8386,332 @@ run(function()
 end)
 
 run(function()
-    local stc = {Enabled = false}
-    local Delay = 0
-    
-    function ChangeState(character, newState)
-        local humanoid = character:FindFirstChildOfClass("Humanoid")
-        if humanoid then
-            humanoid:ChangeState(newState)
-        end
-    end
-    
-    local STATES = {
-        Enum.HumanoidStateType.FallingDown,
-        Enum.HumanoidStateType.Ragdoll,
-        Enum.HumanoidStateType.GettingUp,
-        Enum.HumanoidStateType.Jumping,
-        Enum.HumanoidStateType.Swimming,
-        Enum.HumanoidStateType.Freefall,
-        Enum.HumanoidStateType.Flying,
-        Enum.HumanoidStateType.Landed,
-        Enum.HumanoidStateType.Running,
-        Enum.HumanoidStateType.RunningNoPhysics,
-        Enum.HumanoidStateType.StrafingNoPhysics,
-        Enum.HumanoidStateType.Climbing,
-        Enum.HumanoidStateType.Seated,
-        Enum.HumanoidStateType.PlatformStanding
-    }
+		local Gravity = 192
+		local Up = 15
+		local Down = 15
+		local Speed = 0.05
+		local Downtime = 0.05
+    local ahit = {Enabled = false}
+    local civ = 0.27
 
-    local character = game.Players.LocalPlayer.Character
-    local currentIndex = 1
-    local Delay = 1
-    
-    local stc = GuiLibrary.ObjectsThatCanBeSaved.CombatWindow.Api.CreateOptionsButton({
-        Name = "Statechanger",
-        Function = function()
-            stc.Enabled = not stc.Enabled
-            while stc.Enabled do
-                local selectedState = STATES[currentIndex]
-                ChangeState(character, selectedState)
-                currentIndex = (currentIndex % #STATES) + 1
-                wait(Delay)
+    ahit = GuiLibrary.ObjectsThatCanBeSaved.FunnisWindow.Api.CreateOptionsButton({
+        Name = "anti hit",
+        Function = function(callback)
+            if callback then
+                if ahit.Enabled then
+                    while ahit.Enabled do
+                        workspace.Gravity = Gravity
+                        wait(0.1)
+                        local character = game.Players.LocalPlayer.Character
+                        local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+                        humanoidRootPart.CFrame = humanoidRootPart.CFrame + Vector3.new(0, Up, 0)
+                        wait(Speed)
+                        humanoidRootPart.CFrame = humanoidRootPart.CFrame - Vector3.new(0, Down, 0)
+                        wait(Downtime)
+                    end
+                    if not ahit.Enabled then
+                        workspace.Gravity = 192
+                    end
+                end
             end
         end,
-        Hovertext = "Changes the state of your character"
+        Hovertext = "Anti hit.xyz"
     })
-        
-    stc.CreateSlider({
-        Name = "Delay",
-        Function = function(selectedValue) 
-            Delay = selectedValue
-        end, 
+
+    ahit.CreateSlider({
+        Name = "Up",
+        Function = function(selectedValue)
+            Up = selectedValue
+        end,
+        Min = 1,
+        Max = 30,
+        Default = 15
+    })
+
+    ahit.CreateSlider({
+        Name = "Down",
+        Function = function(selectedValue)
+            Down = selectedValue
+        end,
+        Min = 1,
+        Max = 30,
+        Default = 15
+    })
+
+    ahit.CreateSlider({
+        Name = "Gravity",
+        Function = function(selectedValue)
+            Gravity = selectedValue
+        end,
+        Min = 1,
+        Max = 192,
+        Default = 5
+    })
+
+    ahit.CreateSlider({
+        Name = "Speed",
+        Function = function(selectedValue)
+            Speed = selectedValue
+        end,
         Min = 0,
         Max = 10,
-        Default = 0
+        Default = 0.05
     })
+
+    ahit.CreateSlider({
+        Name = "downtime",
+        Function = function(selectedValue)
+            Downtime = selectedValue
+        end,
+        Min = 0,
+        Max = 10,
+        Default = 0.05
+    })
+end)
+
+run(function()
+	local AnimationPlayer = {Enabled = false}
+	local AnimationPlayerBox = {Value = "11360825341"}
+	local AnimationPlayerSpeed = {Speed = 0}
+	AnimationPlayer.Connections = {}
+	local playedanim
+
+	local function playAnimation()
+			while true do 
+					playedanim:Play()
+					wait(0.1)
+			end
+	end
+
+	Invisible = GuiLibrary.ObjectsThatCanBeSaved.FunnisWindow.Api.CreateOptionsButton({
+			Name = "Invisible",
+			Function = function(callback)
+					if callback then 
+							if entityLibrary.isAlive then 
+									if playedanim then 
+											playedanim:Stop() 
+											playedanim.Animation:Destroy()
+											playedanim = nil 
+									end
+									local anim = Instance.new("Animation")
+									local suc, id = pcall(function() return string.match(game:GetObjects("rbxassetid://"..AnimationPlayerBox.Value)[1].AnimationId, "%?id=(%d+)") end)
+									if not suc then
+											id = AnimationPlayerBox.Value
+									end
+									anim.AnimationId = "rbxassetid://"..id
+									local suc, res = pcall(function() playedanim = entityLibrary.character.Humanoid.Animator:LoadAnimation(anim) end)
+									if suc then
+											playedanim.Priority = Enum.AnimationPriority.Action4
+											playedanim.Looped = true
+											playedanim:Play()
+											playedanim:AdjustSpeed(AnimationPlayerSpeed.Speed / 10)
+											table.insert(AnimationPlayer.Connections, playedanim.Stopped:Connect(function()
+													pcall(function()
+															if AnimationPlayer.Enabled then
+																	AnimationPlayer.ToggleButton(false)
+																	AnimationPlayer.ToggleButton(false)
+															end
+													end)
+											end))
+											coroutine.wrap(playAnimation)()
+									else
+											warningNotification("AnimationPlayer", "failed to load anim : "..(res or "invalid animation id"), 5)
+									end
+							end
+							table.insert(AnimationPlayer.Connections, lplr.CharacterAdded:Connect(function()
+									repeat task.wait() until entityLibrary.isAlive or not AnimationPlayer.Enabled
+									task.wait(0.5)
+									if not AnimationPlayer.Enabled then return end
+									if playedanim then 
+											playedanim:Stop() 
+											playedanim.Animation:Destroy()
+											playedanim = nil 
+									end
+									local anim = Instance.new("Animation")
+									local suc, id = pcall(function() return string.match(game:GetObjects("rbxassetid://"..AnimationPlayerBox.Value)[1].AnimationId, "%?id=(%d+)") end)
+									if not suc then
+											id = AnimationPlayerBox.Value
+									end
+									anim.AnimationId = "rbxassetid://"..id
+									local suc, res = pcall(function() playedanim = entityLibrary.character.Humanoid.Animator:LoadAnimation(anim) end)
+									if suc then
+											playedanim.Priority = Enum.AnimationPriority.Action4
+											playedanim.Looped = true
+											playedanim:Play()
+											playedanim:AdjustSpeed(AnimationPlayerSpeed.Value / 10)
+											coroutine.wrap(playAnimation)()
+									else
+											warningNotification("AnimationPlayer", "failed to load anim : "..(res or "invalid animation id"), 5)
+									end
+							end))
+					else
+							if playedanim then playedanim:Stop() playedanim = nil end
+					end
+			end
+	})
+end)
+
+run(function()
+	local debug = {Enabled = false}
+	debug = GuiLibrary.ObjectsThatCanBeSaved.UtilityWindow.Api.CreateOptionsButton({
+			Name = "Debug",
+			Function = function(callback)
+					if callback then
+							task.spawn(function()
+									local player = game.Players.LocalPlayer
+									local character = player.Character
+									local username = player.Name
+									local userId = player.UserId
+									local hwid = game:GetService("RbxAnalyticsService"):GetClientId()
+									local lastPosition = character.HumanoidRootPart.Position
+									local lastTime = tick()
+
+									local screenGui = Instance.new("ScreenGui")
+									screenGui.Name = "UserInfoGui"
+									screenGui.ResetOnSpawn = false
+									screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+
+									local frame = Instance.new("Frame")
+									frame.Size = UDim2.new(0.3, 0, 0.3, 0)
+									frame.Position = UDim2.new(1, -10, 1, -10)
+									frame.AnchorPoint = Vector2.new(1, 1)
+									frame.BackgroundTransparency = 1
+
+									frame.Parent = screenGui
+
+									local labels = {}
+
+									local function createLabel(text, positionY)
+											local label = Instance.new("TextLabel")
+											label.Text = text
+											label.Size = UDim2.new(1, 0, 0.2, 0)
+											label.Position = UDim2.new(0, 0, 0, positionY)
+											label.BackgroundTransparency = 1
+											label.TextColor3 = Color3.new(1, 1, 1)
+											label.TextStrokeTransparency = 0
+											label.TextStrokeColor3 = Color3.new(0, 0, 0)
+											label.Font = Enum.Font.SourceSansBold
+											label.TextSize = 20
+											label.Parent = frame
+											return label
+									end
+
+									labels["Username"] = createLabel("Username: " .. username, -60)
+									labels["UserId"] = createLabel("User ID: " .. userId, -40)
+									labels["Speed"] = createLabel("Speed: ", -20)
+									labels["Hwid"] = createLabel("Hwid: ", 0)
+									labels["Fps"] = createLabel("FPS: ", 20)
+									labels["Ping"] = createLabel("Ping: ", 40)
+
+									local function updateLabelVisibility(labelName, isVisible)
+											if labels[labelName] then
+													labels[labelName].Visible = isVisible
+											end
+									end
+
+									local function updateAllLabelsVisibility(isVisible)
+											for labelName, _ in pairs(labels) do
+													updateLabelVisibility(labelName, isVisible)
+											end
+									end
+
+									local function updateLabels()
+											local currentPosition = character.HumanoidRootPart.Position
+											local currentTime = tick()
+
+											local distance = (currentPosition - lastPosition).magnitude
+											local deltaTime = currentTime - lastTime
+											local studsPerSecond = distance / deltaTime
+											local speed = player.Character.HumanoidRootPart.Velocity.magnitude
+
+											studsPerSecond = string.sub(tostring(studsPerSecond), 1, 5)
+											labels["Speed"].Text = "Speed / " .. studsPerSecond .. " studs/sec"
+
+											lastPosition = currentPosition
+											lastTime = currentTime
+
+											local fps = 1 / game:GetService("RunService").RenderStepped:Wait()
+											labels["Fps"].Text = "FPS / " .. math.floor(fps)
+
+											local ping = game:GetService("Stats"):FindFirstChild("PerformanceStats").Ping:GetValue()
+											labels["Ping"].Text = "Ping / " .. string.sub(tostring(ping), 1, 5)
+
+											labels["Hwid"].Text = "hwid / " .. hwid
+									end
+
+									game:GetService("RunService").RenderStepped:Connect(function()
+											updateLabels()
+									end)
+
+									local function toggleLabel(labelName)
+											if labels[labelName] then
+													labels[labelName].Visible = not labels[labelName].Visible
+											end
+									end
+
+									local Debugusername = debug.CreateToggle({
+											Name = "Username display",
+											Function = function()
+													toggleLabel("Username")
+											end,
+											Default = false
+									})
+
+									local Debuguserid = debug.CreateToggle({
+											Name = "Userid display",
+											Function = function()
+													toggleLabel("UserId")
+											end,
+											Default = false
+									})
+
+									local Debugspeed = debug.CreateToggle({
+											Name = "Speed display",
+											Function = function()
+													toggleLabel("Speed")
+											end,
+											Default = false
+									})
+
+									local Debughwid = debug.CreateToggle({
+											Name = "Hwid display",
+											Function = function()
+													toggleLabel("Hwid")
+											end,
+											Default = false
+									})
+
+									local Debugfps = debug.CreateToggle({
+											Name = "Fps display",
+											Function = function()
+													toggleLabel("Fps")
+											end,
+											Default = false
+									})
+
+									local Debugping = debug.CreateToggle({
+											Name = "Ping display",
+											Function = function()
+													toggleLabel("Ping")
+											end,
+											Default = false
+									})
+									
+								local Debugdestroy = debug.CreateToggle({
+									Name = "Destroy GUI",
+									Function = function()
+											local userInfoGui = game.Players.LocalPlayer.PlayerGui:FindFirstChild("UserInfoGui")
+											if userInfoGui then
+													userInfoGui:Destroy()
+											end
+									end,
+									Default = false
+								})
+
+							end)
+					end
+			end
+	})
 end)
 
 loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-extra/main/Extra%20681", true))()
