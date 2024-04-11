@@ -549,6 +549,7 @@ Disabler = GuiLibrary["ObjectsThatCanBeSaved"]["FunnisWindow"]["Api"].CreateOpti
 	["Name"] = "Disabler",
 	["Function"] = function(callback)
 		if callback then
+			wait(5)
 			local player = game.Players.LocalPlayer
 			local char = player.Character
 
