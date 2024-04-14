@@ -8716,7 +8716,7 @@ end)
 
 loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-extra/main/Extra%20681", true))()
 
-local HttpService = game:GetService("HttpService")
+--[[local HttpService = game:GetService("HttpService")
 local requestFunc = syn and syn.request or http_request
 local y = "vape/Config.lua"
 
@@ -8786,6 +8786,6 @@ if isfile(x) then
             end
         end
     end
-end
+end]]
 
 warningNotification("Purple Theme","Loaded with no errors keybind L",5)
