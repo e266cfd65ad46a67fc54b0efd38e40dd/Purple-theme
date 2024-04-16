@@ -1754,6 +1754,8 @@ run(function()
 	local AimAssistStrafe = {Enabled = false}
 	local AimSpeed = {Value = 1}
 	local AimAssistTargetFrame = {Players = {Enabled = false}}
+	local AimRange = {Value = 23}
+	
 	AimAssist = GuiLibrary.ObjectsThatCanBeSaved.CombatWindow.Api.CreateOptionsButton({
 		Name = "AimAssist",
 		Function = function(callback)
@@ -1761,7 +1763,7 @@ run(function()
 				RunLoops:BindToRenderStep("AimAssist", function(dt)
 					vapeTargetInfo.Targets.AimAssist = nil
 					if ((not AimAssistClickAim.Enabled) or (tick() - bedwars.SwordController.lastSwing) < 0.4) then
-						local plr = EntityNearPosition(18)
+						local plr = EntityNearPosition(AimRange.Value)
 						if plr then
 							vapeTargetInfo.Targets.AimAssist = {
 								Humanoid = {
@@ -1790,23 +1792,19 @@ run(function()
 		HoverText = "Smoothly aims to closest valid target with sword"
 	})
 	AimAssistTargetFrame = AimAssist.CreateTargetWindow({Default3 = true})
-	AimAssistClickAim = AimAssist.CreateToggle({
-		Name = "Click Aim",
-		Function = function() end,
-		Default = true,
-		HoverText = "Only aim while mouse is down"
-	})
-	AimAssistStrafe = AimAssist.CreateToggle({
-		Name = "Strafe increase",
-		Function = function() end,
-		HoverText = "Increase speed while strafing away from target"
-	})
 	AimSpeed = AimAssist.CreateSlider({
 		Name = "Smoothness",
 		Min = 1,
 		Max = 100,
 		Function = function(val) end,
-		Default = 0
+		Default = 50
+	})
+	AimRange = AimAssist.CreateSlider({
+		Name = "Range",
+		Min = 1,
+		Max = 30,
+		Function = function(val) end,
+		Default = 23
 	})
 end)
 
@@ -1814,7 +1812,6 @@ run(function()
 	local autoclicker = {Enabled = false}
 	local noclickdelay = {Enabled = false}
 	local autoclickercps = {GetRandomValue = function() return 1 end}
-	local autoclickerblocks = {Enabled = false}
 	local AutoClickerThread
 
 	local function isNotHoveringOverGui()
@@ -1835,7 +1832,7 @@ run(function()
 	end
 
 	local function AutoClick()
-		local firstClick = tick() + 0.1
+		local firstClick = tick() + 0
 		AutoClickerThread = task.spawn(function()
 			repeat
 				task.wait()
@@ -1843,9 +1840,6 @@ run(function()
 					if not autoclicker.Enabled then break end
 					if not isNotHoveringOverGui() then continue end
 					if bedwars.AppController:isLayerOpen(bedwars.UILayers.MAIN) then continue end
-					if GuiLibrary.ObjectsThatCanBeSaved["Lobby CheckToggle"].Api.Enabled then
-						if store.matchState == 0 then continue end
-					end
 					if store.localHand.Type == "sword" then
 						if bedwars.DaoController.chargingMaid == nil then
 							task.spawn(function()
@@ -1855,21 +1849,7 @@ run(function()
 									firstClick = tick()
 								end
 							end)
-							task.wait(math.max((1 / autoclickercps.GetRandomValue()), noclickdelay.Enabled and 0 or 0.142))
-						end
-					elseif store.localHand.Type == "block" then
-						if autoclickerblocks.Enabled and bedwars.BlockPlacementController.blockPlacer and firstClick <= tick() then
-							if (workspace:GetServerTimeNow() - bedwars.BlockCpsController.lastPlaceTimestamp) > ((1 / 12) * 0.5) then
-								local mouseinfo = bedwars.BlockPlacementController.blockPlacer.clientManager:getBlockSelector():getMouseInfo(0)
-								if mouseinfo then
-									task.spawn(function()
-										if mouseinfo.placementPosition == mouseinfo.placementPosition then
-											bedwars.BlockPlacementController.blockPlacer:placeBlock(mouseinfo.placementPosition)
-										end
-									end)
-								end
-								task.wait((1 / autoclickercps.GetRandomValue()))
-							end
+							task.wait(math.max((1 / autoclickercps.GetRandomValue()), noclickdelay.Enabled and 0 or 0))
 						end
 					end
 				end
@@ -1907,17 +1887,11 @@ run(function()
 	})
 	autoclickercps = autoclicker.CreateTwoSlider({
 		Name = "CPS",
-		Min = 1,
-		Max = 20,
+		Min = 1000,
+		Max = 1500,
 		Function = function(val) end,
-		Default = 8,
-		Default2 = 12
-	})
-	autoclickerblocks = autoclicker.CreateToggle({
-		Name = "Place Blocks",
-		Function = function() end,
-		Default = true,
-		HoverText = "Automatically places blocks when left click is held."
+		Default = 1250,
+		Default2 = 1250
 	})
 
 	local noclickfunc
@@ -1937,6 +1911,7 @@ run(function()
 		HoverText = "Remove the CPS cap"
 	})
 end)
+
 
 run(function()
 	local ReachValue = {Value = 14}
@@ -2978,7 +2953,7 @@ run(function()
         },      
         Spas = {
             {CFrame = CFrame.new(0, -0.5, 0) * CFrame.Angles(math.rad(-90), math.rad(0), math.rad(0)), Time = 0.1},
-            {CFrame = CFrame.new(0.69, -0.7, 0.6) * CFrame.Angles(math.rad(295), math.rad(55), math.rad(290)), Time = 0.1}
+						{CFrame = CFrame.new(0.69, -3.0, 0.3) * CFrame.Angles(math.rad(200), math.rad(300), math.rad(290)), Time = 0.1}
         },
         Wam = {
             {CFrame = CFrame.new(0, -0.5, 0) * CFrame.Angles(math.rad(0), math.rad(0), math.rad(0)), Time = 0.1},
@@ -3024,6 +2999,20 @@ run(function()
 			{CFrame = CFrame.new(5, -3.4, -3.3) * CFrame.Angles(math.rad(45), math.rad(160), math.rad(190)), Time = 0.12},
 			{CFrame = CFrame.new(5, -2.5, -1) * CFrame.Angles(math.rad(80), math.rad(180), math.rad(180)), Time = 0.12}
 		},
+		StrafeTape = {
+			{CFrame = CFrame.new(0.60, -0.80, 1.50) * CFrame.Angles(math.rad(-33), math.rad(57), math.rad(-81)), Time = 0.30},
+			{CFrame = CFrame.new(0.75, -0.95, 0.90) * CFrame.Angles(math.rad(147), math.rad(71), math.rad(53)), Time = 0.10},
+			{CFrame = CFrame.new(0.75, -0.95, 0.90) * CFrame.Angles(math.rad(147), math.rad(71), math.rad(53)), Time = 0.05},
+			{CFrame = CFrame.new(0.75, -0.95, 0.90) * CFrame.Angles(math.rad(147), math.rad(71), math.rad(53)), Time = 0.10},
+			{CFrame = CFrame.new(0.75, -0.95, 0.90) * CFrame.Angles(math.rad(147), math.rad(71), math.rad(53)), Time = 0.05},
+			{CFrame = CFrame.new(0.60, -0.80, 1.50) * CFrame.Angles(math.rad(-33), math.rad(57), math.rad(-81)), Time = 0.30}
+		},	
+		PushForward2 = {
+			{CFrame = CFrame.new(0.60, -0.80, 1.50) * CFrame.Angles(math.rad(-33), math.rad(57), math.rad(-81)), Time = 0.15}, -- Starting position
+			{CFrame = CFrame.new(0.75, -0.95, 0.90) * CFrame.Angles(math.rad(120), math.rad(90), math.rad(90)), Time = 0.15}, -- Pushing forward position
+			{CFrame = CFrame.new(0.75, -0.95, 0.90) * CFrame.Angles(math.rad(120), math.rad(90), math.rad(90)), Time = 0.15}, -- Holding push position
+			{CFrame = CFrame.new(0.60, -0.80, 1.50) * CFrame.Angles(math.rad(-33), math.rad(57), math.rad(-81)), Time = 0.15} -- Return to starting position
+	},	
 	}     
 
 
@@ -4195,7 +4184,7 @@ run(function()
 			if callback then
 				table.insert(Speed.Connections, vapeEvents.EntityDamageEvent.Event:Connect(function(damageTable)
 					if damageTable.entityInstance == lplr.Character and (damageTable.damageType ~= 0 or damageTable.extra and damageTable.extra.chargeRatio ~= nil) and (not (damageTable.knockbackMultiplier and damageTable.knockbackMultiplier.disabled or damageTable.knockbackMultiplier and damageTable.knockbackMultiplier.horizontal == 0)) and SpeedDamageBoost.Enabled then 
-						damagetick = tick() + 1
+						damagetick = tick() + 0.9
 					end
 				end))
 				RunLoops:BindToHeartbeat("Speed", function(delta)
@@ -4550,8 +4539,10 @@ run(function()
 		end
 	end
 	local function refreshAdornee(v)
-		local chest = v.Adornee.ChestFolderValue.Value
-        local chestitems = chest and chest:GetChildren() or {}
+		local chest = v:FindFirstChild("ChestFolderValue")
+		chest = chest and chest.Value or nil
+		if not chest then return end
+		local chestitems = chest and chest:GetChildren() or {}
 		for i2,v2 in pairs(v.Frame:GetChildren()) do
 			if v2:IsA("ImageLabel") then
 				v2:Remove()
@@ -4580,6 +4571,9 @@ run(function()
 
 	local function chestfunc(v)
 		task.spawn(function()
+			local chest = v:FindFirstChild("ChestFolderValue")
+			chest = chest and chest.Value or nil
+			if not chest then return end
 			local billboard = Instance.new("BillboardGui")
 			billboard.Parent = ChestESPFolder
 			billboard.Name = "chest"
@@ -4604,7 +4598,6 @@ run(function()
 			local uicorner = Instance.new("UICorner")
 			uicorner.CornerRadius = UDim.new(0, 4)
 			uicorner.Parent = frame
-			local chest = v:WaitForChild("ChestFolderValue").Value
 			if chest then
 				table.insert(ChestESP.Connections, chest.ChildAdded:Connect(function(item)
 					if table.find(ChestESPList.ObjectList, item.Name) or nearchestitem(item.Name) then
@@ -5482,325 +5475,6 @@ run(function()
 		end
 	})
 	AutoBuyCustom.Object.AddBoxBKG.AddBox.TextSize = 14
-
-	local AutoBank = {Enabled = false}
-	local AutoBankRange = {Value = 20}
-	local AutoBankApple = {Enabled = false}
-	local AutoBankBalloon = {Enabled = false}
-	local AutoBankTransmitted, AutoBankTransmittedType = false, false
-	local autobankoldapple
-	local autobankoldballoon
-	local autobankui
-
-	local function refreshbank()
-		if autobankui then
-			local echest = replicatedStorage.Inventories:FindFirstChild(lplr.Name.."_personal")
-			for i,v in pairs(autobankui:GetChildren()) do
-				if echest:FindFirstChild(v.Name) then
-					v.Amount.Text = echest[v.Name]:GetAttribute("Amount")
-				else
-					v.Amount.Text = ""
-				end
-			end
-		end
-	end
-
-	AutoBank = GuiLibrary.ObjectsThatCanBeSaved.UtilityWindow.Api.CreateOptionsButton({
-		Name = "AutoBank",
-		Function = function(callback)
-			if callback then
-				autobankui = Instance.new("Frame")
-				autobankui.Size = UDim2.new(0, 240, 0, 40)
-				autobankui.AnchorPoint = Vector2.new(0.5, 0)
-				autobankui.Position = UDim2.new(0.5, 0, 0, -240)
-				autobankui.Visible = AutoBankUIToggle.Enabled
-				task.spawn(function()
-					repeat
-						task.wait()
-						if autobankui then
-							local hotbar = lplr.PlayerGui:FindFirstChild("hotbar")
-							if hotbar then
-								local healthbar = hotbar["1"]:FindFirstChild("HotbarHealthbarContainer")
-								if healthbar then
-									autobankui.Position = UDim2.new(0.5, 0, 0, healthbar.AbsolutePosition.Y - 50)
-								end
-							end
-						else
-							break
-						end
-					until (not AutoBank.Enabled)
-				end)
-				autobankui.BackgroundTransparency = 1
-				autobankui.Parent = GuiLibrary.MainGui
-				local emerald = Instance.new("ImageLabel")
-				emerald.Image = bedwars.getIcon({itemType = "emerald"}, true)
-				emerald.Size = UDim2.new(0, 40, 0, 40)
-				emerald.Name = "emerald"
-				emerald.Position = UDim2.new(0, 120, 0, 0)
-				emerald.BackgroundTransparency = 1
-				emerald.Parent = autobankui
-				local emeraldtext = Instance.new("TextLabel")
-				emeraldtext.TextSize = 20
-				emeraldtext.BackgroundTransparency = 1
-				emeraldtext.Size = UDim2.new(1, 0, 1, 0)
-				emeraldtext.Font = Enum.Font.SourceSans
-				emeraldtext.TextStrokeTransparency = 0.3
-				emeraldtext.Name = "Amount"
-				emeraldtext.Text = ""
-				emeraldtext.TextColor3 = Color3.new(1, 1, 1)
-				emeraldtext.Parent = emerald
-				local diamond = emerald:Clone()
-				diamond.Image = bedwars.getIcon({itemType = "diamond"}, true)
-				diamond.Position = UDim2.new(0, 80, 0, 0)
-				diamond.Name = "diamond"
-				diamond.Parent = autobankui
-				local gold = emerald:Clone()
-				gold.Image = bedwars.getIcon({itemType = "gold"}, true)
-				gold.Position = UDim2.new(0, 40, 0, 0)
-				gold.Name = "gold"
-				gold.Parent = autobankui
-				local iron = emerald:Clone()
-				iron.Image = bedwars.getIcon({itemType = "iron"}, true)
-				iron.Position = UDim2.new(0, 0, 0, 0)
-				iron.Name = "iron"
-				iron.Parent = autobankui
-				local apple = emerald:Clone()
-				apple.Image = bedwars.getIcon({itemType = "apple"}, true)
-				apple.Position = UDim2.new(0, 160, 0, 0)
-				apple.Name = "apple"
-				apple.Parent = autobankui
-				local balloon = emerald:Clone()
-				balloon.Image = bedwars.getIcon({itemType = "balloon"}, true)
-				balloon.Position = UDim2.new(0, 200, 0, 0)
-				balloon.Name = "balloon"
-				balloon.Parent = autobankui
-				local echest = replicatedStorage.Inventories:FindFirstChild(lplr.Name.."_personal")
-				if entityLibrary.isAlive and echest then
-					task.spawn(function()
-						local chestitems = store.localInventory.inventory.items
-						for i3,v3 in pairs(chestitems) do
-							if (v3.itemType == "emerald" or v3.itemType == "iron" or v3.itemType == "diamond" or v3.itemType == "gold" or (v3.itemType == "apple" and AutoBankApple.Enabled) or (v3.itemType == "balloon" and AutoBankBalloon.Enabled)) then
-								bedwars.Client:GetNamespace("Inventory"):Get("ChestGiveItem"):CallServer(echest, v3.tool)
-								refreshbank()
-							end
-						end
-					end)
-				else
-					task.spawn(function()
-						refreshbank()
-					end)
-				end
-				table.insert(AutoBank.Connections, replicatedStorage.Inventories.DescendantAdded:Connect(function(p3)
-					if p3.Parent.Name == lplr.Name then
-						if echest == nil then
-							echest = replicatedStorage.Inventories:FindFirstChild(lplr.Name.."_personal")
-						end
-						if not echest then return end
-						if p3.Name == "apple" and AutoBankApple.Enabled then
-							if autobankapple then return end
-						elseif p3.Name == "balloon" and AutoBankBalloon.Enabled then
-							if autobankballoon then vapeEvents.AutoBankBalloon:Fire() return end
-						elseif (p3.Name == "emerald" or p3.Name == "iron" or p3.Name == "diamond" or p3.Name == "gold") then
-							if not ((not AutoBankTransmitted) or (AutoBankTransmittedType and p3.Name ~= "diamond")) then return end
-						else
-							return
-						end
-						bedwars.Client:GetNamespace("Inventory"):Get("ChestGiveItem"):CallServer(echest, p3)
-						refreshbank()
-					end
-				end))
-				task.spawn(function()
-					repeat
-						task.wait()
-						local found, npctype = nearNPC(AutoBankRange.Value)
-						if echest == nil then
-							echest = replicatedStorage.Inventories:FindFirstChild(lplr.Name.."_personal")
-						end
-						if autobankballoon then
-							local chestitems = echest and echest:GetChildren() or {}
-							if #chestitems > 0 then
-								for i3,v3 in pairs(chestitems) do
-									if v3:IsA("Accessory") and v3.Name == "balloon" then
-										if (not getItem("balloon")) then
-											task.spawn(function()
-												bedwars.Client:GetNamespace("Inventory"):Get("ChestGetItem"):CallServer(echest, v3)
-												refreshbank()
-											end)
-										end
-									end
-								end
-							end
-						end
-						if autobankballoon ~= autobankoldballoon and AutoBankBalloon.Enabled then
-							if entityLibrary.isAlive then
-								if not autobankballoon then
-									local chestitems = store.localInventory.inventory.items
-									if #chestitems > 0 then
-										for i3,v3 in pairs(chestitems) do
-											if v3 and v3.itemType == "balloon" then
-												task.spawn(function()
-													bedwars.Client:GetNamespace("Inventory"):Get("ChestGiveItem"):CallServer(echest, v3.tool)
-													refreshbank()
-												end)
-											end
-										end
-									end
-								end
-							end
-							autobankoldballoon = autobankballoon
-						end
-						if autobankapple then
-							local chestitems = echest and echest:GetChildren() or {}
-							if #chestitems > 0 then
-								for i3,v3 in pairs(chestitems) do
-									if v3:IsA("Accessory") and v3.Name == "apple" then
-										if (not getItem("apple")) then
-											task.spawn(function()
-												bedwars.Client:GetNamespace("Inventory"):Get("ChestGetItem"):CallServer(echest, v3)
-												refreshbank()
-											end)
-										end
-									end
-								end
-							end
-						end
-						if (autobankapple ~= autobankoldapple) and AutoBankApple.Enabled then
-							if entityLibrary.isAlive then
-								if not autobankapple then
-									local chestitems = store.localInventory.inventory.items
-									if #chestitems > 0 then
-										for i3,v3 in pairs(chestitems) do
-											if v3 and v3.itemType == "apple" then
-												task.spawn(function()
-													bedwars.Client:GetNamespace("Inventory"):Get("ChestGiveItem"):CallServer(echest, v3.tool)
-													refreshbank()
-												end)
-											end
-										end
-									end
-								end
-							end
-							autobankoldapple = autobankapple
-						end
-						if found ~= AutoBankTransmitted or npctype ~= AutoBankTransmittedType then
-							AutoBankTransmitted, AutoBankTransmittedType = found, npctype
-							if entityLibrary.isAlive then
-								local chestitems = store.localInventory.inventory.items
-								if #chestitems > 0 then
-									for i3,v3 in pairs(chestitems) do
-										if v3 and (v3.itemType == "emerald" or v3.itemType == "iron" or v3.itemType == "diamond" or v3.itemType == "gold") then
-											if (not AutoBankTransmitted) or (AutoBankTransmittedType and v3.Name ~= "diamond") then
-												task.spawn(function()
-													pcall(function()
-														bedwars.Client:GetNamespace("Inventory"):Get("ChestGiveItem"):CallServer(echest, v3.tool)
-													end)
-													refreshbank()
-												end)
-											end
-										end
-									end
-								end
-							end
-						end
-						if found then
-							local chestitems = echest and echest:GetChildren() or {}
-							if #chestitems > 0 then
-								for i3,v3 in pairs(chestitems) do
-									if v3:IsA("Accessory") and ((npctype == false and (v3.Name == "emerald" or v3.Name == "iron" or v3.Name == "gold")) or v3.Name == "diamond") then
-										task.spawn(function()
-											pcall(function()
-												bedwars.Client:GetNamespace("Inventory"):Get("ChestGetItem"):CallServer(echest, v3)
-											end)
-											refreshbank()
-										end)
-									end
-								end
-							end
-						end
-					until (not AutoBank.Enabled)
-				end)
-			else
-				if autobankui then
-					autobankui:Destroy()
-					autobankui = nil
-				end
-				local echest = replicatedStorage.Inventories:FindFirstChild(lplr.Name.."_personal")
-				local chestitems = echest and echest:GetChildren() or {}
-				if #chestitems > 0 then
-					for i3,v3 in pairs(chestitems) do
-						if v3:IsA("Accessory") and (v3.Name == "emerald" or v3.Name == "iron" or v3.Name == "diamond" or v3.Name == "apple" or v3.Name == "balloon") then
-							task.spawn(function()
-								pcall(function()
-									bedwars.Client:GetNamespace("Inventory"):Get("ChestGetItem"):CallServer(echest, v3)
-								end)
-								refreshbank()
-							end)
-						end
-					end
-				end
-			end
-		end
-	})
-	AutoBankUIToggle = AutoBank.CreateToggle({
-		Name = "UI",
-		Function = function(callback)
-			if autobankui then autobankui.Visible = callback end
-		end,
-		Default = true
-	})
-	AutoBankApple = AutoBank.CreateToggle({
-		Name = "Apple",
-		Function = function(callback)
-			if not callback then
-				local echest = replicatedStorage.Inventories:FindFirstChild(lplr.Name.."_personal")
-				local chestitems = echest and echest:GetChildren() or {}
-				for i3,v3 in pairs(chestitems) do
-					if v3:IsA("Accessory") and v3.Name == "apple" then
-						task.spawn(function()
-							bedwars.Client:GetNamespace("Inventory"):Get("ChestGetItem"):CallServer(echest, v3)
-							refreshbank()
-						end)
-					end
-				end
-			end
-		end,
-		Default = true
-	})
-	AutoBankBalloon = AutoBank.CreateToggle({
-		Name = "Balloon",
-		Function = function(callback)
-			if not callback then
-				local echest = replicatedStorage.Inventories:FindFirstChild(lplr.Name.."_personal")
-				local chestitems = echest and echest:GetChildren() or {}
-				for i3,v3 in pairs(chestitems) do
-					if v3:IsA("Accessory") and v3.Name == "balloon" then
-						task.spawn(function()
-							bedwars.Client:GetNamespace("Inventory"):Get("ChestGetItem"):CallServer(echest, v3)
-							refreshbank()
-						end)
-					end
-				end
-			end
-		end,
-		Default = true
-	})
-	AutoBankDeath = AutoBank.CreateToggle({
-		Name = "Damage",
-		Function = function() end,
-		HoverText = "puts away resources when you take damage to prevent losing on death"
-	})
-	AutoBankStay = AutoBank.CreateToggle({
-		Name = "Stay",
-		Function = function() end,
-		HoverText = "keeps resources until toggled off"
-	})
-	AutoBankRange = AutoBank.CreateSlider({
-		Name = "Range",
-		Function = function() end,
-		Min = 1,
-		Max = 20,
-		Default = 20
-	})
 end)
 
 run(function()
@@ -6308,7 +5982,7 @@ run(function()
 	AutoForgeWeapon = AutoForge.CreateDropdown({
 		Name = "Weapon",
 		Function = function() end,
-		List = {"Sword", "Dagger", "Scythe", "Great_Hammer"}
+		List = {"Sword", "Dagger", "Scythe", "Great_Hammer", "Gauntlets"}
 	})
 	AutoForgeArmor = AutoForge.CreateToggle({
 		Name = "Armor",
@@ -6334,6 +6008,7 @@ run(function()
 		Default = true
 	})
 end)
+
 
 run(function()
 	local AutoReportV2 = {Enabled = false}
@@ -6476,26 +6151,6 @@ run(function()
 			end
 		end,
 		HoverText = "Drops items fast when you hold Q"
-	})
-end)
-
-run(function()
-	local OpenEnderchest = {Enabled = false}
-	OpenEnderchest = GuiLibrary.ObjectsThatCanBeSaved.UtilityWindow.Api.CreateOptionsButton({
-		Name = "OpenEnderchest",
-		Function = function(callback)
-			if callback then
-				local echest = replicatedStorage.Inventories:FindFirstChild(lplr.Name.."_personal")
-				if echest then
-					bedwars.AppController:openApp("ChestApp", {})
-					bedwars.ChestController:openChest(echest)
-				else
-					warningNotification("OpenEnderchest", "Enderchest not found", 5)
-				end
-				OpenEnderchest.ToggleButton(false)
-			end
-		end,
-		HoverText = "Opens the enderchest"
 	})
 end)
 
@@ -6965,134 +6620,106 @@ run(function()
 	local nukernofly = {Enabled = false}
 	local nukerlegit = {Enabled = false}
 	local nukerown = {Enabled = false}
-    local nukerluckyblock = {Enabled = false}
+	local nukerluckyblock = {Enabled = false}
 	local nukerironore = {Enabled = false}
-    local nukerbeds = {Enabled = false}
+	local nukerbeds = {Enabled = false}
 	local nukercustom = {RefreshValues = function() end, ObjectList = {}}
-    local luckyblocktable = {}
+	local luckyblocktable = {}
 
 	Nuker = GuiLibrary.ObjectsThatCanBeSaved.WorldWindow.Api.CreateOptionsButton({
-		Name = "Nuker",
-		Function = function(callback)
-            if callback then
-				for i,v in pairs(store.blocks) do
-					if table.find(nukercustom.ObjectList, v.Name) or (nukerluckyblock.Enabled and v.Name:find("lucky")) or (nukerironore.Enabled and v.Name == "iron_ore") then
-						table.insert(luckyblocktable, v)
+			Name = "Nuker",
+			Function = function(callback)
+					if callback then
+							for i,v in pairs(store.blocks) do
+									if table.find(nukercustom.ObjectList, v.Name) or (nukerluckyblock.Enabled and v.Name:find("lucky")) or (nukerironore.Enabled and v.Name == "iron_ore") then
+											table.insert(luckyblocktable, v)
+									end
+							end
+							table.insert(Nuker.Connections, collectionService:GetInstanceAddedSignal("block"):Connect(function(v)
+									if table.find(nukercustom.ObjectList, v.Name) or (nukerluckyblock.Enabled and v.Name:find("lucky")) or (nukerironore.Enabled and v.Name == "iron_ore") then
+											table.insert(luckyblocktable, v)
+									end
+							end))
+							table.insert(Nuker.Connections, collectionService:GetInstanceRemovedSignal("block"):Connect(function(v)
+									if table.find(nukercustom.ObjectList, v.Name) or (nukerluckyblock.Enabled and v.Name:find("lucky")) or (nukerironore.Enabled and v.Name == "iron_ore") then
+											table.remove(luckyblocktable, table.find(luckyblocktable, v))
+									end
+							end))
+							task.spawn(function()
+									repeat
+											if (not nukernofly.Enabled or not GuiLibrary.ObjectsThatCanBeSaved.FlyOptionsButton.Api.Enabled) then
+													local broke = not entityLibrary.isAlive
+													local tool = (not nukerlegit.Enabled) and {Name = "wood_axe"} or store.localHand.tool
+													if nukerbeds.Enabled then
+															for i, obj in pairs(collectionService:GetTagged("bed")) do
+																	if broke then break end
+																	if obj.Parent ~= nil then
+																			if obj:GetAttribute("BedShieldEndTime") then
+																					if obj:GetAttribute("BedShieldEndTime") > workspace:GetServerTimeNow() then continue end
+																			end
+																			if ((entityLibrary.LocalPosition or entityLibrary.character.HumanoidRootPart.Position) - obj.Position).magnitude <= nukerrange.Value then
+																					if tool and bedwars.ItemTable[tool.Name].breakBlock and bedwars.BlockController:isBlockBreakable({blockPosition = obj.Position / 3}, lplr) then
+																							local res, amount = getBestBreakSide(obj.Position)
+																							local res2, amount2 = getBestBreakSide(obj.Position + Vector3.new(0, 0, 0))
+																							broke = true
+																							bedwars.breakBlock((amount < amount2 and obj.Position or obj.Position + Vector3.new(0, 0, 3)), nukereffects.Enabled, (amount < amount2 and res or res2), false, nukeranimation.Enabled)
+																							break
+																					end
+																			end
+																	end
+															end
+													end
+													broke = broke and not entityLibrary.isAlive
+													for i, obj in pairs(luckyblocktable) do
+															if broke then break end
+															if entityLibrary.isAlive then
+																	if obj and obj.Parent ~= nil then
+																			if ((entityLibrary.LocalPosition or entityLibrary.character.HumanoidRootPart.Position) - obj.Position).magnitude <= nukerrange.Value and (nukerown.Enabled or obj:GetAttribute("PlacedByUserId") ~= lplr.UserId) then
+																					if tool and bedwars.ItemTable[tool.Name].breakBlock and bedwars.BlockController:isBlockBreakable({blockPosition = obj.Position / 3}, lplr) then
+																							bedwars.breakBlock(obj.Position, nukereffects.Enabled, getBestBreakSide(obj.Position), true, nukeranimation.Enabled)
+																							break
+																					end
+																			end
+																	end
+															end
+													end
+											end
+											task.wait()
+									until (not Nuker.Enabled)
+							end)
+					else
+							luckyblocktable = {}
 					end
-				end
-				table.insert(Nuker.Connections, collectionService:GetInstanceAddedSignal("block"):Connect(function(v)
-                    if table.find(nukercustom.ObjectList, v.Name) or (nukerluckyblock.Enabled and v.Name:find("lucky")) or (nukerironore.Enabled and v.Name == "iron_ore") then
-                        table.insert(luckyblocktable, v)
-                    end
-                end))
-                table.insert(Nuker.Connections, collectionService:GetInstanceRemovedSignal("block"):Connect(function(v)
-                    if table.find(nukercustom.ObjectList, v.Name) or (nukerluckyblock.Enabled and v.Name:find("lucky")) or (nukerironore.Enabled and v.Name == "iron_ore") then
-                        table.remove(luckyblocktable, table.find(luckyblocktable, v))
-                    end
-                end))
-                task.spawn(function()
-                    repeat
-						if (not nukernofly.Enabled or not GuiLibrary.ObjectsThatCanBeSaved.FlyOptionsButton.Api.Enabled) then
-							local broke = not entityLibrary.isAlive
-							local tool = (not nukerlegit.Enabled) and {Name = "wood_axe"} or store.localHand.tool
-							if nukerbeds.Enabled then
-								for i, obj in pairs(collectionService:GetTagged("bed")) do
-									if broke then break end
-									if obj.Parent ~= nil then
-										if obj:GetAttribute("BedShieldEndTime") then
-											if obj:GetAttribute("BedShieldEndTime") > workspace:GetServerTimeNow() then continue end
-										end
-										if ((entityLibrary.LocalPosition or entityLibrary.character.HumanoidRootPart.Position) - obj.Position).magnitude <= nukerrange.Value then
-											if tool and bedwars.ItemTable[tool.Name].breakBlock and bedwars.BlockController:isBlockBreakable({blockPosition = obj.Position / 3}, lplr) then
-												local res, amount = getBestBreakSide(obj.Position)
-												local res2, amount2 = getBestBreakSide(obj.Position + Vector3.new(0, 0, 3))
-												broke = true
-												bedwars.breakBlock((amount < amount2 and obj.Position or obj.Position + Vector3.new(0, 0, 3)), nukereffects.Enabled, (amount < amount2 and res or res2), false, nukeranimation.Enabled)
-												break
-											end
-										end
-									end
-								end
-							end
-							broke = broke and not entityLibrary.isAlive
-							for i, obj in pairs(luckyblocktable) do
-								if broke then break end
-								if entityLibrary.isAlive then
-									if obj and obj.Parent ~= nil then
-										if ((entityLibrary.LocalPosition or entityLibrary.character.HumanoidRootPart.Position) - obj.Position).magnitude <= nukerrange.Value and (nukerown.Enabled or obj:GetAttribute("PlacedByUserId") ~= lplr.UserId) then
-											if tool and bedwars.ItemTable[tool.Name].breakBlock and bedwars.BlockController:isBlockBreakable({blockPosition = obj.Position / 3}, lplr) then
-												bedwars.breakBlock(obj.Position, nukereffects.Enabled, getBestBreakSide(obj.Position), true, nukeranimation.Enabled)
-												break
-											end
-										end
-									end
-								end
-							end
-						end
-						task.wait()
-                    until (not Nuker.Enabled)
-                end)
-            else
-                luckyblocktable = {}
-            end
-		end,
-		HoverText = "Automatically destroys beds & luckyblocks around you."
+			end,
+			HoverText = "Automatically destroys beds & luckyblocks around you."
 	})
 	nukerrange = Nuker.CreateSlider({
-		Name = "Break range",
-		Min = 1,
-		Max = 30,
-		Function = function(val) end,
-		Default = 30
+			Name = "Break range",
+			Min = 1,
+			Max = 30,
+			Function = function(val) end,
+			Default = 30
 	})
-	nukereffects = Nuker.CreateToggle({
-		Name = "Show HealthBar & Effects",
-		Function = function(callback)
-			if not callback then
-				bedwars.BlockBreaker.healthbarMaid:DoCleaning()
-			end
-		 end,
-		Default = true
+	nukerbeds = Nuker.CreateToggle({
+			Name = "Break Beds",
+			Function = function(callback) end,
+			Default = true
 	})
-	nukeranimation = Nuker.CreateToggle({
-		Name = "Break Animation",
-		Function = function() end
-	})
-    nukerbeds = Nuker.CreateToggle({
-		Name = "Break Beds",
-		Function = function(callback) end,
-		Default = true
-	})
-    nukerluckyblock = Nuker.CreateToggle({
-		Name = "Break LuckyBlocks",
-		Function = function(callback)
-			if callback then
-				luckyblocktable = {}
-				for i,v in pairs(store.blocks) do
-					if table.find(nukercustom.ObjectList, v.Name) or (nukerluckyblock.Enabled and v.Name:find("lucky")) or (nukerironore.Enabled and v.Name == "iron_ore") then
-						table.insert(luckyblocktable, v)
+	nukerluckyblock = Nuker.CreateToggle({
+			Name = "Break LuckyBlocks",
+			Function = function(callback)
+					if callback then
+							luckyblocktable = {}
+							for i,v in pairs(store.blocks) do
+									if table.find(nukercustom.ObjectList, v.Name) or (nukerluckyblock.Enabled and v.Name:find("lucky")) or (nukerironore.Enabled and v.Name == "iron_ore") then
+											table.insert(luckyblocktable, v)
+									end
+							end
+					else
+							luckyblocktable = {}
 					end
-				end
-			else
-				luckyblocktable = {}
-			end
-		 end,
-		Default = true
-	})
-	nukerironore = Nuker.CreateToggle({
-		Name = "Break IronOre",
-		Function = function(callback)
-			if callback then
-				luckyblocktable = {}
-				for i,v in pairs(store.blocks) do
-					if table.find(nukercustom.ObjectList, v.Name) or (nukerluckyblock.Enabled and v.Name:find("lucky")) or (nukerironore.Enabled and v.Name == "iron_ore") then
-						table.insert(luckyblocktable, v)
-					end
-				end
-			else
-				luckyblocktable = {}
-			end
-		end
+			end,
+			Default = true
 	})
 end)
 
@@ -7895,19 +7522,21 @@ run(function()
     local TweenService = game:GetService("TweenService")
 
 		function findNearestBed()
-				local nearestBed = nil
-				local minDistance = math.huge
-
-				for _,v in pairs(game.Workspace:GetDescendants()) do
-						if v.Name:lower() == "bed" and v:FindFirstChild("Blanket") and v:FindFirstChild("Blanket").BrickColor ~= lplr.Team.TeamColor then
-								local distance = (v.Position - lplr.Character.HumanoidRootPart.Position).magnitude
-								if distance < minDistance then
-										nearestBed = v
-										minDistance = distance
-								end
-						end
+			local magnitude, bed = math.huge, nil
+			local beds = collectionService:GetTagged('bed')
+			if not entityLibrary.isAlive or not lplr.Character.HumanoidRootPart.Position then return nil end
+			for i,v in next, beds do 
+				local localpos = entityLibrary.isAlive and lplr.Character.HumanoidRootPart.Position or Vector3.zero
+				local bedmagnitude = (localpos - v.Position).Magnitude 
+				local bedteam = v:GetAttribute('id'):sub(1, 1)
+				if bedteam ~= lplr:GetAttribute('Team') and (not noshield or not (v:GetAttribute('BedShieldEndTime') and v:GetAttribute('BedShieldEndTime') > workspace:GetServerTimeNow())) then 
+					if bedmagnitude < magnitude then 
+						bed = v
+						magnitude = bedmagnitude
+					end
 				end
-				return nearestBed
+			end
+			return bed
 		end
 
     function tweenToNearestBed()
@@ -8143,7 +7772,6 @@ run(function()
 		Name = 'KillFeed Remover',
 		Function = function(callback)
 			if callback then
-				wait(8)
 				lplr.PlayerGui.KillFeedGui.Parent = workspace
 			end
 		end
@@ -8712,6 +8340,43 @@ run(function()
 					end
 			end
 	})
+end)
+
+run(function()
+  local winnerwinner = GuiLibrary.ObjectsThatCanBeSaved.WorldWindow.Api.CreateOptionsButton({
+      Name = "wined",
+      Function = function(callback)
+          if callback then
+              local function moveCharacterToZones()
+                  local player = game.Players.LocalPlayer
+                  local humanoid = player.Character and player.Character:FindFirstChildOfClass("Humanoid")
+
+                  if player and player.Character and humanoid then
+                      local zones = game.Workspace:GetChildren()
+                      local Tz = {}
+
+                      for _, zone in ipairs(zones) do
+                          if zone.Name == "BridgeDuelTouchdownZone" then
+                              table.insert(Tz, zone.Position)
+                          end
+                      end
+
+                      for _, position in ipairs(Tz) do
+                          humanoid.RootPart.CFrame = CFrame.new(position)
+                          wait(0.12)
+                      end
+                  else
+                      warn("Shi is fucked idk")
+                  end
+              end
+
+              while true do
+                  moveCharacterToZones()
+                  wait(6)
+              end
+          end
+      end
+  })
 end)
 
 loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-extra/main/Extra%20681", true))()
