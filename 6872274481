@@ -7589,155 +7589,146 @@ run(function()
   })
 end)
 
-
 run(function()
-    local BedTPMethod = {Value = 'Linear'}
-    local BedTPDirection = {Value = 'In'}
-    local BedTPWaitTime = {Value = 0.1}
-    local BedTPTime = {Value = 0.78}
-    local BedTPHeight = {Value = 6}
-    local Bedtp = {}
-    local lplr = game.Players.LocalPlayer
-    local hasTeleported = false
-    local TweenService = game:GetService("TweenService")
-
-    function findNearestBed()
-      local magnitude, bed = (range or math.huge), nil
-      local beds = collectionService:GetTagged('bed')
-      if not entityLibrary.isAlive and not lplr.Character.HumanoidRootPart.Position then 
-          return nil 
-      end
-      for i,v in next, beds do 
-          local localpos = entityLibrary.isAlive and lplr.Character.HumanoidRootPart.Position or Vector3.zero
-          local bedmagnitude = (localpos - v.Position).Magnitude 
-          local bedteam = v:GetAttribute('id'):sub(1, 1)
-          if bedteam == lplr:GetAttribute('Team') then 
-              continue 
-          end
-          if noshield and v:GetAttribute('BedShieldEndTime') and v:GetAttribute('BedShieldEndTime') > workspace:GetServerTimeNow() then 
-              continue  
-          end
-          if bedmagnitude < magnitude then 
-              bed = v
-              magnitude = bedmagnitude
-          end
-      end
-      return bed
-  end
-
-    function tweenToNearestBed()
-        local nearestBed = findNearestBed()
-        if nearestBed and not hasTeleported then
-            hasTeleported = true
-            local tweenInfo = TweenInfo.new(BedTPTime.Value, Enum.EasingStyle[BedTPMethod.Value], Enum.EasingDirection[BedTPDirection.Value])
-            local tween = TweenService:Create(lplr.Character.HumanoidRootPart, tweenInfo, {CFrame = nearestBed.CFrame * CFrame.new(0, BedTPHeight.Value, 0)})
-            tween:Play()
-        end
-    end
-
-    local Bedtp = GuiLibrary.ObjectsThatCanBeSaved.MovementWindow.Api.CreateOptionsButton({
-        ["Name"] = 'Bed tp',
-        ["Function"] = function(callback)
-            if callback then
-                lplr.Character:FindFirstChildOfClass("Humanoid"):ChangeState(Enum.HumanoidStateType.Dead)
-                lplr.CharacterAdded:Connect(function()
-                    wait(BedTPWaitTime.Value)
-                    tweenToNearestBed()
-                end)
-                hasTeleported = false
-            end
-        end,
-        ["ExtraText"] = function()
-            return BedTPMethod["Value"]
-        end
-    })
-
-    Bedtp.CreateDropdown({
-        ["Name"] = 'Mode',
-        ["Function"] = function(selectedValue) 
-            BedTPMethod["Value"] = selectedValue
-        end,
-        ["List"] = {"Linear", "Sine", "Back", "Quad", "Quart", "Quint", "Bounce", "Elastic", "Exponential", "Circular", "Cubic"}
-
-    })
-
-    Bedtp.CreateDropdown({
-        ["Name"] = 'Direction',
-        ["Function"] = function(selectedValue) 
-            BedTPDirection["Value"] = selectedValue
-        end,
-        ["List"] = {"In", "Out", "InOut"}
-
-    })
-
-    Bedtp.CreateSlider({
-        Name = 'Wait Time',
-        Function = function(selectedValue) 
-            BedTPWaitTime.Value = selectedValue
-        end, 
-        ["Min"] = 0.1,
-        ["Max"] = 3,
-        ["Default"] = 0.1
-    })
-
-    Bedtp.CreateSlider({
-        ["Name"] = 'Time',
-        ["Function"] = function(selectedValue) 
-            BedTPTime["Value"] = selectedValue
-        end, 
-        ["Min"] = 0.10,
-				["Max"] = 1,
-        ["Default"] = 0.78
-    })
-
-    Bedtp.CreateSlider({
-        ["Name"] = 'Height',
-        ["Function"] = function(selectedValue) 
-            BedTPHeight["Value"] = selectedValue
-        end, 
-        ["Min"] = 1,
-				["Max"] = 50,
-        ["Default"] = 6
-    })
-end)
-
-run(function()
-  local Bedtpv2WaitTime = {Value = 0.1}
-  local Bedtpv2Time = {Value = 1}
-  local Bedtpv2Height = {Value = 6}
+  local BedTPMethod = {Value = 'Linear'}
+  local BedTPDirection = {Value = 'In'}
+  local BedTPWaitTime = {Value = 0.1}
+  local BedTPTime = {Value = 0.83}
+  local BedTPHeight = {Value = 16}
+  local Bedtp = {}
   local lplr = game.Players.LocalPlayer
   local hasTeleported = false
   local TweenService = game:GetService("TweenService")
 
-    function findNearestBed()
-      local magnitude, bed = (range or math.huge), nil
-      local beds = collectionService:GetTagged('bed')
-      if not entityLibrary.isAlive and not lplr.Character.HumanoidRootPart.Position then 
-          return nil 
-      end
-      for i,v in next, beds do 
-          local localpos = entityLibrary.isAlive and lplr.Character.HumanoidRootPart.Position or Vector3.zero
-          local bedmagnitude = (localpos - v.Position).Magnitude 
-          local bedteam = v:GetAttribute('id'):sub(1, 1)
-          if bedteam == lplr:GetAttribute('Team') then 
-              continue 
-          end
-          if noshield and v:GetAttribute('BedShieldEndTime') and v:GetAttribute('BedShieldEndTime') > workspace:GetServerTimeNow() then 
-              continue  
-          end
-          if bedmagnitude < magnitude then 
-              bed = v
-              magnitude = bedmagnitude
+  function findNearestBed()
+      local nearestBed = nil
+      local minDistance = math.huge
+
+      for _,v in pairs(game.Workspace:GetDescendants()) do
+          if v.Name:lower() == "bed" and v:FindFirstChild("Blanket") and v:FindFirstChild("Blanket").BrickColor ~= lplr.Team.TeamColor then
+              local distance = (v.Position - lplr.Character.HumanoidRootPart.Position).magnitude
+              if distance < minDistance then
+                  nearestBed = v
+                  minDistance = distance
+              end
           end
       end
-      return bed
+      return nearestBed
   end
 
   function tweenToNearestBed()
       local nearestBed = findNearestBed()
       if nearestBed and not hasTeleported then
           hasTeleported = true
-          local tween = TweenService:Create(lplr.Character.HumanoidRootPart, TweenInfo.new(Bedtpv2Time.Value), {CFrame = nearestBed.CFrame * CFrame.new(0, Bedtpv2Height.Value, 0)})
+          local tweenInfo = TweenInfo.new(BedTPTime.Value, Enum.EasingStyle[BedTPMethod.Value], Enum.EasingDirection[BedTPDirection.Value])
+          local tween = TweenService:Create(lplr.Character.HumanoidRootPart, tweenInfo, {CFrame = nearestBed.CFrame * CFrame.new(0, BedTPHeight.Value, 0)})
+          tween:Play()
+      end
+  end
+
+  local Bedtp = GuiLibrary.ObjectsThatCanBeSaved.MovementWindow.Api.CreateOptionsButton({
+      ["Name"] = 'Bed tp',
+      ["Function"] = function(callback)
+          if callback then
+              lplr.Character:FindFirstChildOfClass("Humanoid"):ChangeState(Enum.HumanoidStateType.Dead)
+              lplr.CharacterAdded:Connect(function()
+                  wait(BedTPWaitTime.Value)
+                  tweenToNearestBed()
+              end)
+              hasTeleported = false
+          end
+      end,
+      ["ExtraText"] = function()
+          return BedTPMethod["Value"]
+      end
+  })
+
+  Bedtp.CreateDropdown({
+      ["Name"] = 'Mode',
+      ["Function"] = function(selectedValue) 
+          BedTPMethod["Value"] = selectedValue
+      end,
+      ["List"] = {"Linear", "Sine", "Back", "Quad", "Quart", "Quint", "Bounce", "Elastic", "Exponential", "Circular", "Cubic"}
+
+  })
+
+  Bedtp.CreateDropdown({
+      ["Name"] = 'Direction',
+      ["Function"] = function(selectedValue) 
+          BedTPDirection["Value"] = selectedValue
+      end,
+      ["List"] = {"In", "Out", "InOut"}
+
+  })
+
+  Bedtp.CreateSlider({
+      Name = 'Wait Time',
+      Function = function(selectedValue) 
+          BedTPWaitTime.Value = selectedValue
+      end, 
+      ["Min"] = 0.1,
+      ["Max"] = 3,
+      ["Default"] = 0.1
+  })
+
+  Bedtp.CreateSlider({
+      ["Name"] = 'Time',
+      ["Function"] = function(selectedValue) 
+          BedTPTime["Value"] = selectedValue
+      end, 
+      ["Min"] = 0.10,
+      ["Max"] = 1,
+      ["Default"] = 0.83
+  })
+
+  Bedtp.CreateSlider({
+      ["Name"] = 'Height',
+      ["Function"] = function(selectedValue) 
+          BedTPHeight["Value"] = selectedValue
+      end, 
+      ["Min"] = 1,
+      ["Max"] = 50,
+      ["Default"] = 16
+  })
+end)
+
+run(function()
+  local Bedtpv2WaitTime = {Value = 0.1}
+  local Bedtpv2Time = {Value = 1}
+  local Bedtpv2Height = {Value = 16}
+  local lplr = game.Players.LocalPlayer
+  local hasTeleportedv2 = false
+  local TweenService = game:GetService("TweenService")
+
+    function findNearestBedv2()
+      local magnitude, bed = (range or math.huge), nil
+      local beds = collectionService:GetTagged('bed')
+      if not entityLibrary.isAlive and not lplr.Character.HumanoidRootPart.Position then 
+          return nil 
+      end
+      for i,v in next, beds do 
+          local localpos = entityLibrary.isAlive and lplr.Character.HumanoidRootPart.Position or Vector3.zero
+          local bedmagnitude = (localpos - v.Position).Magnitude 
+          local bedteam = v:GetAttribute('id'):sub(1, 1)
+          if bedteam == lplr:GetAttribute('Team') then 
+              continue 
+          end
+          if noshield and v:GetAttribute('BedShieldEndTime') and v:GetAttribute('BedShieldEndTime') > workspace:GetServerTimeNow() then 
+              continue  
+          end
+          if bedmagnitude < magnitude then 
+              bed = v
+              magnitude = bedmagnitude
+          end
+      end
+      return bed
+  end
+
+  function tweenToNearestBedv2()
+      local nearestBedv2 = findNearestBedv2()
+      if nearestBedv2 and not hasTeleportedv2 then
+          hasTeleportedv2 = true
+          local tween = TweenService:Create(lplr.Character.HumanoidRootPart, TweenInfo.new(Bedtpv2Time.Value), {CFrame = nearestBedv2.CFrame * CFrame.new(0, Bedtpv2Height.Value, 0)})
           tween:Play()
       end
   end
@@ -7750,9 +7741,9 @@ run(function()
                   lplr.Character:FindFirstChildOfClass("Humanoid"):ChangeState(Enum.HumanoidStateType.Dead)
                   lplr.CharacterAdded:Connect(function()
                       wait(Bedtpv2WaitTime.Value)
-                      tweenToNearestBed()
+                      tweenToNearestBedv2()
                   end)
-                  hasTeleported = false
+                  hasTeleportedv2 = false
               end
           end
       end
@@ -7785,11 +7776,9 @@ run(function()
       end, 
       Min = 1,
       Max = 50,
-      Default = 6
+      Default = 16
   })
 end)
-
-
 
 run(function()
 	local Scydisabler = {}
