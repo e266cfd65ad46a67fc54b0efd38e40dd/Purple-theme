@@ -7512,7 +7512,7 @@ end
 end)
 
 run(function()
-  local PlayerTpv2WaitTime = {Value = 0}
+  local PlayerTpv2WaitTime = {Value = 0.1}
   local PlayerTpv2Time = {Value = 1}
   local PlayerTpv2Height = {Value = 0}
   local hasTeleported = false
@@ -7696,7 +7696,7 @@ run(function()
 end)
 
 run(function()
-  local Bedtpv2WaitTime = {Value = 0}
+  local Bedtpv2WaitTime = {Value = 0.1}
   local Bedtpv2Time = {Value = 1}
   local Bedtpv2Height = {Value = 6}
   local Bedtpv2 = {}
