@@ -7601,23 +7601,29 @@ run(function()
     local hasTeleported = false
     local TweenService = game:GetService("TweenService")
 
-		function findNearestBed()
-			local magnitude, bed = math.huge, nil
-			local beds = collectionService:GetTagged('bed')
-			if not entityLibrary.isAlive or not lplr.Character.HumanoidRootPart.Position then return nil end
-			for i,v in next, beds do 
-				local localpos = entityLibrary.isAlive and lplr.Character.HumanoidRootPart.Position or Vector3.zero
-				local bedmagnitude = (localpos - v.Position).Magnitude 
-				local bedteam = v:GetAttribute('id'):sub(1, 1)
-				if bedteam ~= lplr:GetAttribute('Team') and (not noshield or not (v:GetAttribute('BedShieldEndTime') and v:GetAttribute('BedShieldEndTime') > workspace:GetServerTimeNow())) then 
-					if bedmagnitude < magnitude then 
-						bed = v
-						magnitude = bedmagnitude
-					end
-				end
-			end
-			return bed
-		end
+    function findNearestBed()
+      local magnitude, bed = (range or math.huge), nil
+      local beds = collectionService:GetTagged('bed')
+      if not entityLibrary.isAlive and not lplr.Character.HumanoidRootPart.Position then 
+          return nil 
+      end
+      for i,v in next, beds do 
+          local localpos = entityLibrary.isAlive and lplr.Character.HumanoidRootPart.Position or Vector3.zero
+          local bedmagnitude = (localpos - v.Position).Magnitude 
+          local bedteam = v:GetAttribute('id'):sub(1, 1)
+          if bedteam == lplr:GetAttribute('Team') then 
+              continue 
+          end
+          if noshield and v:GetAttribute('BedShieldEndTime') and v:GetAttribute('BedShieldEndTime') > workspace:GetServerTimeNow() then 
+              continue  
+          end
+          if bedmagnitude < magnitude then 
+              bed = v
+              magnitude = bedmagnitude
+          end
+      end
+      return bed
+  end
 
     function tweenToNearestBed()
         local nearestBed = findNearestBed()
@@ -7699,24 +7705,29 @@ run(function()
   local Bedtpv2WaitTime = {Value = 0.1}
   local Bedtpv2Time = {Value = 1}
   local Bedtpv2Height = {Value = 6}
-  local Bedtpv2 = {}
   local lplr = game.Players.LocalPlayer
   local hasTeleported = false
   local TweenService = game:GetService("TweenService")
 
-  function findNearestBed()
-      local magnitude, bed = math.huge, nil
+    function findNearestBed()
+      local magnitude, bed = (range or math.huge), nil
       local beds = collectionService:GetTagged('bed')
-      if not entityLibrary.isAlive or not lplr.Character.HumanoidRootPart.Position then return nil end
+      if not entityLibrary.isAlive and not lplr.Character.HumanoidRootPart.Position then 
+          return nil 
+      end
       for i,v in next, beds do 
-          local localpos = entityLibrary.isAlive and lplr.Character.HumanoidRootPart.Position or Vector3.new()
+          local localpos = entityLibrary.isAlive and lplr.Character.HumanoidRootPart.Position or Vector3.zero
           local bedmagnitude = (localpos - v.Position).Magnitude 
           local bedteam = v:GetAttribute('id'):sub(1, 1)
-          if bedteam ~= lplr:GetAttribute('Team') and (not noshield or not (v:GetAttribute('BedShieldEndTime') and v:GetAttribute('BedShieldEndTime') > workspace:GetServerTimeNow())) then 
-              if bedmagnitude < magnitude then 
-                  bed = v
-                  magnitude = bedmagnitude
-              end
+          if bedteam == lplr:GetAttribute('Team') then 
+              continue 
+          end
+          if noshield and v:GetAttribute('BedShieldEndTime') and v:GetAttribute('BedShieldEndTime') > workspace:GetServerTimeNow() then 
+              continue  
+          end
+          if bedmagnitude < magnitude then 
+              bed = v
+              magnitude = bedmagnitude
           end
       end
       return bed
@@ -7726,7 +7737,7 @@ run(function()
       local nearestBed = findNearestBed()
       if nearestBed and not hasTeleported then
           hasTeleported = true
-          local tween = TweenService:Create(lplr.Character.HumanoidRootPart, TweenInfo.new(Bedtpv2Time.Value), {CFrame = nearestPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0, Bedtpv2Height.Value, 0)})
+          local tween = TweenService:Create(lplr.Character.HumanoidRootPart, TweenInfo.new(Bedtpv2Time.Value), {CFrame = nearestBed.CFrame * CFrame.new(0, Bedtpv2Height.Value, 0)})
           tween:Play()
       end
   end
@@ -7735,12 +7746,14 @@ run(function()
       Name = 'Bedtp v2',
       Function = function(callback)
           if callback then
-              lplr.Character:FindFirstChildOfClass("Humanoid"):ChangeState(Enum.HumanoidStateType.Dead)
-              lplr.CharacterAdded:Connect(function()
-                  wait(Bedtpv2WaitTime.Value)
-                  tweenToNearestBed()
-              end)
-              hasTeleported = false
+              if lplr.Character then
+                  lplr.Character:FindFirstChildOfClass("Humanoid"):ChangeState(Enum.HumanoidStateType.Dead)
+                  lplr.CharacterAdded:Connect(function()
+                      wait(Bedtpv2WaitTime.Value)
+                      tweenToNearestBed()
+                  end)
+                  hasTeleported = false
+              end
           end
       end
   })
@@ -7775,6 +7788,8 @@ run(function()
       Default = 6
   })
 end)
+
+
 
 run(function()
 	local Scydisabler = {}
