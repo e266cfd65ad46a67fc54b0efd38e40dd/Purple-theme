@@ -1,3 +1,4 @@
+
 local GuiLibrary = shared.GuiLibrary
 local playersService = game:GetService("Players")
 local textService = game:GetService("TextService")
@@ -7410,111 +7411,190 @@ run(function()
 end)
 
 run(function()
-    local PlayerTpMethod = {Value = 'Linear'}
-    local PlayerTpDirection = {Value = 'InOut'}
-    local PlayerTpWaitTime = {Value = 0.1}
-    local PlayerTpTime = {Value = 0.68}
-    local PlayerTpHeight = {Value = 20}
-    local PlayerTp = {}
-    local hasTeleported = false
-    local TweenService = game:GetService("TweenService")
-    local lplr = game.Players.LocalPlayer
+  local PlayerTpMethod = {Value = 'Linear'}
+  local PlayerTpDirection = {Value = 'InOut'}
+  local PlayerTpWaitTime = {Value = 0.1}
+  local PlayerTpTime = {Value = 0.8}
+  local PlayerTpHeight = {Value = 0}
+  local PlayerTp = {}
+  local hasTeleported = false
+  local TweenService = game:GetService("TweenService")
+  local lplr = game.Players.LocalPlayer
 
-    function findNearestPlayer()
-        local nearestPlayer = nil
-        local minDistance = math.huge
+  function findNearestPlayer()
+      local nearestPlayer = nil
+      local minDistance = math.huge
 
-        for _,v in pairs(game.Players:GetPlayers()) do
-            if v ~= lplr and v.Character and v.Character:FindFirstChild("HumanoidRootPart") and v.Team ~= lplr.Team and v.Character:FindFirstChild("Humanoid").Health > 0 then
-                local distance = (v.Character.HumanoidRootPart.Position - lplr.Character.HumanoidRootPart.Position).magnitude
-                if distance < minDistance then
-                    nearestPlayer = v
-                    minDistance = distance
-                end
-            end
-        end
-        return nearestPlayer
+      for _,v in pairs(game.Players:GetPlayers()) do
+          if v ~= lplr and v.Character and v.Character:FindFirstChild("HumanoidRootPart") and v.Team ~= lplr.Team and v.Character:FindFirstChild("Humanoid").Health > 0 then
+              local distance = (v.Character.HumanoidRootPart.Position - lplr.Character.HumanoidRootPart.Position).magnitude
+              if distance < minDistance then
+                  nearestPlayer = v
+                  minDistance = distance
+              end
+          end
+      end
+      return nearestPlayer
+  end
+
+  function tweenToNearestPlayer()
+    local nearestPlayer = findNearestPlayer()
+    if nearestPlayer and not hasTeleported then
+        hasTeleported = true
+        local tweenInfo = TweenInfo.new(PlayerTpTime.Value, Enum.EasingStyle[PlayerTpMethod.Value], Enum.EasingDirection[PlayerTpDirection.Value])
+        local tween = TweenService:Create(lplr.Character.HumanoidRootPart, tweenInfo, {CFrame = nearestPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0, PlayerTpHeight.Value, 0)})
+        tween:Play()
     end
+end
 
-    function tweenToNearestPlayer()
-        local nearestPlayer = findNearestPlayer()
-        if nearestPlayer and not hasTeleported then
-            hasTeleported = true
-            local tweenInfo = TweenInfo.new(PlayerTpTime.Value, Enum.EasingStyle[PlayerTpMethod.Value], Enum.EasingDirection[PlayerTpDirection.Value])
-            local tween = TweenService:Create(lplr.Character.HumanoidRootPart, tweenInfo, {CFrame = nearestPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0, PlayerTpHeight.Value, 0)})
-            tween:Play()
-        end
-    end
+  local PlayerTp = GuiLibrary.ObjectsThatCanBeSaved.MovementWindow.Api.CreateOptionsButton({
+      Name = 'PlayerTp',
+      Function = function(callback)
+          if callback then
+              lplr.Character:FindFirstChildOfClass("Humanoid"):ChangeState(Enum.HumanoidStateType.Dead)
+              lplr.CharacterAdded:Connect(function()
+                  wait(PlayerTpWaitTime.Value)
+                  tweenToNearestPlayer()
+              end)
+              hasTeleported = false
+          end
+      end,
+      ExtraText = function()
+          return PlayerTpMethod.Value
+      end
+  })
 
-    local PlayerTp = GuiLibrary.ObjectsThatCanBeSaved.MovementWindow.Api.CreateOptionsButton({
-        Name = 'PlayerTp',
-        Function = function(callback)
-            if callback then
-                lplr.Character:FindFirstChildOfClass("Humanoid"):ChangeState(Enum.HumanoidStateType.Dead)
-                lplr.CharacterAdded:Connect(function()
-                    wait(PlayerTpWaitTime.Value)
-                    tweenToNearestPlayer()
-                end)
-                hasTeleported = false
-            end
-        end,
-        ExtraText = function()
-            return PlayerTpMethod.Value
-        end
-    })
+  PlayerTp.CreateDropdown({
+      Name = 'Mode',
+      Function = function(selectedValue) 
+          PlayerTpMethod.Value = selectedValue
+      end,
+      List = {"None", "Linear", "Sine", "Back", "Quad", "Quart", "Quint", "Bounce", "Elastic", "Exponential", "Circular", "Cubic"}
+  })
 
-    PlayerTp.CreateDropdown({
-        Name = 'Mode',
-        Function = function(selectedValue) 
-            PlayerTpMethod.Value = selectedValue
-        end,
-        List = {"Linear", "Sine", "Back", "Quad", "Quart", "Quint", "Bounce", "Elastic", "Exponential", "Circular", "Cubic"}
-    })
+  PlayerTp.CreateDropdown({
+      Name = 'Direction',
+      Function = function(selectedValue) 
+          PlayerTpDirection.Value = selectedValue
+      end,
+      List = {"None", "In", "Out", "InOut"}
+  })  
 
-    PlayerTp.CreateDropdown({
-        Name = 'Direction',
-        Function = function(selectedValue) 
-            PlayerTpDirection.Value = selectedValue
-        end,
-        List = {"In", "Out", "InOut"}
-    })
+  PlayerTp.CreateSlider({
+      Name = 'Wait Time',
+      Function = function(selectedValue) 
+          PlayerTpWaitTime.Value = selectedValue
+      end, 
+      Min = 0.1,
+      Max = 3,
+      Default = 0.1
+  })
 
-    PlayerTp.CreateSlider({
-        Name = 'Wait Time',
-        Function = function(selectedValue) 
-            PlayerTpWaitTime.Value = selectedValue
-        end, 
-        Min = 0.1,
-        Max = 3,
-        Default = 0.1
-    })
+  PlayerTp.CreateSlider({
+      Name = 'Time',
+      Function = function(selectedValue) 
+          PlayerTpTime.Value = selectedValue
+      end, 
+      Min = 0.10,
+      Max = 1,
+      Default = 0.8
+  })
 
-    PlayerTp.CreateSlider({
-        Name = 'Time',
-        Function = function(selectedValue) 
-            PlayerTpTime.Value = selectedValue
-        end, 
-        Min = 0.10,
-        Max = 1,
-        Default = 0.68
-    })
-
-    PlayerTp.CreateSlider({
-        Name = 'Height',
-        Function = function(selectedValue) 
-            PlayerTpHeight.Value = selectedValue
-        end, 
-        Min = 1,
-        Max = 50,
-        Default = 20
-    })
+  PlayerTp.CreateSlider({
+      Name = 'Height',
+      Function = function(selectedValue) 
+          PlayerTpHeight.Value = selectedValue
+      end, 
+      Min = 1,
+      Max = 50,
+      Default = 0
+  })
 end)
+
+run(function()
+  local PlayerTpv2WaitTime = {Value = 0}
+  local PlayerTpv2Time = {Value = 1}
+  local PlayerTpv2Height = {Value = 0}
+  local hasTeleported = false
+  local TweenService = game:GetService("TweenService")
+  local lplr = game.Players.LocalPlayer
+
+  function findNearestPlayer()
+      local nearestPlayer = nil
+      local minDistance = math.huge
+
+      for _,v in pairs(game.Players:GetPlayers()) do
+          if v ~= lplr and v.Character and v.Character:FindFirstChild("HumanoidRootPart") and v.Team ~= lplr.Team and v.Character:FindFirstChild("Humanoid") and v.Character.Humanoid.Health > 0 then
+              local distance = (v.Character.HumanoidRootPart.Position - lplr.Character.HumanoidRootPart.Position).magnitude
+              if distance < minDistance then
+                  nearestPlayer = v
+                  minDistance = distance
+              end
+          end
+      end
+      return nearestPlayer
+  end
+
+  function tweenToNearestPlayer()
+      local nearestPlayer = findNearestPlayer()
+      if nearestPlayer and not hasTeleported then
+          hasTeleported = true
+          local tween = TweenService:Create(lplr.Character.HumanoidRootPart, TweenInfo.new(PlayerTpv2Time.Value), {CFrame = nearestPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0, PlayerTpv2Height.Value, 0)})
+          tween:Play()
+      end
+  end
+
+  local PlayerTpv2 = GuiLibrary.ObjectsThatCanBeSaved.MovementWindow.Api.CreateOptionsButton({
+      Name = 'PlayerTp v2',
+      Function = function(callback)
+          if callback then
+              lplr.Character:FindFirstChildOfClass("Humanoid"):ChangeState(Enum.HumanoidStateType.Dead)
+              lplr.CharacterAdded:Connect(function()
+                  wait(PlayerTpv2WaitTime.Value)
+                  tweenToNearestPlayer()
+              end)
+              hasTeleported = false
+          end
+      end
+  })
+
+  PlayerTpv2.CreateSlider({
+      Name = 'Wait Time',
+      Function = function(selectedValue) 
+          PlayerTpv2WaitTime.Value = selectedValue
+      end, 
+      Min = 0.1,
+      Max = 3,
+      Default = 0
+  })
+
+  PlayerTpv2.CreateSlider({
+      Name = 'Time',
+      Function = function(selectedValue) 
+          PlayerTpv2Time.Value = selectedValue
+      end, 
+      Min = 0.40,
+      Max = 2,
+      Default = 1
+  })
+
+  PlayerTpv2.CreateSlider({
+      Name = 'Height',
+      Function = function(selectedValue) 
+          PlayerTpv2Height.Value = selectedValue
+      end, 
+      Min = 1,
+      Max = 50,
+      Default = 0
+  })
+end)
+
 
 run(function()
     local BedTPMethod = {Value = 'Linear'}
     local BedTPDirection = {Value = 'In'}
     local BedTPWaitTime = {Value = 0.1}
-    local BedTPTime = {Value = 0.58}
+    local BedTPTime = {Value = 0.78}
     local BedTPHeight = {Value = 6}
     local Bedtp = {}
     local lplr = game.Players.LocalPlayer
@@ -7601,7 +7681,7 @@ run(function()
         end, 
         ["Min"] = 0.10,
 				["Max"] = 1,
-        ["Default"] = 0.68
+        ["Default"] = 0.78
     })
 
     Bedtp.CreateSlider({
@@ -7611,8 +7691,89 @@ run(function()
         end, 
         ["Min"] = 1,
 				["Max"] = 50,
-        ["Default"] = 20
+        ["Default"] = 6
     })
+end)
+
+run(function()
+  local Bedtpv2WaitTime = {Value = 0}
+  local Bedtpv2Time = {Value = 1}
+  local Bedtpv2Height = {Value = 6}
+  local Bedtpv2 = {}
+  local lplr = game.Players.LocalPlayer
+  local hasTeleported = false
+  local TweenService = game:GetService("TweenService")
+
+  function findNearestBed()
+      local magnitude, bed = math.huge, nil
+      local beds = collectionService:GetTagged('bed')
+      if not entityLibrary.isAlive or not lplr.Character.HumanoidRootPart.Position then return nil end
+      for i,v in next, beds do 
+          local localpos = entityLibrary.isAlive and lplr.Character.HumanoidRootPart.Position or Vector3.new()
+          local bedmagnitude = (localpos - v.Position).Magnitude 
+          local bedteam = v:GetAttribute('id'):sub(1, 1)
+          if bedteam ~= lplr:GetAttribute('Team') and (not noshield or not (v:GetAttribute('BedShieldEndTime') and v:GetAttribute('BedShieldEndTime') > workspace:GetServerTimeNow())) then 
+              if bedmagnitude < magnitude then 
+                  bed = v
+                  magnitude = bedmagnitude
+              end
+          end
+      end
+      return bed
+  end
+
+  function tweenToNearestBed()
+      local nearestBed = findNearestBed()
+      if nearestBed and not hasTeleported then
+          hasTeleported = true
+          local tween = TweenService:Create(lplr.Character.HumanoidRootPart, TweenInfo.new(Bedtpv2Time.Value), {CFrame = nearestPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0, Bedtpv2Height.Value, 0)})
+          tween:Play()
+      end
+  end
+
+  local Bedtpv2 = GuiLibrary.ObjectsThatCanBeSaved.MovementWindow.Api.CreateOptionsButton({
+      Name = 'Bedtp v2',
+      Function = function(callback)
+          if callback then
+              lplr.Character:FindFirstChildOfClass("Humanoid"):ChangeState(Enum.HumanoidStateType.Dead)
+              lplr.CharacterAdded:Connect(function()
+                  wait(Bedtpv2WaitTime.Value)
+                  tweenToNearestBed()
+              end)
+              hasTeleported = false
+          end
+      end
+  })
+
+  Bedtpv2.CreateSlider({
+      Name = 'Wait Time',
+      Function = function(selectedValue) 
+          Bedtpv2WaitTime.Value = selectedValue
+      end, 
+      Min = 0.1,
+      Max = 3,
+      Default = 0
+  })
+
+  Bedtpv2.CreateSlider({
+      Name = 'Time',
+      Function = function(selectedValue) 
+          Bedtpv2Time.Value = selectedValue
+      end, 
+      Min = 0.40,
+      Max = 2,
+      Default = 1
+  })
+
+  Bedtpv2.CreateSlider({
+      Name = 'Height',
+      Function = function(selectedValue) 
+          Bedtpv2Height.Value = selectedValue
+      end, 
+      Min = 1,
+      Max = 50,
+      Default = 6
+  })
 end)
 
 run(function()
@@ -8341,6 +8502,141 @@ run(function()
 			end
 	})
 end)
+
+run(function()
+  local TweenService = game:GetService("TweenService")
+  local lplr = game.Players.LocalPlayer
+  local tpSpeed = 0.7
+  local mode = "DeathTween"
+  local tped = false
+
+  local function isPlayerAlive(player)
+      return player.Character and player.Character:FindFirstChildOfClass("Humanoid") and player.Character.Humanoid.Health > 0
+  end
+
+  local function findNearestPlayer()
+      local nearestPlayer = nil
+      local minDistance = math.huge
+      
+      for _, player in pairs(game.Players:GetPlayers()) do
+          if player ~= lplr and player.Character and player.Character:FindFirstChild("HumanoidRootPart") and player.Team ~= lplr.Team and isPlayerAlive(player) then
+              local distance = (player.Character.HumanoidRootPart.Position - lplr.Character.HumanoidRootPart.Position).magnitude
+              if distance < minDistance then
+                  nearestPlayer = player
+                  minDistance = distance
+              end
+          end
+      end
+      return nearestPlayer
+  end
+
+  local function teleportToPlayer(player)
+      if mode == "TP" then
+          local randomPlayerPosition = player.Character.HumanoidRootPart.Position
+          if lplr.Character and lplr.Character:FindFirstChild("HumanoidRootPart") then
+              lplr.Character.HumanoidRootPart.CFrame = CFrame.new(randomPlayerPosition)
+          end
+          wait(0.5) -- Ensures the teleport completes
+      elseif mode == "DeathTween" and not tped then
+          tped = true
+          lplr.Character:FindFirstChildOfClass("Humanoid"):ChangeState(Enum.HumanoidStateType.Dead) -- Resets the player
+          lplr.CharacterAdded:Connect(function()
+              wait(0.3) -- Small delay for the character to respawn
+              tweenToNearestPlayer()
+          end)
+      elseif mode == "Autowin" then
+          local randomPlayerPosition = player.Character.HumanoidRootPart.Position
+          if lplr.Character and lplr.Character:FindFirstChild("HumanoidRootPart") then
+              lplr.Character.HumanoidRootPart.CFrame = CFrame.new(randomPlayerPosition)
+          end
+      end
+  end
+
+  local function tweenToNearestPlayer()
+      local nearestPlayer = findNearestPlayer()
+      
+      if nearestPlayer and not tped then
+          tped = true
+
+          local playerRootPart = nearestPlayer.Character.HumanoidRootPart
+          local blockPosition = Vector3.new(playerRootPart.Position.X, playerRootPart.Position.Y, playerRootPart.Position.Z)
+          
+          local playerName = nearestPlayer.Name  
+
+          warningNotification("Wonder", "Teleporting to " .. playerName, 5)  
+
+          local teleportSuccess = false  
+
+          local tween = TweenService:Create(lplr.Character.HumanoidRootPart, TweenInfo.new(tpSpeed), {CFrame = CFrame.new(blockPosition)})
+          tween:Play()
+          tween.Completed:Connect(function()
+              teleportSuccess = true
+          end)
+
+          wait(7) 
+          if not teleportSuccess and isPlayerAlive(nearestPlayer) then
+              warningNotification("Wonder", "Teleport failed", 5) 
+          end
+      end
+  end
+
+  PlayerTP2 = GuiLibrary.ObjectsThatCanBeSaved.WorldWindow.Api.CreateOptionsButton({
+      Name = "PlayerTP2",
+      Function = function(callback)
+          if callback then
+              if mode == "DeathTween" then
+                  tped = false -- Reset the flag whenever the module is enabled
+                  lplr.Character:FindFirstChildOfClass("Humanoid"):ChangeState(Enum.HumanoidStateType.Dead) -- Resets the player
+                  lplr.CharacterAdded:Connect(function()
+                      wait(0.3) -- Small delay for the character to respawn
+                      tweenToNearestPlayer()
+                  end)
+              elseif mode == "TP" then
+                  tped = false -- Reset the flag whenever the module is enabled
+                  local nearestPlayer = findNearestPlayer()
+                  if nearestPlayer then
+                      teleportToPlayer(nearestPlayer)
+                  else
+                      warn("No players found")
+                  end
+              elseif mode == "Autowin" then
+                  while PlayerTP2.Enabled and mode == "Autowin" do
+                      local nearestPlayer = findNearestPlayer()
+                      if nearestPlayer then
+                          teleportToPlayer(nearestPlayer)
+                          wait(0.1) -- Small delay to prevent spamming
+                      else
+                          warn("No players found")
+                          wait(1) -- Wait longer if no players were found
+                      end
+                  end
+              end
+          end
+      end,
+      HoverText = "TP to players!"
+  })
+
+  PlayerTP2.CreateDropdown({
+      Name = "Mode",
+      List = {"DeathTween", "TP", "Autowin"},
+      Function = function(newMode)
+          mode = newMode
+      end,
+      HoverText = "Select mode"
+  })
+
+  PlayerTP2.CreateSlider({
+      Name = "TweenSpeed",
+      Min = 0.1,
+      Max = 5,
+      Function = function(val)
+          tpSpeed = val
+      end,
+      Default = 0.7,
+      HoverText = "Adjust teleport speed"
+  })
+end)
+
 
 loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-extra/main/Extra%20681", true))()
 
