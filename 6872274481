@@ -8342,45 +8342,6 @@ run(function()
 	})
 end)
 
-run(function()
-    local winnerwinner = GuiLibrary.ObjectsThatCanBeSaved.WorldWindow.Api.CreateOptionsButton({
-        Name = "wined",
-        Function = function(callback)
-            if callback then
-                local function moveCharacterToZones()
-                    local player = game.Players.LocalPlayer
-                    local humanoid = player.Character and player.Character:FindFirstChildOfClass("Humanoid")
-
-                    if player and player.Character and humanoid then
-                        local zones = game.Workspace:GetChildren()
-                        local Tz = {}
-
-                        for _, zone in ipairs(zones) do
-                            if zone.Name == "BridgeDuelTouchdownZone" then
-                                table.insert(Tz, zone.Position)
-                            end
-                        end
-
-                        for _, position in ipairs(Tz) do
-                            humanoid.RootPart.CFrame = CFrame.new(position)
-                            wait(0.12)
-                        end
-                    else
-                        warn("Shi is fucked idk")
-                    end
-                end
-
-                while true do
-                    moveCharacterToZones()
-                    wait(6)
-                end
-            end
-        end
-    })
-    winnerwinner.ToggleButton(false)
-end)
-
-
 loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-extra/main/Extra%20681", true))()
 
 local HttpService = game:GetService("HttpService")
