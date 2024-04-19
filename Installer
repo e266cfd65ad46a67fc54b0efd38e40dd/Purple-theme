@@ -1,134 +1,47 @@
-local httpservice = game:GetService('HttpService')
-local httprequest = (http and http.request or http_request or fluxus and fluxus.request or syn and syn.request or request)
-local isfile = isfile or function(file)
-    local success, filecontents = pcall(function() return readfile(file) end)
-    return success and type(filecontents) == 'string'
-end 
-
-if httprequest == nil or writefile == nil or delfile == nil or isfolder == nil or makefolder == nil or print == nil or warn == nil or pcall == nil or wait == nil then 
-    game.Players.LocalPlayer:Kick("Please use a supported executer for system file functions or httprequest")
+if request == nil or writefile == nil or delfolder == nil or isfolder == nil or makefolder == nil or warn == nil then 
+    game.Players.LocalPlayer:Kick("Please use a supported executor for system file functions or httprequest")
 end
 
-function Reset()
-    if isfolder('vape') then
-        delfolder('vape')
-    end
+local function start()
+    if isfolder('vape') then delfolder('vape') end
+    makefolder('vape/assets', 'vape/CustomModules', 'vape/Libraries', 'vape/Profiles')
+    writefile('vape/PurpleVerison.txt', "2.5")
 end
 
-function Makevapefolders()
-    if not isfolder('vape/assets') then 
-        makefolder('vape/assets')
-    end
-    if not isfolder('vape/CustomModules') then 
-        makefolder('vape/CustomModules')
-    end
-    if not isfolder('vape/Libraries') then 
-        makefolder('vape/Libraries')
-    end
-    if not isfolder('vape/Profiles') then 
-        makefolder('vape/Profiles')
-    end
-    if not isfile('vape/PurpleVerison.txt') then 
-        writefile('vape/PurpleVerison.txt', "2.5")
-    end
+start()
+
+local function Install(files)
+    for _, file in ipairs(files) do local success, body = pcall(game.HttpGetAsync, game, file.url) if success then writefile('vape/' .. file.dir .. file.name, body) else warn('listen idk what happend but it did not install ' .. file.name) end end
 end
 
-function InstallModules()
-    local modules = {
-        {name = "6872274481.lua", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Modules/6872274481.lua"},
-        {name = "cachechecked.txt", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Modules/cachechecked.txt"},
-        {name = "6872265039.lua", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Modules/6872265039.lua"}
-    }
-    
-    for _, module in ipairs(modules) do
-        local success, body = pcall(function() return game:HttpGetAsync(module.url) end)
-        if success then
-            writefile('vape/CustomModules/' .. module.name, body)
-        else
-            warn('Failed to download ' .. module.name)
-        end
-    end
+local function Installnodir(files)
+    for _, file in ipairs(files) do local success, body = pcall(game.HttpGetAsync, game, file.url) if success then writefile('vape/' .. file.name, body) else warn('listen idk what happend but it did not install ' .. file.name) end end
 end
 
-function InstallLibraries()
-    local libraries = {
-        {name = "entityHandler.lua", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Libraries/entityHandler.lua"},
-        {name = "sha.lua", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Libraries/sha.lua"}
-    }
-    
-    for _, library in ipairs(libraries) do
-        local success, body = pcall(function() return game:HttpGetAsync(library.url) end)
-        if success then
-            writefile('vape/Libraries/' .. library.name, body)
-        else
-            warn('Failed to download ' .. library.name)
-        end
-    end
-end
 
-function InstallProfiles()
-    local profiles = {
-        {name = "2619619496GUIPositions.vapeprofile.txt", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Profiles/2619619496GUIPositions.vapeprofile.txt"},
-        {name = "6872265039.vapeprofile.txt", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Profiles/6872265039.vapeprofile.txt"},
-        {name = "6872265039.vapeprofiles.txt", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Profiles/6872265039.vapeprofiles.txt"},
-        {name = "6872274481.vapeprofile.txt", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Profiles/6872274481.vapeprofile.txt"},
-        {name = "6872274481.vapeprofiles.txt", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Profiles/6872274481.vapeprofiles.txt"},
-        {name = "bedwarsdata.txt", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Profiles/bedwarsdata.txt"}
-    }
-    
-    for _, profile in ipairs(profiles) do
-        local success, body = pcall(function() return game:HttpGetAsync(profile.url) end)
-        if success then
-            writefile('vape/Profiles/' .. profile.name, body)
-        else
-            warn('Failed to download ' .. profile.name)
-        end
-    end
-end
+Install({
+    {name = "6872274481.lua", dir = "CustomModules/", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Modules/6872274481.lua"},
+    {name = "cachechecked.txt", dir = "CustomModules/", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Modules/cachechecked.txt"},
+    {name = "6872265039.lua", dir = "CustomModules/", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Modules/6872265039.lua"},
+    {name = "entityHandler.lua", dir = "Libraries/", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Libraries/entityHandler.lua"},
+    {name = "sha.lua", dir = "Libraries/", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Libraries/sha.lua"},
+    {name = "2619619496GUIPositions.vapeprofile.txt", dir = "Profiles/", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Profiles/2619619496GUIPositions.vapeprofile.txt"},
+    {name = "6872265039.vapeprofile.txt", dir = "Profiles/", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Profiles/6872265039.vapeprofile.txt"},
+    {name = "6872265039.vapeprofiles.txt", dir = "Profiles/", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Profiles/6872265039.vapeprofiles.txt"},
+    {name = "6872274481.vapeprofile.txt", dir = "Profiles/", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Profiles/6872274481.vapeprofile.txt"},
+    {name = "6872274481.vapeprofiles.txt", dir = "Profiles/", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Profiles/6872274481.vapeprofiles.txt"},
+    {name = "bedwarsdata.txt", dir = "Profiles/", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Profiles/bedwarsdata.txt"},
+})
 
-function InstallOther()
-    local other = {
-        {name = "GuiLibrary.lua", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/GuiLibrary.lua"},
-        {name = "MainScript.lua", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/MainScript.lua"},
-        {name = "NewMainScript.lua", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/NewMainScript.lua"},
-        {name = "Universal.lua", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Universal.lua"},
-        {name = "assetsversion.txt", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/assetsversion.txt"},
-        {name = "Config.lua", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-theme/main/Config.lua"}
-    }
-    
-    for _, otherfile in ipairs(other) do
-        local success, body = pcall(function() return game:HttpGetAsync(otherfile.url) end)
-        if success then
-            writefile('vape/' .. otherfile.name, body)
-        else
-            warn('Failed to download ' .. otherfile.name)
-        end
-    end
-end
-
-Reset()
-Makevapefolders()
-InstallModules()
-InstallLibraries()
-InstallProfiles()
-InstallOther()
+Installnodir({
+    {name = "GuiLibrary.lua", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/GuiLibrary.lua"},
+    {name = "MainScript.lua", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/MainScript.lua"},
+    {name = "NewMainScript.lua", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/NewMainScript.lua"},
+    {name = "Universal.lua", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Universal.lua"},
+    {name = "assetsversion.txt", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/assetsversion.txt"},
+    {name = "Config.lua", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-theme/main/Config.lua"}
+})
 
 wait(0.5)
 
-local UserInputService = game:GetService("UserInputService")
-local platform = UserInputService:GetPlatform()
-
-local DCM = (platform == Enum.Platform.IOS) or (platform == Enum.Platform.Android) or (platform == Enum.Platform.Ouya) or (platform == Enum.Platform.WebOS)
-local DCP = (platform == Enum.Platform.Windows) or (platform == Enum.Platform.Linux) or (platform == Enum.Platform.UWP)
-
-local DCU = nil
-
-if DCM then
-    DCU = loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-theme/main/Loader", true))()
-elseif DCP then
-    DCU = loadfile('vape/NewMainScript.lua')
-end
-
-if DCU then
-    DCU()
-end
+loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-theme/main/Loader", true))()
