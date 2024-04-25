@@ -8206,67 +8206,6 @@ run(function()
 	})
 end)
 
-run(function()
-  local JumpBoost = {Enabled = false}
-  local JumpBoostAmount = {Value = 24}
-  local JumpDuration = {Value = 1}
-  local JumpGravity = {Value = 7}
-  local JumpChange = true
-  
-  funnyfly = GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
-      Name = "Glide",
-      Function = function(callback)
-          if callback then
-              if entityLibrary.isAlive and entityLibrary.character.Humanoid.FloorMaterial ~= Enum.Material.Air then
-                  entityLibrary.character.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
-              end
-              RunLoops:BindToHeartbeat("Jump", function()
-                  if entityLibrary.isAlive then
-                      if (entityLibrary.character.Humanoid:GetState() == Enum.HumanoidStateType.Freefall or entityLibrary.character.Humanoid:GetState() == Enum.HumanoidStateType.Jumping) and entityLibrary.character.Humanoid.MoveDirection ~= Vector3.zero then
-                          local forwardVelocity = JumpBoostAmount.Value
-                          local duration = JumpDuration.Value
-                          local gravity = JumpGravity.Value
-                          local velocity = entityLibrary.character.Humanoid.MoveDirection * (forwardVelocity / duration)
-                          entityLibrary.character.HumanoidRootPart.Velocity = Vector3.new(velocity.X, (velocity.Y - gravity * duration), velocity.Z)
-                      end
-                      local check = entityLibrary.character.Humanoid.FloorMaterial ~= Enum.Material.Air
-                      if JumpChange ~= check then
-                          if check then Jump.ToggleButton(true) end
-                          JumpChange = check
-                      end
-                  end
-              end)
-          else
-              RunLoops:UnbindFromHeartbeat("Jump")
-              JumpChange = true
-          end
-      end
-  })
-  
-  JumpBoostAmount = funnyfly.CreateSlider({
-      Name = "Boost",
-      Min = 1,
-      Max = 150,
-      Function = function(val) end
-  })
-  
-  JumpDuration = funnyfly.CreateSlider({
-      Name = "Duration (s)",
-      Min = 0.1,
-      Max = 5,
-      Value = 1,
-      Function = function(val) end
-  })
-  
-  JumpGravity = funnyfly.CreateSlider({
-      Name = "Gravity",
-      Min = 50,
-      Max = 300,
-      Value = 196.2,
-      Function = function(val) end
-  })
-end)
-
 loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-extra/main/Extra%20681", true))()
 
 local HttpService = game:GetService("HttpService")
