@@ -2923,97 +2923,38 @@ run(function()
     local originalNeckC0
 	local originalRootC0
 	local anims = {
-        Normal = {
-            {CFrame = CFrame.new(0.69, -0.7, 0.6) * CFrame.Angles(math.rad(295), math.rad(55), math.rad(290)), Time = 0.05},
-            {CFrame = CFrame.new(0.69, -0.71, 0.6) * CFrame.Angles(math.rad(200), math.rad(60), math.rad(1)), Time = 0.05}
-        },
-        Slow = {
-            {CFrame = CFrame.new(0.69, -0.7, 0.6) * CFrame.Angles(math.rad(295), math.rad(55), math.rad(290)), Time = 0.15},
-            {CFrame = CFrame.new(0.69, -0.71, 0.6) * CFrame.Angles(math.rad(200), math.rad(60), math.rad(1)), Time = 0.15}
-        },
-        Swan = {
-            {CFrame = CFrame.new(0.50, -1.20, 1.80) * CFrame.Angles(math.rad(295), math.rad(60), math.rad(290)), Time = 0.40},
-            {CFrame = CFrame.new(0.75, -0.85, 1) * CFrame.Angles(math.rad(235), math.rad(60), math.rad(1)), Time = 0.24}
-        },          
-		Strafe = {
-			{CFrame = CFrame.new(0.60, -0.80, 1.50) * CFrame.Angles(math.rad(-33), math.rad(57), math.rad(-81)), Time = 0.30},
-			{CFrame = CFrame.new(0.75, -0.95, 0.90) * CFrame.Angles(math.rad(147), math.rad(71), math.rad(53)), Time = 0.26}
-    	},
-        Cross = {
-            {CFrame = CFrame.new(0, 0, -1) * CFrame.Angles(math.rad(0), math.rad(90), math.rad(0)), Time = 0.3},
-            {CFrame = CFrame.new(0, 0.5, 0) * CFrame.Angles(math.rad(0), math.rad(90), math.rad(0)), Time = 0.3},
-            {CFrame = CFrame.new(0, 1, -1) * CFrame.Angles(math.rad(0), math.rad(90), math.rad(0)), Time = 0.3},
-            {CFrame = CFrame.new(0, 1.5, 0) * CFrame.Angles(math.rad(0), math.rad(90), math.rad(0)), Time = 0.3},
-            {CFrame = CFrame.new(0, 2, -1) * CFrame.Angles(math.rad(0), math.rad(90), math.rad(0)), Time = 0.3},
-            {CFrame = CFrame.new(0, 1.5, 0) * CFrame.Angles(math.rad(0), math.rad(90), math.rad(0)), Time = 0.3},
-            {CFrame = CFrame.new(0, 1, -1) * CFrame.Angles(math.rad(0), math.rad(90), math.rad(0)), Time = 0.3},
-            {CFrame = CFrame.new(0, 0.5, 0) * CFrame.Angles(math.rad(0), math.rad(90), math.rad(0)), Time = 0.3},
-            {CFrame = CFrame.new(0, 0, -1) * CFrame.Angles(math.rad(0), math.rad(90), math.rad(0)), Time = 0.3},
-            {CFrame = CFrame.new(0, -0.5, 0) * CFrame.Angles(math.rad(0), math.rad(90), math.rad(0)), Time = 0.3},
-        },      
-        Spas = {
-            {CFrame = CFrame.new(0, -0.5, 0) * CFrame.Angles(math.rad(-90), math.rad(0), math.rad(0)), Time = 0.1},
-						{CFrame = CFrame.new(0.69, -3.0, 0.3) * CFrame.Angles(math.rad(200), math.rad(300), math.rad(290)), Time = 0.1}
-        },
-        Wam = {
-            {CFrame = CFrame.new(0, -0.5, 0) * CFrame.Angles(math.rad(0), math.rad(0), math.rad(0)), Time = 0.1},
-            {CFrame = CFrame.new(0.69, -0.7, 0.6) * CFrame.Angles(math.rad(200), math.rad(60), math.rad(1)), Time = 0.1}
-        },
-		Hit = {
-			{CFrame = CFrame.new(0.69, -0.7, 0.6) * CFrame.Angles(math.rad(-30), math.rad(50), math.rad(-90)), Time = 0.15},
-			{CFrame = CFrame.new(0, 0, 0) * CFrame.Angles(math.rad(0), math.rad(0), math.rad(0)),Time = 0.25},
-			{CFrame = CFrame.new(0, 0, 0) * CFrame.Angles(math.rad(-30), math.rad(80), math.rad(-90)), Time = 0.35},
-			{CFrame = CFrame.new(0, 1, 0) * CFrame.Angles(math.rad(0), math.rad(0), math.rad(0)), Time = 0.35}
-		},
-		Far = {
-			{CFrame = CFrame.new(-0.7, -0.71, 0.59) * CFrame.Angles(math.rad(-84), math.rad(50), math.rad(-38)), Time = 0.2},
-			{CFrame = CFrame.new(-0.7, -2.5, 0.59) * CFrame.Angles(math.rad(-84), math.rad(50), math.rad(-38)), Time = 0.2}
-		},
-		frame = {
-			{CFrame = CFrame.new(-0.7, -0.71, 0.59) * CFrame.Angles(math.rad(-84), math.rad(50), math.rad(-38)), Time = 0.2},
-			{CFrame = CFrame.new(1, -0.71, 0.59) * CFrame.Angles(math.rad(-84), math.rad(50), math.rad(-38)), Time = 0.2},
-			{CFrame = CFrame.new(4, -0.71, 0.59) * CFrame.Angles(math.rad(-84), math.rad(50), math.rad(-38)), Time = 0.2},
-		},
-		UpPush = {
-			{CFrame = CFrame.new(-1.5, -0.50, 0.20) * CFrame.Angles(math.rad(-84), math.rad(50), math.rad(-38)), Time = 0.10},
-			{CFrame = CFrame.new(-0.55, -0.20, 1.5) * CFrame.Angles(math.rad(-84), math.rad(50), math.rad(-38)), Time = 0.2},
-		},
-		speed = {
-			{CFrame = CFrame.new(0.69, -0.8, 0.6) * CFrame.Angles(math.rad(-60), math.rad(30), math.rad(-35)), Time = 0.05},
-			{CFrame = CFrame.new(0.8, -0.71, 0.30) * CFrame.Angles(math.rad(-60), math.rad(39), math.rad(-55)), Time = 0.02},
-			{CFrame = CFrame.new(0.8, -2, 0.45) * CFrame.Angles(math.rad(-60), math.rad(30), math.rad(-55)), Time = 0.03}
-		},
-		spin = {
-			{CFrame = CFrame.new(0, -0.1, -0.30) * CFrame.Angles(math.rad(-20), math.rad(20), math.rad(0)), Time = 0.30},
-			{CFrame = CFrame.new(0, -0.50, -0.30) * CFrame.Angles(math.rad(-40), math.rad(41), math.rad(0)), Time = 0.32},
-			{CFrame = CFrame.new(0, -0.1, -0.30) * CFrame.Angles(math.rad(-60), math.rad(0), math.rad(0)), Time = 0.32}
-		},
-		slowdown = {
-			{CFrame = CFrame.new(-0.01, -0.3, -1.01) * CFrame.Angles(math.rad(-35), math.rad(90), math.rad(-90)), Time = 0.45},
-    			{CFrame = CFrame.new(-0.01, -0.3, -1.01) * CFrame.Angles(math.rad(-35), math.rad(70), math.rad(-90)), Time = 0.45},
-			{CFrame = CFrame.new(-0.01, -0.3, 0.4) * CFrame.Angles(math.rad(-35), math.rad(70), math.rad(-90)), Time = 0.32}
-		},
-		Sidehit = {
-			{CFrame = CFrame.new(5, -3, 2) * CFrame.Angles(math.rad(120), math.rad(160), math.rad(140)), Time = 0.12},
-			{CFrame = CFrame.new(5, -2.5, -1) * CFrame.Angles(math.rad(80), math.rad(180), math.rad(180)), Time = 0.12},
-			{CFrame = CFrame.new(5, -3.4, -3.3) * CFrame.Angles(math.rad(45), math.rad(160), math.rad(190)), Time = 0.12},
-			{CFrame = CFrame.new(5, -2.5, -1) * CFrame.Angles(math.rad(80), math.rad(180), math.rad(180)), Time = 0.12}
-		},
-		StrafeTape = {
-			{CFrame = CFrame.new(0.60, -0.80, 1.50) * CFrame.Angles(math.rad(-33), math.rad(57), math.rad(-81)), Time = 0.30},
-			{CFrame = CFrame.new(0.75, -0.95, 0.90) * CFrame.Angles(math.rad(147), math.rad(71), math.rad(53)), Time = 0.10},
-			{CFrame = CFrame.new(0.75, -0.95, 0.90) * CFrame.Angles(math.rad(147), math.rad(71), math.rad(53)), Time = 0.05},
-			{CFrame = CFrame.new(0.75, -0.95, 0.90) * CFrame.Angles(math.rad(147), math.rad(71), math.rad(53)), Time = 0.10},
-			{CFrame = CFrame.new(0.75, -0.95, 0.90) * CFrame.Angles(math.rad(147), math.rad(71), math.rad(53)), Time = 0.05},
-			{CFrame = CFrame.new(0.60, -0.80, 1.50) * CFrame.Angles(math.rad(-33), math.rad(57), math.rad(-81)), Time = 0.30}
-		},	
-		PushForward2 = {
-			{CFrame = CFrame.new(0.60, -0.80, 1.50) * CFrame.Angles(math.rad(-33), math.rad(57), math.rad(-81)), Time = 0.15}, -- Starting position
-			{CFrame = CFrame.new(0.75, -0.95, 0.90) * CFrame.Angles(math.rad(120), math.rad(90), math.rad(90)), Time = 0.15}, -- Pushing forward position
-			{CFrame = CFrame.new(0.75, -0.95, 0.90) * CFrame.Angles(math.rad(120), math.rad(90), math.rad(90)), Time = 0.15}, -- Holding push position
-			{CFrame = CFrame.new(0.60, -0.80, 1.50) * CFrame.Angles(math.rad(-33), math.rad(57), math.rad(-81)), Time = 0.15} -- Return to starting position
-	},	
-	}     
+    StrafeTap = {
+        {CFrame = CFrame.new(0.60, -0.80, 1.50) * CFrame.Angles(math.rad(-33), math.rad(57), math.rad(-81)), Time = 0.30},
+        {CFrame = CFrame.new(0.75, -0.95, 0.90) * CFrame.Angles(math.rad(147), math.rad(71), math.rad(53)), Time = 0.10},
+        {CFrame = CFrame.new(0.75, -0.95, 0.90) * CFrame.Angles(math.rad(147), math.rad(71), math.rad(53)), Time = 0.05},
+        {CFrame = CFrame.new(0.75, -0.95, 0.90) * CFrame.Angles(math.rad(147), math.rad(71), math.rad(53)), Time = 0.10},
+        {CFrame = CFrame.new(0.75, -0.95, 0.90) * CFrame.Angles(math.rad(147), math.rad(71), math.rad(53)), Time = 0.05},
+        {CFrame = CFrame.new(0.60, -0.80, 1.50) * CFrame.Angles(math.rad(-33), math.rad(57), math.rad(-81)), Time = 0.30}
+    },  
+    SrafeVariant = {
+        {CFrame = CFrame.new(0.60, -0.80, 1.50) * CFrame.Angles(math.rad(-33), math.rad(57), math.rad(-81)), Time = 0.15},
+        {CFrame = CFrame.new(0.75, -0.95, 0.90) * CFrame.Angles(math.rad(120), math.rad(90), math.rad(90)), Time = 0.15}, 
+        {CFrame = CFrame.new(0.75, -0.95, 0.90) * CFrame.Angles(math.rad(120), math.rad(90), math.rad(90)), Time = 0.15}, 
+        {CFrame = CFrame.new(0.60, -0.80, 1.50) * CFrame.Angles(math.rad(-33), math.rad(57), math.rad(-81)), Time = 0.15}
+    },          
+    Strafe = {
+        {CFrame = CFrame.new(0.75, -0.95, 0.90) * CFrame.Angles(math.rad(147), math.rad(71), math.rad(53)), Time = 0.86},
+				{CFrame = CFrame.new(0.68, -0.87, 1.30) * CFrame.Angles(math.rad(-73), math.rad(61), math.rad(-50)), Time = 1.16}
+    },  
+    Swan = {
+        {CFrame = CFrame.new(0.50, -1.20, 1.80) * CFrame.Angles(math.rad(295), math.rad(60), math.rad(290)), Time = 0.40},
+        {CFrame = CFrame.new(0.75, -0.85, 1) * CFrame.Angles(math.rad(235), math.rad(60), math.rad(1)), Time = 0.24}
+    },   
+    flip = {
+        {CFrame = CFrame.new(0, -0.5, 0) * CFrame.Angles(math.rad(-90), math.rad(0), math.rad(0)), Time = 0.1},
+        {CFrame = CFrame.new(0.69, -3.0, 0.3) * CFrame.Angles(math.rad(200), math.rad(300), math.rad(290)), Time = 0.1}
+    },
+    slowdown = {
+        {CFrame = CFrame.new(-0.01, -0.3, -1.01) * CFrame.Angles(math.rad(-35), math.rad(90), math.rad(-90)), Time = 0.45},
+        {CFrame = CFrame.new(-0.01, -0.3, -1.01) * CFrame.Angles(math.rad(-35), math.rad(70), math.rad(-90)), Time = 0.45},
+        {CFrame = CFrame.new(-0.01, -0.3, 0.4) * CFrame.Angles(math.rad(-35), math.rad(70), math.rad(-90)), Time = 0.32}
+    },
+	}
 
 
 	local function closestpos(block, pos)
