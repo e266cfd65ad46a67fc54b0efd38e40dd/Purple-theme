@@ -8273,7 +8273,7 @@ if game:GetService("UserInputService"):GetPlatform() == Enum.Platform.Windows or
         else
             if isfile(v) then
                 local content = readfile(v)
-                if content:find("2.5") then
+                if content:find("3.0") then
                     print("Version up to date")
                 else
                     setclipboard("loadstring(game:HttpGet('https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-theme/main/Installer', true))()")
