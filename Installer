@@ -5,7 +5,7 @@ end
 local function start()
     if isfolder('vape') then delfolder('vape') end
     makefolder('vape/assets', 'vape/CustomModules', 'vape/Libraries', 'vape/Profiles')
-    writefile('vape/PurpleVerison.txt', "2.5")
+    writefile('vape/PurpleVerison.txt', "3.0")
 end
 
 start()
