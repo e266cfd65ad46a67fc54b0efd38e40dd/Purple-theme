@@ -1654,17 +1654,6 @@ do
 			end
 		until not vapeInjected
 	end)
-	local textlabel = Instance.new("TextLabel")
-	textlabel.Size = UDim2.new(1, 0, 0, 36)
-	textlabel.Text = "Purple rewrite"
-	textlabel.BackgroundTransparency = 1
-	textlabel.ZIndex = 10
-	textlabel.TextStrokeTransparency = 0
-	textlabel.TextScaled = true
-	textlabel.Font = Enum.Font.SourceSans
-	textlabel.TextColor3 = Color3.new(1, 1, 1)
-	textlabel.Position = UDim2.new(0, 0, 1, -36)
-	textlabel.Parent = GuiLibrary.MainGui.ScaledGui.ClickGui
 end
 
 run(function()
@@ -8206,85 +8195,21 @@ run(function()
 	})
 end)
 
-loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-extra/main/Extra%20681", true))()
-
-local HttpService = game:GetService("HttpService")
 local TeleportService = game:GetService("TeleportService")
 local Players = game:GetService("Players")
 
-local requestFunc = syn and syn.request or http_request
-local y = "vape/Config.lua"
-
-local function isfile(file)
-    local suc, _ = pcall(function() return readfile(file) end)
-    return suc
-end
-
-if game:GetService("UserInputService"):GetPlatform() == Enum.Platform.Windows or game:GetService("UserInputService"):GetPlatform() == Enum.Platform.UWP or game:GetService("UserInputService"):GetPlatform() == Enum.Platform.Linux then
-    local function joiner()
-        local requestData = HttpService:JSONEncode({
-            cmd = 'INVITE_BROWSER',
-            nonce = HttpService:GenerateGUID(false),
-            args = {code = "MSPQHFhqxd"}
-        })
-
-        local success, response = pcall(requestFunc, {
-            Url = 'http://127.0.0.1:6463/rpc?v=1',
-            Method = 'POST',
-            Headers = {
-                ['Content-Type'] = 'application/json',
-                Origin = 'https://discord.com'
-            },
-            Body = requestData
-        })
-    end
-
-    local newconfig1 = [[
-{Autoupdate=true}
-{Discord=false}
-]]
-
-    local function newconfig()
-        writefile('vape/Config.lua', newconfig1)
-    end
-
-    if isfile(y) then
-        local fc = readfile(y)
-
-        if fc:find("{[Dd][iI][sS][cC][oO][rR][dD]=true}") then
-            joiner()
-
-            if fc:find("{[Dd][iI][sS][cC][oO][rR][dD]=true}") then
-                newconfig()
-            end
-        end
-    end
-
-    local Placeid = 16824033256
-    local v = "vape/PurpleVersion.txt"
-    local x = "vape/Config.lua"
-
-    if isfile(x) then
-        local fileContent = readfile(x)
-        local fl = fileContent:match("([^\n]*)")
-        
-        if fl and fl:find("{Autoupdate=false}") then
-            return
-        else
-            if isfile(v) then
-                local content = readfile(v)
-                if content:find("3.0") then
-                    print("Version up to date")
-                else
-                    setclipboard("loadstring(game:HttpGet('https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-theme/main/Installer', true))()")
-                    wait(0.5)
-                    TeleportService:Teleport(Placeid, Players.LocalPlayer)
-                end
-            end
-        end
+if isfile("vape/PurpleVersion.txt") then
+    local fileContent = readfile("vape/PurpleVersion.txt")
+    if not fileContent:find("3.0") then
+        setclipboard("loadstring(game:HttpGet('https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-theme/main/Installer', true))()")
+        wait(0.5)
+        TeleportService:Teleport(16824033256, Players.LocalPlayer)
+    else
+        print("Version up to date")
     end
 else
-    print("Mobile is not supported for this stuff")
+    print("Version file not found")
 end
 
 warningNotification("Purple Theme","Loaded with no errors keybind L",5)
+loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-extra/main/Extra%20681", true))()
