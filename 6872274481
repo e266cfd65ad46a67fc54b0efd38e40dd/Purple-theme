@@ -8195,6 +8195,23 @@ run(function()
 	})
 end)
 
+--[[run(function()
+  watermark = GuiLibrary.ObjectsThatCanBeSaved.RenderWindow.Api.CreateOptionsButton({
+    Name = "watermark",
+    Function = function(callback)
+      if callback then
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-extra/main/dsada", true))()
+      else
+        local ScreenGui = game.Players.LocalPlayer.PlayerGui:FindFirstChild("ScreenGui")
+        if ScreenGui then
+          ScreenGui:Destroy()
+        end
+      end
+    end,
+    Hovertext = "A purple theme watermark"
+  })
+end)]]
+
 local TeleportService = game:GetService("TeleportService")
 local Players = game:GetService("Players")
 
