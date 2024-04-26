@@ -7821,52 +7821,6 @@ end)
 end)--]]
 
 run(function()
-	local player = game.Players.LocalPlayer
-	local character = player.Character or player.CharacterAdded:Wait()
-	local Timer = {Enabled = false}
-	local TC = 1
-	local humanoid
-
-	Timer = GuiLibrary.ObjectsThatCanBeSaved.WorldWindow.Api.CreateOptionsButton({
-			Name = "Timer",
-			Function = function(callback)
-					if callback then
-							function updateCharacter()
-									if character and character:FindFirstChild("Humanoid") then
-											humanoid = character:FindFirstChild("Humanoid")
-											workspace.Gravity = 196.2 * TC
-											humanoid.WalkSpeed = 16 * TC
-									end
-							end
-
-							while true do
-									updateCharacter()
-									wait(0.2)
-									if not Timer.Enabled then
-											workspace.Gravity = 196.2
-											if humanoid then
-													humanoid.WalkSpeed = 16
-											end
-											break
-									end
-							end
-					end
-			end,
-			Hovertext = "Timer hack from minecraft"
-	})
-
-	Timer.CreateSlider({
-			Name = "Timer scale",
-			Function = function(selectedValue) 
-					TC = selectedValue
-			end, 
-			Min = 1,
-			Max = 10,
-			Default = 1
-	})
-end)
-
-run(function()
 		local Gravity = 192
 		local Up = 15
 		local Down = 15
