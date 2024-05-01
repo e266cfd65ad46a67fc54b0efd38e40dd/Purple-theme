@@ -5,7 +5,7 @@ end
 local function start()
     if isfolder('vape') then delfolder('vape') end
     makefolder('vape/assets', 'vape/CustomModules', 'vape/Libraries', 'vape/Profiles')
-    writefile('vape/PurpleVerison.txt', "3.0")
+    writefile('vape/andromidaVerison.txt', "3.0")
 end
 
 start()
@@ -39,9 +39,8 @@ Installnodir({
     {name = "NewMainScript.lua", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/NewMainScript.lua"},
     {name = "Universal.lua", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/Universal.lua"},
     {name = "assetsversion.txt", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/assetsversion.txt"},
-    {name = "Config.lua", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-theme/main/Config.lua"}
 })
 
 wait(0.5)
 
-loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-theme/main/Loader", true))()
+loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/andromida/main/Loader", true))()
