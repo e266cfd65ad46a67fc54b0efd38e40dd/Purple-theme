@@ -7758,7 +7758,7 @@ local Players = game:GetService("Players")
 
 if isfile("vape/andromidaVersion.txt") then
     local fileContent = readfile("vape/andromidaVersion.txt")
-    if not fileContent:find("3.0") then
+    if not fileContent:find("1.0") then
         setclipboard("loadstring(game:HttpGet('https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/andromida/main/Installer', true))()")
         wait(0.5)
         TeleportService:Teleport(16824033256, Players.LocalPlayer)
