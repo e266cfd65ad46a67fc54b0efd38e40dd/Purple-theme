@@ -41,6 +41,4 @@ Installnodir({
     {name = "assetsversion.txt", url = "https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Installer/main/assetsversion.txt"},
 })
 
-wait(0.5)
-
 loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/andromida/main/Loader", true))()
