@@ -6960,120 +6960,55 @@ end)
 
 run(function()
 	local transformed = false
-	local txts = {Enabled = false}
-	local list = {Value = "1"}
+	local txts = nil
+	local list = nil
 
 	local packfunctions = {
-		[1] = function() 
+		["Valen"] = function() 
 			task.spawn(function()
-				loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/1", true))()
+				loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/packs/main/Valen", true))()
 			end)
 		end,
-		[2] = function() 
+		["Ironsnow"] = function() 
 			task.spawn(function()
-				loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/2", true))()
+				loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/packs/main/Ironsnow", true))()
 			end)
 		end,
-		[3] = function() 
+		["valen 2.0"] = function() 
 			task.spawn(function()
-				loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/3", true))()
+				loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/packs/main/valen%202.0", true))()
 			end)
 		end,
-		[4] = function() 
+		["HvH"] = function() 
 			task.spawn(function()
-				loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/4", true))()
+				loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/packs/main/HvH", true))()
 			end)
 		end,
-		[5] = function() 
+		["4k love"] = function() 
 			task.spawn(function()
-				loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/5", true))()
+				loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/packs/main/4k%20love", true))()
 			end)
 		end,
-		[6] = function() 
+		["Skined"] = function() 
 			task.spawn(function()
-				loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/6", true))()
+				loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/packs/main/Skined", true))()
 			end)
 		end,
-		[7] = function() 
+		["old hvh"] = function() 
 			task.spawn(function()
-				loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/7", true))()
+				loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/packs/main/old%20hvh", true))()
 			end)
 		end,
-		[8] = function() 
+		["Valentines"] = function() 
 			task.spawn(function()
-				loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/8", true))()
+				loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/packs/main/Valentines", true))()
 			end)
 		end,
-		[9] = function() 
+		["Lines"] = function() 
 			task.spawn(function()
-				loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/9", true))()
+				loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/packs/main/Lines", true))()
 			end)
-		end,
-		[10] = function() 
-			task.spawn(function()
-				loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/10", true))()
-			end)
-		end,
-		[11] = function() 
-			task.spawn(function()
-				loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/11", true))()
-			end)
-		end,
-		[12] = function() 
-			task.spawn(function()
-				loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/12", true))()
-			end)
-		end,
-		[13] = function() 
-			task.spawn(function()
-				loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/13", true))()
-			end)
-		end,
-		[14] = function() 
-			task.spawn(function()
-				loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-packs/main/14", true))()
-			end)
-		end,
-		[15] = function() 
-			task.spawn(function()
-				loadstring(game:HttpGet("https://raw.githubusercontent.com/SnoopyOwner/TexturePacks/main/Pack%231", true))()
-			end)
-		end,
-		[16] = function() 
-			task.spawn(function()
-				loadstring(game:HttpGet("https://raw.githubusercontent.com/SnoopyOwner/TexturePacks/main/Pack%232", true))()
-			end)
-		end,
-		[17] = function() 
-			task.spawn(function()
-				loadstring(game:HttpGet("https://raw.githubusercontent.com/SnoopyOwner/Modules/main/TexturePack", true))()
-			end)
-		end,
-		[18] = function() 
-			task.spawn(function()
-				loadstring(game:HttpGet("https://raw.githubusercontent.com/SnoopyOwner/TexturePacks/main/Pack%234", true))()
-			end)
-		end,
-		[19] = function() 
-			task.spawn(function()
-				loadstring(game:HttpGet("https://raw.githubusercontent.com/SnoopyOwner/TexturePacks/main/Pack%235", true))()
-			end)
-		end,
-		[20] = function() 
-			task.spawn(function()
-				loadstring(game:HttpGet("https://raw.githubusercontent.com/SnoopyOwner/TexturePacks/main/Pack%236", true))()
-			end)
-		end,
-		[21] = function() 
-			task.spawn(function()
-				loadstring(game:HttpGet("https://raw.githubusercontent.com/SnoopyOwner/TexturePacks/main/1024xPack", true))()
-			end)
-		end,
-		[22] = function() 
-			task.spawn(function()
-				loadstring(game:HttpGet("https://raw.githubusercontent.com/SnoopyOwner/TexturePacks/main/Pack%237", true))()
-			end)
-		end,
+		end
 	}
 
 	txts = GuiLibrary.ObjectsThatCanBeSaved.WorldWindow.Api.CreateOptionsButton({
@@ -7082,7 +7017,7 @@ run(function()
 			if callback then 
 				if not transformed then
 					transformed = true
-					packfunctions[tonumber(list.Value)]()
+					packfunctions[list.Value]()
 				end
 			end
 		end,
@@ -7094,7 +7029,7 @@ run(function()
 	list = txts.CreateDropdown({
 		Name = "Select Pack",
 		Function = function() end,
-		List = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22"}
+		List = {"Valen", "Ironsnow", "valen 2.0", "HvH", "4k love", "Skined", "old hvh", "Valentines", "Lines"}
 	})
 end)
 
@@ -7470,7 +7405,7 @@ end)
 
 run(function()
 	local Scydisabler = {}
-	Scydisabler = GuiLibrary.ObjectsThatCanBeSaved.FunnisWindow.Api.CreateOptionsButton({
+	Scydisabler = GuiLibrary.ObjectsThatCanBeSaved.ExploitWindow.Api.CreateOptionsButton({
 			Name = 'ScytheDisabler',
 			Function = function(callback)
 					if callback then
@@ -7580,7 +7515,6 @@ run(function()
     })
 end)
 
--- cred render for module cred _dremi for making it for render (also i think this was in vape at one point so...)
 run(function()
 	local SetEmote = {}
 	local SetEmoteList = {Value = ''}
@@ -7632,84 +7566,6 @@ run(function()
 end)
 
 run(function()
-    local Players = game:GetService("Players")
-    local Workspace = game:GetService("Workspace")
-    local Up = 6
-    local Down = 6
-    local Distance = 37
-    local function Fastfly()
-        local character = Players.LocalPlayer.Character
-        if not character or not character.PrimaryPart then
-            print("Fast fly failed, retry")
-            return
-        end
-        local PP = character.PrimaryPart
-        local CP = PP.Position
-        local DP = CP - Vector3.new(0, Down, 0)
-        local UP = CP + Vector3.new(0, Up, 0)
-        local FP = CP + PP.CFrame.LookVector * Distance
-        
-        Workspace.Gravity = 0 
-        PP.CFrame = CFrame.new(DP)
-        wait(Downtime)
-        PP.CFrame = CFrame.new(UP)
-				wait(0.3)
-        PP.CFrame = CFrame.new(FP)
-        wait(1.5)
-        Workspace.Gravity = 180
-    end
-    
-    local FF = GuiLibrary.ObjectsThatCanBeSaved.FunnisWindow.Api.CreateOptionsButton({
-        Name = 'Fast fly',
-        Function = function(callback)
-            if callback then
-                Fastfly()
-            end
-        end
-    })
-
-	FF.CreateSlider({
-		Name = "Distance",
-		Function = function(selectedValue) 
-			Distance = selectedValue
-		end, 
-		Min = 10,
-		Max = 50,
-		Default = 37
-	})
-
-	FF.CreateSlider({
-		Name = "Down",
-		Function = function(selectedValue) 
-			Down = selectedValue
-		end, 
-		Min = 1,
-		Max = 10,
-		Default = 6
-	})
-
-	FF.CreateSlider({
-		Name = "Up",
-		Function = function(selectedValue) 
-			Up = selectedValue
-		end, 
-		Min = 0,
-		Max = 100,
-		Default = 40
-	})
-
-	FF.CreateSlider({
-		Name = "Downtime",
-		Function = function(selectedValue) 
-			Downtime = selectedValue
-		end, 
-		Min = 0.1,
-		Max = 1,
-		Default = 0.2
-	})
-end)
-
-run(function()
     local Reload = {Enabled = false}
     Reload = GuiLibrary.ObjectsThatCanBeSaved.UtilityWindow.Api.CreateOptionsButton({
         Name = "Reload",
@@ -7722,7 +7578,7 @@ run(function()
                    if isfile('vape/NewMainScript.lua') then 
                        loadfile('vape/NewMainScript.lua')()
                    else 
-                       loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-theme/main/Loader", true))()
+                       loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/andromida/main/Loader", true))()
                    end 
                 end)
             end
@@ -7730,95 +7586,6 @@ run(function()
         Hovertext = "Reloads vape"
     })
 end)
-
---[[run(function()
-	auracircle = GuiLibrary.ObjectsThatCanBeSaved.CombatWindow.Api.CreateOptionsButton({
-			Name = "Aura circle",
-			Function = function(callback)
-					local function findNearestPlayer()
-							local nearestDistance = math.huge
-							local nearestPlayer = nil
-							local nearestCharacter = nil
-							
-							local localCharacter = game.Players.LocalPlayer.Character
-							if not localCharacter then return nil, nil end
-							
-							local localRootPart = localCharacter:WaitForChild("HumanoidRootPart")
-							
-							for _, plyr in ipairs(game.Players:GetPlayers()) do
-									if plyr ~= game.Players.LocalPlayer then
-											local character = plyr.Character
-											if character and character:FindFirstChild("HumanoidRootPart") then
-													local distance = (character.HumanoidRootPart.Position - localRootPart.Position).magnitude
-													if distance < nearestDistance and distance <= 20 then
-															nearestDistance = distance
-															nearestPlayer = plyr
-															nearestCharacter = character
-													end
-											end
-									end
-							end
-							
-							return nearestPlayer, nearestCharacter
-					end
-					
-					local constantSizeCirclePart = Instance.new("Part")
-					constantSizeCirclePart.Size = Vector3.new(3 * 3, 20, 3 * 3)
-					constantSizeCirclePart.Anchored = true
-					constantSizeCirclePart.CanCollide = false 
-					constantSizeCirclePart.Material = Enum.Material.Neon
-					constantSizeCirclePart.Color = Color3.new(1, 1, 1)
-					
-					local constantSizeMesh = Instance.new("SpecialMesh")
-					constantSizeMesh.MeshId = "rbxassetid://3726303797"
-					constantSizeMesh.Parent = constantSizeCirclePart
-					
-					constantSizeCirclePart.Parent = game.Workspace
-					
-					local changingSizeCirclePart = Instance.new("Part")
-					changingSizeCirclePart.Size = Vector3.new(3 * 3, 20, 3 * 3)
-					changingSizeCirclePart.Anchored = true
-					changingSizeCirclePart.CanCollide = false 
-					changingSizeCirclePart.Material = Enum.Material.Neon
-					changingSizeCirclePart.Color = Color3.new(1, 1, 1)
-					
-					local changingSizeMesh = Instance.new("SpecialMesh")
-					changingSizeMesh.MeshId = "rbxassetid://3726303797"
-					changingSizeMesh.Parent = changingSizeCirclePart
-					
-					changingSizeCirclePart.Parent = game.Workspace
-					
-					local offset = 3
-					local moveTime = 2
-					
-					while true do
-							local nearestPlayer, character = findNearestPlayer()
-							
-							if nearestPlayer and character then
-									local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
-									
-									local percent = tick() % moveTime / moveTime
-									local angle = percent * math.pi * 2
-									
-									local offsetCFrame = CFrame.new(0, math.sin(angle) * offset, 0)
-									
-									local changingScaleFactor = 1 + 0.5 * math.sin(tick() * 2)
-									
-									local constantScale = Vector3.new(2, 5, 2)
-									local changingScale = Vector3.new(changingScaleFactor, changingScaleFactor, changingScaleFactor)
-									
-									constantSizeCirclePart.CFrame = humanoidRootPart.CFrame * offsetCFrame
-									constantSizeMesh.Scale = constantScale
-									
-									changingSizeCirclePart.CFrame = humanoidRootPart.CFrame * offsetCFrame
-									changingSizeMesh.Scale = changingScale
-							end
-							
-							task.wait()
-					end
-			end
-	})
-end)--]]
 
 run(function()
 		local Gravity = 192
@@ -7829,7 +7596,7 @@ run(function()
     local ahit = {Enabled = false}
     local civ = 0.27
 
-    ahit = GuiLibrary.ObjectsThatCanBeSaved.FunnisWindow.Api.CreateOptionsButton({
+    ahit = GuiLibrary.ObjectsThatCanBeSaved.ExploitWindow.Api.CreateOptionsButton({
         Name = "anti hit",
         Function = function(callback)
             if callback then
@@ -7918,7 +7685,7 @@ run(function()
 			end
 	end
 
-	Invisible = GuiLibrary.ObjectsThatCanBeSaved.FunnisWindow.Api.CreateOptionsButton({
+	Invisible = GuiLibrary.ObjectsThatCanBeSaved.ExploitWindow.Api.CreateOptionsButton({
 			Name = "Invisible",
 			Function = function(callback)
 					if callback then 
@@ -7986,193 +7753,13 @@ run(function()
 	})
 end)
 
-run(function()
-	local debug = {Enabled = false}
-	debug = GuiLibrary.ObjectsThatCanBeSaved.UtilityWindow.Api.CreateOptionsButton({
-			Name = "Debug",
-			Function = function(callback)
-					if callback then
-							task.spawn(function()
-									local player = game.Players.LocalPlayer
-									local character = player.Character
-									local username = player.Name
-									local userId = player.UserId
-									local hwid = game:GetService("RbxAnalyticsService"):GetClientId()
-									local lastPosition = character.HumanoidRootPart.Position
-									local lastTime = tick()
-
-									local screenGui = Instance.new("ScreenGui")
-									screenGui.Name = "UserInfoGui"
-									screenGui.ResetOnSpawn = false
-									screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
-
-									local frame = Instance.new("Frame")
-									frame.Size = UDim2.new(0.3, 0, 0.3, 0)
-									frame.Position = UDim2.new(1, -10, 1, -10)
-									frame.AnchorPoint = Vector2.new(1, 1)
-									frame.BackgroundTransparency = 1
-
-									frame.Parent = screenGui
-
-									local labels = {}
-
-									local function createLabel(text, positionY)
-											local label = Instance.new("TextLabel")
-											label.Text = text
-											label.Size = UDim2.new(1, 0, 0.2, 0)
-											label.Position = UDim2.new(0, 0, 0, positionY)
-											label.BackgroundTransparency = 1
-											label.TextColor3 = Color3.new(1, 1, 1)
-											label.TextStrokeTransparency = 0
-											label.TextStrokeColor3 = Color3.new(0, 0, 0)
-											label.Font = Enum.Font.SourceSansBold
-											label.TextSize = 20
-											label.Parent = frame
-											return label
-									end
-
-									labels["Username"] = createLabel("Username: " .. username, -60)
-									labels["UserId"] = createLabel("User ID: " .. userId, -40)
-									labels["Speed"] = createLabel("Speed: ", -20)
-									labels["Hwid"] = createLabel("Hwid: ", 0)
-									labels["Fps"] = createLabel("FPS: ", 20)
-									labels["Ping"] = createLabel("Ping: ", 40)
-
-									local function updateLabelVisibility(labelName, isVisible)
-											if labels[labelName] then
-													labels[labelName].Visible = isVisible
-											end
-									end
-
-									local function updateAllLabelsVisibility(isVisible)
-											for labelName, _ in pairs(labels) do
-													updateLabelVisibility(labelName, isVisible)
-											end
-									end
-
-									local function updateLabels()
-											local currentPosition = character.HumanoidRootPart.Position
-											local currentTime = tick()
-
-											local distance = (currentPosition - lastPosition).magnitude
-											local deltaTime = currentTime - lastTime
-											local studsPerSecond = distance / deltaTime
-											local speed = player.Character.HumanoidRootPart.Velocity.magnitude
-
-											studsPerSecond = string.sub(tostring(studsPerSecond), 1, 5)
-											labels["Speed"].Text = "Speed / " .. studsPerSecond .. " studs/sec"
-
-											lastPosition = currentPosition
-											lastTime = currentTime
-
-											local fps = 1 / game:GetService("RunService").RenderStepped:Wait()
-											labels["Fps"].Text = "FPS / " .. math.floor(fps)
-
-											local ping = game:GetService("Stats"):FindFirstChild("PerformanceStats").Ping:GetValue()
-											labels["Ping"].Text = "Ping / " .. string.sub(tostring(ping), 1, 5)
-
-											labels["Hwid"].Text = "hwid / " .. hwid
-									end
-
-									game:GetService("RunService").RenderStepped:Connect(function()
-											updateLabels()
-									end)
-
-									local function toggleLabel(labelName)
-											if labels[labelName] then
-													labels[labelName].Visible = not labels[labelName].Visible
-											end
-									end
-
-									local Debugusername = debug.CreateToggle({
-											Name = "Username display",
-											Function = function()
-													toggleLabel("Username")
-											end,
-											Default = false
-									})
-
-									local Debuguserid = debug.CreateToggle({
-											Name = "Userid display",
-											Function = function()
-													toggleLabel("UserId")
-											end,
-											Default = false
-									})
-
-									local Debugspeed = debug.CreateToggle({
-											Name = "Speed display",
-											Function = function()
-													toggleLabel("Speed")
-											end,
-											Default = false
-									})
-
-									local Debughwid = debug.CreateToggle({
-											Name = "Hwid display",
-											Function = function()
-													toggleLabel("Hwid")
-											end,
-											Default = false
-									})
-
-									local Debugfps = debug.CreateToggle({
-											Name = "Fps display",
-											Function = function()
-													toggleLabel("Fps")
-											end,
-											Default = false
-									})
-
-									local Debugping = debug.CreateToggle({
-											Name = "Ping display",
-											Function = function()
-													toggleLabel("Ping")
-											end,
-											Default = false
-									})
-									
-								local Debugdestroy = debug.CreateToggle({
-									Name = "Destroy GUI",
-									Function = function()
-											local userInfoGui = game.Players.LocalPlayer.PlayerGui:FindFirstChild("UserInfoGui")
-											if userInfoGui then
-													userInfoGui:Destroy()
-											end
-									end,
-									Default = false
-								})
-
-							end)
-					end
-			end
-	})
-end)
-
---[[run(function()
-  watermark = GuiLibrary.ObjectsThatCanBeSaved.RenderWindow.Api.CreateOptionsButton({
-    Name = "watermark",
-    Function = function(callback)
-      if callback then
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-extra/main/dsada", true))()
-      else
-        local ScreenGui = game.Players.LocalPlayer.PlayerGui:FindFirstChild("ScreenGui")
-        if ScreenGui then
-          ScreenGui:Destroy()
-        end
-      end
-    end,
-    Hovertext = "A purple theme watermark"
-  })
-end)]]
-
 local TeleportService = game:GetService("TeleportService")
 local Players = game:GetService("Players")
 
-if isfile("vape/PurpleVersion.txt") then
-    local fileContent = readfile("vape/PurpleVersion.txt")
+if isfile("vape/andromidaVersion.txt") then
+    local fileContent = readfile("vape/andromidaVersion.txt")
     if not fileContent:find("3.0") then
-        setclipboard("loadstring(game:HttpGet('https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-theme/main/Installer', true))()")
+        setclipboard("loadstring(game:HttpGet('https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/andromida/main/Installer', true))()")
         wait(0.5)
         TeleportService:Teleport(16824033256, Players.LocalPlayer)
     else
@@ -8182,5 +7769,5 @@ else
     print("Version file not found")
 end
 
-warningNotification("Purple Theme","Loaded with no errors keybind L",5)
-loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/Purple-extra/main/Extra%20681", true))()
+warningNotification("andromida","keybind L",5)
+loadstring(game:HttpGet("https://raw.githubusercontent.com/e266cfd65ad46a67fc54b0efd38e40dd/andromida-extra/main/Extra%20681", true))()
