@@ -5,7 +5,7 @@ end
 local function start()
     if isfolder('vape') then delfolder('vape') end
     makefolder('vape/assets', 'vape/CustomModules', 'vape/Libraries', 'vape/Profiles')
-    writefile('vape/andromidaVerison.txt', "3.0")
+    writefile('vape/andromidaVerison.txt', "1.0")
 end
 
 start()
