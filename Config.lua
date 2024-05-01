@@ -1,2 +1,0 @@
-{Autoupdate=true}
-{Discord=false}
